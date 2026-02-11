@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "malgn": {
+      "type": "http",
+      "url": "https://malgn-mcp.apiserver.kr/mcp"
+    }
+  }
+}
