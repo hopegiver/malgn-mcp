@@ -55,7 +55,7 @@ export const TOOL_DEFINITIONS = [
   },
   {
     name: 'get_rules',
-    description: '맑은프레임워크 코딩 규칙 조회.',
+    description: '맑은프레임워크 코딩 규칙 조회. rule_id로 개별 규칙 조회 가능.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -63,6 +63,10 @@ export const TOOL_DEFINITIONS = [
           type: 'string',
           enum: ['all', 'naming', 'structure', 'template', 'parameter', 'data', 'postback', 'message', 'ajax', 'security', 'style', 'checklist'],
           description: '규칙 카테고리 (기본: all). checklist는 코드리뷰용 체크리스트.'
+        },
+        rule_id: {
+          type: 'string',
+          description: '규칙 ID (예: naming-dao, param-invalid-method). validate_code 결과의 ruleId로 조회.'
         }
       }
     }
@@ -139,6 +143,14 @@ export function executeTool(name, args = {}) {
     }
 
     case 'get_rules': {
+      // rule_id로 개별 규칙 조회
+      if (args.rule_id) {
+        const allRules = dataService.getRules('all');
+        const rule = (allRules?.rules || []).find(r => r.id === args.rule_id);
+        if (!rule) return { error: `규칙 '${args.rule_id}'를 찾을 수 없습니다.` };
+        return { total: 1, rules: [rule] };
+      }
+
       const category = args.category || 'all';
       if (category === 'checklist') {
         return {

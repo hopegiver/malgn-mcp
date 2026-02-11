@@ -149,7 +149,7 @@ function formatValidation(result) {
 }
 
 function formatIssue(lines, i) {
-  lines.push(`- Line ${i.line}:${i.column || ''} [${i.code}] ${i.message}`);
+  lines.push(`- Line ${i.line}:${i.column || ''} [${i.ruleId}] ${i.message}`);
   if (i.fix && i.matched) {
     lines.push(`  fix: \`${i.matched}\` -> \`${i.fix}\``);
   } else if (i.suggestion) {
