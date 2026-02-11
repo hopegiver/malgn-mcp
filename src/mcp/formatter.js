@@ -155,6 +155,9 @@ function formatIssue(lines, i) {
   } else if (i.suggestion) {
     lines.push(`  -> ${i.suggestion}`);
   }
+  if (i.related_pattern) {
+    lines.push(`  -> 참고 패턴: get_pattern(type: "${i.related_pattern}")`);
+  }
 }
 
 // ── get_class ──

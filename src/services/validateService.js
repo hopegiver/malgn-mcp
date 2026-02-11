@@ -59,12 +59,14 @@ const ANTIPATTERNS = [
   // DataSet next() 누락
   { pattern: /=\s*\w+\.(find|get|query)\([^)]*\)\s*;\s*\n[^\n]*\w+\.s\(/, ruleId: 'data-dataset-next', severity: 'error',
     message: 'DataSet의 next()를 호출하지 않고 데이터에 접근.',
-    suggestion: 'if(info.next()) { ... } 또는 while(list.next()) { ... }' },
+    suggestion: 'if(info.next()) { ... } 또는 while(list.next()) { ... }',
+    related_pattern: 'jsp-view' },
 
   // AJAX 위반
   { pattern: /data-ajax\s*=\s*"true"[\s\S]*?m\.jsReplace/, ruleId: 'ajax-response', severity: 'error',
     message: 'AJAX 폼에서 m.jsReplace()는 작동하지 않습니다.',
-    suggestion: 'j.success() / j.error() 를 사용하세요.' },
+    suggestion: 'j.success() / j.error() 를 사용하세요.',
+    related_pattern: 'jsp-ajax' },
 
   // moveRow
   { pattern: /\.moveRow\s*\(/, ruleId: 'data-setloop-cursor', severity: 'error',
@@ -100,6 +102,9 @@ export class ValidateService {
 
         if (ap.fix) {
           issue.fix = match[0].replace(new RegExp(ap.fix.search.source), ap.fix.replace);
+        }
+        if (ap.related_pattern) {
+          issue.related_pattern = ap.related_pattern;
         }
 
         issues.push(issue);
