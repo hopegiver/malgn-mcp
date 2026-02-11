@@ -71,7 +71,65 @@ const ANTIPATTERNS = [
   // moveRow
   { pattern: /\.moveRow\s*\(/, ruleId: 'data-setloop-cursor', severity: 'error',
     message: 'moveRow() 메소드는 존재하지 않습니다.',
-    suggestion: 'setLoop()가 자동으로 커서를 초기화합니다.' }
+    suggestion: 'setLoop()가 자동으로 커서를 초기화합니다.' },
+
+  // --- 추가 안티패턴 ---
+
+  // JSP/HTML 분리 위반: out.println으로 HTML 직접 출력
+  { pattern: /out\.print(ln)?\s*\(\s*"</, ruleId: 'template-separation', severity: 'error',
+    fileTypes: ['jsp'],
+    message: 'JSP에서 HTML 직접 출력 금지.',
+    suggestion: 'p.setBody()로 HTML 템플릿 파일을 분리하세요.',
+    related_pattern: 'jsp-view' },
+
+  // import 직접 사용 (init.jsp 자동 초기화 무시)
+  { pattern: /import\s+malgnsoft\./, ruleId: 'structure-init-objects', severity: 'error',
+    fileTypes: ['jsp'],
+    message: 'malgnsoft 패키지 직접 import 금지.',
+    suggestion: 'init.jsp에서 m, f, p, auth, j 등이 자동 초기화됩니다.' },
+  { pattern: /new\s+Malgn\s*\(/, ruleId: 'structure-init-objects', severity: 'error',
+    fileTypes: ['jsp'],
+    message: 'Malgn 객체 직접 생성 금지.',
+    suggestion: 'init.jsp에서 m 변수가 자동 초기화됩니다.' },
+
+  // m.redirect() 사용 (jsReplace 권장)
+  { pattern: /m\.redirect\s*\(/, ruleId: 'postback-redirect', severity: 'warning',
+    fileTypes: ['jsp'],
+    message: 'm.redirect() 대신 m.jsReplace() 권장.',
+    suggestion: 'm.jsReplace("/list.jsp")를 사용하세요.',
+    fix: { search: /m\.redirect\s*\(/, replace: 'm.jsReplace(' } },
+
+  // 비밀번호 평문 저장
+  { pattern: /\.item\s*\(\s*"password"\s*,\s*f\.get\s*\(/, ruleId: 'security-password', severity: 'error',
+    message: '비밀번호를 평문으로 저장하면 안 됩니다.',
+    suggestion: 'Malgn.sha256(f.get("password"))로 해시 저장하세요.' },
+
+  // out.print로 JSON 직접 출력
+  { pattern: /out\.print(ln)?\s*\(\s*"\{/, ruleId: 'ajax-json', severity: 'warning',
+    fileTypes: ['jsp'],
+    message: 'JSON 직접 출력 금지.',
+    suggestion: 'j.put("key", value); j.success(); 형태를 사용하세요.',
+    related_pattern: 'jsp-ajax' },
+
+  // DataSet 변수명 (복수) 위반
+  { pattern: /DataSet\s+(result|rs|dataset|datas)\s*=/, ruleId: 'naming-dataset-list', severity: 'error',
+    message: 'DataSet 복수 행 변수명이 부적절합니다.',
+    suggestion: 'list 또는 xxxList를 사용하세요.',
+    fix: { search: /DataSet\s+(result|rs|dataset|datas)\s*=/, replace: 'DataSet list =' } },
+
+  // HTML 템플릿에서 비교연산자 사용
+  { pattern: /<!--@if\s*\([^)]*[=<>!]{2}/, ruleId: 'template-if-boolean', severity: 'error',
+    fileTypes: ['html'],
+    message: '템플릿 조건문에 비교연산자 사용 불가.',
+    suggestion: 'JSP에서 boolean 변수로 변환 후 <!--@if(변수명)--> 사용.' },
+
+  // addSearch 전 불필요한 빈 값 체크
+  { pattern: /if\s*\([^)]*\.isEmpty\s*\(\)[^)]*\)\s*\{[^}]*addSearch/, ruleId: 'data-addsearch-empty', severity: 'warning',
+    message: 'addSearch() 전 빈 값 체크는 불필요합니다.',
+    suggestion: 'addSearch()는 빈 값을 자동 무시합니다. 조건문 없이 바로 호출하세요.' },
+  { pattern: /if\s*\(\s*!""\s*\.equals\s*\([^)]*\)\s*\)\s*\{[^}]*addSearch/, ruleId: 'data-addsearch-empty', severity: 'warning',
+    message: 'addSearch() 전 빈 문자열 체크는 불필요합니다.',
+    suggestion: 'addSearch()는 빈 값을 자동 무시합니다. 조건문 없이 바로 호출하세요.' }
 ];
 
 export class ValidateService {
@@ -80,6 +138,7 @@ export class ValidateService {
 
     for (const ap of ANTIPATTERNS) {
       if (!strict && ap.severity === 'info') continue;
+      if (ap.fileTypes && !ap.fileTypes.includes(fileType)) continue;
 
       const regex = new RegExp(ap.pattern.source, 'g');
       let match;

@@ -208,29 +208,49 @@ export function executeTool(name, args = {}) {
     }
 
     case 'search_docs': {
-      const limit = args.limit || 10;
+      const limit = Math.min(args.limit || 10, 50);
       const index = dataService.getDocIndex();
-      const allDocs = [];
+      const query = args.query.toLowerCase();
+
+      // 모든 문서를 본문 포함하여 검색
+      const scored = [];
       for (const [category, docList] of Object.entries(index.categories || {})) {
         for (const doc of docList) {
-          allDocs.push({ ...doc, category });
+          const titleLower = doc.title.toLowerCase();
+          const slugLower = doc.slug.toLowerCase();
+          const content = (dataService.getDoc(doc.slug)?.content || '').toLowerCase();
+
+          const inTitle = titleLower.includes(query);
+          const inSlug = slugLower.includes(query);
+          const inContent = content.includes(query);
+
+          if (inTitle || inSlug || inContent) {
+            // 매칭 위치 주변 텍스트 추출
+            let excerpt = '';
+            if (inContent) {
+              const pos = content.indexOf(query);
+              const start = Math.max(0, pos - 60);
+              const end = Math.min(content.length, pos + query.length + 100);
+              excerpt = (start > 0 ? '...' : '') +
+                content.substring(start, end).replace(/\n/g, ' ') +
+                (end < content.length ? '...' : '');
+            }
+
+            scored.push({
+              slug: doc.slug,
+              title: doc.title,
+              category,
+              excerpt,
+              // 제목 매칭 > slug 매칭 > 본문 매칭 순으로 정렬
+              score: (inTitle ? 100 : 0) + (inSlug ? 50 : 0) + (inContent ? 10 : 0)
+            });
+          }
         }
       }
-      const query = args.query.toLowerCase();
-      const matched = allDocs.filter(d =>
-        d.title.toLowerCase().includes(query) ||
-        d.slug.toLowerCase().includes(query)
-      );
-      const results = matched.slice(0, limit).map(d => {
-        const detail = dataService.getDoc(d.slug);
-        return {
-          slug: d.slug,
-          title: d.title,
-          category: d.category,
-          excerpt: detail ? (detail.content || '').substring(0, 200) + '...' : ''
-        };
-      });
-      return { query: args.query, total: matched.length, results };
+
+      scored.sort((a, b) => b.score - a.score);
+      const results = scored.slice(0, limit).map(({ score, ...rest }) => rest);
+      return { query: args.query, total: scored.length, results };
     }
 
     default:

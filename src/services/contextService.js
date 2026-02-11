@@ -2,17 +2,28 @@ import { DataService } from './dataService.js';
 
 // feature → 필요한 클래스/패턴/규칙 매핑
 const FEATURE_MAP = {
-  list:    { classes: ['ListManager', 'DataObject', 'Form'], patterns: ['jsp-list', 'html-list'] },
-  insert:  { classes: ['DataObject', 'Form', 'Page'], patterns: ['jsp-insert', 'html-form', 'dao-basic'] },
-  modify:  { classes: ['DataObject', 'Form', 'Page'], patterns: ['jsp-modify', 'html-form'] },
-  delete:  { classes: ['DataObject'], patterns: ['jsp-delete'] },
-  view:    { classes: ['DataObject', 'Page'], patterns: ['jsp-view', 'html-view'] },
-  search:  { classes: ['ListManager', 'Form'], patterns: ['jsp-list', 'html-list'] },
-  paging:  { classes: ['ListManager'], patterns: ['jsp-list'] },
-  ajax:    { classes: ['Json', 'Form'], patterns: ['jsp-ajax'] },
-  restapi: { classes: ['RestAPI', 'Json'], patterns: ['jsp-restapi'] },
-  upload:  { classes: ['Form', 'FileManager'], patterns: ['jsp-insert'] },
-  auth:    { classes: ['Auth'], patterns: [] }
+  list:    { classes: ['ListManager', 'DataObject', 'Form'], patterns: ['jsp-list', 'html-list'],
+             rule_categories: ['naming', 'data', 'style', 'template', 'structure'] },
+  insert:  { classes: ['DataObject', 'Form', 'Page'], patterns: ['jsp-insert', 'html-form', 'dao-basic'],
+             rule_categories: ['naming', 'postback', 'parameter', 'structure', 'security', 'template'] },
+  modify:  { classes: ['DataObject', 'Form', 'Page'], patterns: ['jsp-modify', 'html-form'],
+             rule_categories: ['naming', 'postback', 'parameter', 'structure', 'security', 'template'] },
+  delete:  { classes: ['DataObject'], patterns: ['jsp-delete'],
+             rule_categories: ['naming', 'data', 'security'] },
+  view:    { classes: ['DataObject', 'Page'], patterns: ['jsp-view', 'html-view'],
+             rule_categories: ['naming', 'data', 'template', 'structure'] },
+  search:  { classes: ['ListManager', 'Form'], patterns: ['jsp-list', 'html-list'],
+             rule_categories: ['naming', 'data', 'style', 'parameter'] },
+  paging:  { classes: ['ListManager'], patterns: ['jsp-list'],
+             rule_categories: ['data', 'style'] },
+  ajax:    { classes: ['Json', 'Form'], patterns: ['jsp-ajax'],
+             rule_categories: ['ajax', 'parameter', 'security'] },
+  restapi: { classes: ['RestAPI', 'Json'], patterns: ['jsp-restapi'],
+             rule_categories: ['ajax', 'security', 'parameter'] },
+  upload:  { classes: ['Form', 'FileManager'], patterns: ['jsp-insert'],
+             rule_categories: ['parameter', 'security', 'postback'] },
+  auth:    { classes: ['Auth'], patterns: [],
+             rule_categories: ['security'] }
 };
 
 const dataService = new DataService();
@@ -21,12 +32,14 @@ export class ContextService {
   buildContext(body) {
     const neededClasses = new Set();
     const neededPatterns = new Set();
+    const neededRuleCategories = new Set();
 
     for (const feature of (body.features || [])) {
       const map = FEATURE_MAP[feature];
       if (map) {
         map.classes.forEach(c => neededClasses.add(c));
         map.patterns.forEach(p => neededPatterns.add(p));
+        (map.rule_categories || []).forEach(c => neededRuleCategories.add(c));
       }
     }
 
@@ -55,7 +68,7 @@ export class ContextService {
     return {
       task: body.task,
       context: {
-        rules: rules ? this.extractRules(rules, body.features) : undefined,
+        rules: rules ? this.extractRules(rules, neededRuleCategories) : undefined,
         patterns: body.include_patterns !== false ? patternData : undefined,
         class_info: this.simplifyClassInfo(classData),
         checklist: this.buildChecklist(body)
@@ -63,27 +76,25 @@ export class ContextService {
     };
   }
 
-  extractRules(allRules, features) {
+  extractRules(allRules, neededCategories) {
     if (!allRules) return null;
+
+    const rules = allRules.rules || [];
+    // feature가 지정되면 관련 카테고리만, 아니면 전체
+    const filtered = neededCategories.size > 0
+      ? rules.filter(r => neededCategories.has(r.category))
+      : rules;
+
+    const mapRule = r => ({
+      id: r.id,
+      rule: r.rule,
+      correct: r.correct || null,
+      incorrect: r.incorrect || null
+    });
+
     return {
-      critical: (allRules.rules || [])
-        .filter(r => r.severity === 'error')
-        .slice(0, 10)
-        .map(r => ({
-          id: r.id,
-          rule: r.rule,
-          correct: r.correct || null,
-          incorrect: r.incorrect || null
-        })),
-      relevant: (allRules.rules || [])
-        .filter(r => r.severity === 'warning')
-        .slice(0, 5)
-        .map(r => ({
-          id: r.id,
-          rule: r.rule,
-          correct: r.correct || null,
-          incorrect: r.incorrect || null
-        }))
+      critical: filtered.filter(r => r.severity === 'error').map(mapRule),
+      relevant: filtered.filter(r => r.severity === 'warning').map(mapRule)
     };
   }
 
