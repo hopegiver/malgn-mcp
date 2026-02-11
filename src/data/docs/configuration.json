@@ -1,0 +1,46 @@
+{
+  "slug": "configuration",
+  "title": "12. \ud658\uacbd \uc124\uc815",
+  "category": "basic",
+  "content": "# 12. \ud658\uacbd \uc124\uc815\n\n[\u2190 \ubaa9\ucc28\ub85c \ub3cc\uc544\uac00\uae30](README.md)\n\n---\n\n## Config \ud074\ub798\uc2a4\n\nConfig \ud074\ub798\uc2a4\ub294 \uc560\ud50c\ub9ac\ucf00\uc774\uc158\uc758 \ud658\uacbd \uc124\uc815\uc744 \uad00\ub9ac\ud558\ub294 \uc815\uc801 \ud074\ub798\uc2a4\uc785\ub2c8\ub2e4.\n\n### \uc8fc\uc694 \uae30\ub2a5\n\n- \uc124\uc815 \ud30c\uc77c \uc77d\uae30 (config.xml)\n- \uacbd\ub85c \uc815\ubcf4 \uc81c\uacf5\n- \ud658\uacbd \ubcc0\uc218 \uad00\ub9ac\n- \uc124\uc815 \ub9ac\ub85c\ub4dc\n\n---\n\n## \uae30\ubcf8 \uacbd\ub85c \uba54\uc18c\ub4dc\n\n### \uc8fc\uc694 \uacbd\ub85c \uac00\uc838\uc624\uae30\n\n```jsp\n<%@ page contentType=\"text/html; charset=utf-8\" %><%@ include file=\"/init.jsp\" %><%\n\nString docRoot = Config.getDocRoot();\nString tplRoot = Config.getTplRoot();\nString dataDir = Config.getDataDir();\nString uploadDir = Config.getUploadDir();\n\n%>\n```\n\n---\n\n## \uc124\uc815 \ud30c\uc77c\n\n### config.xml\n\n`/WEB-INF/config.xml` \ud30c\uc77c\uc5d0\uc11c \uc124\uc815\uc744 \uad00\ub9ac\ud569\ub2c8\ub2e4.\n\n```xml\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<config>\n    <env>\n        <jndi>jdbc/myapp</jndi>\n        <rojndi>jdbc/myapp_ro</rojndi>\n        <mailFrom>noreply@example.com</mailFrom>\n        <mailHost>smtp.gmail.com</mailHost>\n        <encoding>utf-8</encoding>\n        <denyHtml>Y</denyHtml>\n        <redisURI>redis://localhost:6379/0?timeout=3s</redisURI>\n        <awsRegion>ap-northeast-2</awsRegion>\n        <siteName>My Website</siteName>\n        <siteUrl>https://example.com</siteUrl>\n        <debugMode>false</debugMode>\n    </env>\n</config>\n```\n\n### \uc124\uc815 \uac12 \uc77d\uae30\n\n```jsp\nString mailFrom = Config.get(\"mailFrom\");\nString siteName = Config.get(\"siteName\");\nString apiKey = Config.get(\"apiKey\", \"default_key\");\n```\n\n### \uc815\uc218 \uac12 \uc77d\uae30\n\n```jsp\nint mailPort = Config.getInt(\"mailPort\");\nint timeout = Config.getInt(\"timeout\", 30);\n```\n\n---\n\n## \uc124\uc815 \ub9ac\ub85c\ub4dc\n\n### Config.reload()\n\n\uc124\uc815 \ud30c\uc77c\uc744 \ub2e4\uc2dc \uc77d\uc5b4\uc635\ub2c8\ub2e4.\n\n```jsp\nConfig.reload();\n```\n\n---\n\n## Cache \ud074\ub798\uc2a4\n\nCache \ud074\ub798\uc2a4\ub294 \ub370\uc774\ud130\ub97c \uba54\ubaa8\ub9ac\uc5d0 \uce90\uc2dc\ud558\uc5ec \uc131\ub2a5\uc744 \ud5a5\uc0c1\uc2dc\ud0b5\ub2c8\ub2e4.\n\n### \uae30\ubcf8 \uc0ac\uc6a9\ubc95\n\n```jsp\nCache cache = new Cache();\nDataSet posts = cache.getDataSet(\"posts_cache\");\nif(posts == null) {\n    BlogDao blog = new BlogDao();\n    posts = blog.query(\"WHERE status = 1 ORDER BY id DESC\");\n    cache.save(\"posts_cache\", posts);\n}\n```\n\n---\n\n## \uc2e4\uc804 \uc608\uc81c\n\n1. \uc774\uba54\uc77c \ubc1c\uc1a1 \uc124\uc815\n2. \uba54\ub274 \uce90\uc2f1\n3. \uc0ac\uc774\ud2b8 \ud1b5\uacc4 \uce90\uc2f1\n4. API \ud0a4 \uad00\ub9ac\n5. \ud658\uacbd\ubcc4 \uc124\uc815\n6. \uce90\uc2dc \ubb34\ud6a8\ud654\n\n---\n\n## \ubca0\uc2a4\ud2b8 \ud504\ub799\ud2f0\uc2a4\n\n1. \ubbfc\uac10\ud55c \uc815\ubcf4\ub294 \uc124\uc815 \ud30c\uc77c\uc5d0\n2. \uce90\uc2dc \ud0a4 \uba85\uba85 \uaddc\uce59\n3. \uce90\uc2dc \uac31\uc2e0 \uc804\ub7b5\n4. \uae30\ubcf8\uac12 \uc124\uc815\n\n---\n\n## \uc8fc\uc694 \uba54\uc18c\ub4dc \uc815\ub9ac\n\n### Config \ud074\ub798\uc2a4\n\n| \uba54\uc18c\ub4dc | \uc124\uba85 |\n|--------|------|\n| getDocRoot() | \ubb38\uc11c \ub8e8\ud2b8 \uacbd\ub85c |\n| getTplRoot() | \ud15c\ud50c\ub9bf \ub8e8\ud2b8 \uacbd\ub85c |\n| getDataDir() | \ub370\uc774\ud130 \ub514\ub809\ud1a0\ub9ac |\n| getUploadDir() | \uc5c5\ub85c\ub4dc \ub514\ub809\ud1a0\ub9ac |\n| get(key) | \uc124\uc815 \uac12 \uac00\uc838\uc624\uae30 |\n| get(key, defaultValue) | \uae30\ubcf8\uac12\uacfc \ud568\uaed8 \uac00\uc838\uc624\uae30 |\n| getInt(key) | \uc815\uc218\ub85c \uac00\uc838\uc624\uae30 |\n| getInt(key, defaultValue) | \uae30\ubcf8\uac12\uacfc \ud568\uaed8 \uc815\uc218\ub85c |\n| reload() | \uc124\uc815 \ud30c\uc77c \ub2e4\uc2dc \uc77d\uae30 |\n\n### Cache \ud074\ub798\uc2a4\n\n| \uba54\uc18c\ub4dc | \uc124\uba85 |\n|--------|------|\n| save(key, value) | \uce90\uc2dc\uc5d0 \uc800\uc7a5 |\n| get(key) | \uce90\uc2dc\uc5d0\uc11c \uac00\uc838\uc624\uae30 |\n| getDataSet(key) | DataSet\uc73c\ub85c \uac00\uc838\uc624\uae30 |\n| getString(key) | \ubb38\uc790\uc5f4\ub85c \uac00\uc838\uc624\uae30 |\n| remove(key) | \ud2b9\uc815 \uce90\uc2dc \uc0ad\uc81c |\n| clear() | \ubaa8\ub4e0 \uce90\uc2dc \uc0ad\uc81c |\n\n---\n\n[\u2190 \uc774\uc804: \uc778\uc99d \ucc98\ub9ac](authentication.md) | [\ubaa9\ucc28\ub85c \ub3cc\uc544\uac00\uae30](README.md)",
+  "sections": [
+    {
+      "heading": "Config \ud074\ub798\uc2a4",
+      "content": "Config \ud074\ub798\uc2a4\ub294 \uc560\ud50c\ub9ac\ucf00\uc774\uc158\uc758 \ud658\uacbd \uc124\uc815\uc744 \uad00\ub9ac\ud558\ub294 \uc815\uc801 \ud074\ub798\uc2a4\uc785\ub2c8\ub2e4. \uc124\uc815 \ud30c\uc77c \uc77d\uae30, \uacbd\ub85c \uc815\ubcf4, \ud658\uacbd \ubcc0\uc218 \uad00\ub9ac, \uc124\uc815 \ub9ac\ub85c\ub4dc \uae30\ub2a5\uc744 \uc81c\uacf5\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\uae30\ubcf8 \uacbd\ub85c \uba54\uc18c\ub4dc",
+      "content": "getDocRoot(), getTplRoot(), getDataDir(), getUploadDir() \ub4f1\uc758 \uacbd\ub85c \uba54\uc18c\ub4dc\ub97c \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\uc124\uc815 \ud30c\uc77c",
+      "content": "config.xml \uc124\uc815 \ud30c\uc77c\uc758 \uad6c\uc870\uc640 \uc124\uc815 \uac12 \uc77d\uae30 \ubc29\ubc95\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\uc124\uc815 \ub9ac\ub85c\ub4dc",
+      "content": "Config.reload()\ub97c \uc0ac\uc6a9\ud558\uc5ec \uc11c\ubc84 \uc7ac\uc2dc\uc791 \uc5c6\uc774 \uc124\uc815\uc744 \ubc18\uc601\ud558\ub294 \ubc29\ubc95\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "Cache \ud074\ub798\uc2a4",
+      "content": "Cache \ud074\ub798\uc2a4\ub85c \ub370\uc774\ud130\ub97c \uba54\ubaa8\ub9ac\uc5d0 \uce90\uc2dc\ud558\uc5ec \uc131\ub2a5\uc744 \ud5a5\uc0c1\uc2dc\ud0a4\ub294 \ubc29\ubc95\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\uc2e4\uc804 \uc608\uc81c",
+      "content": "\uc774\uba54\uc77c \ubc1c\uc1a1, \uba54\ub274 \uce90\uc2f1, \ud1b5\uacc4 \uce90\uc2f1, API \ud0a4 \uad00\ub9ac, \ud658\uacbd\ubcc4 \uc124\uc815, \uce90\uc2dc \ubb34\ud6a8\ud654 \ub4f1\uc758 \uc2e4\uc804 \uc608\uc81c\ub97c \uc81c\uacf5\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\ubca0\uc2a4\ud2b8 \ud504\ub799\ud2f0\uc2a4",
+      "content": "\ubbfc\uac10 \uc815\ubcf4 \uc124\uc815, \uce90\uc2dc \ud0a4 \uba85\uba85, \uce90\uc2dc \uac31\uc2e0 \uc804\ub7b5, \uae30\ubcf8\uac12 \uc124\uc815 \ub4f1\uc758 \ubca0\uc2a4\ud2b8 \ud504\ub799\ud2f0\uc2a4\ub97c \uc81c\uacf5\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\uc8fc\uc694 \uba54\uc18c\ub4dc \uc815\ub9ac",
+      "content": "Config\uc640 Cache \ud074\ub798\uc2a4\uc758 \uc8fc\uc694 \uba54\uc18c\ub4dc\ub97c \ud45c\ub85c \uc815\ub9ac\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\uc131\ub2a5 \ucd5c\uc801\ud654",
+      "content": "\uc790\uc8fc \uc870\ud68c\ub418\ub294 \ub370\uc774\ud130, \ubcf5\uc7a1\ud55c \ucffc\ub9ac \uacb0\uacfc, API \uc751\ub2f5 \uce90\uc2f1 \ub4f1\uc758 \uc131\ub2a5 \ucd5c\uc801\ud654 \ubc29\ubc95\uc744 \uc81c\uacf5\ud569\ub2c8\ub2e4."
+    }
+  ],
+  "related_docs": ["installation", "introduction", "database", "utility-methods"],
+  "related_classes": ["Malgn", "Page", "DataSet", "DataObject", "ExcelX", "Http"]
+}

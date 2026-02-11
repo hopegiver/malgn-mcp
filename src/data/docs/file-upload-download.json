@@ -1,0 +1,16 @@
+{
+  "slug": "file-upload-download",
+  "title": "파일 업로드 및 다운로드",
+  "category": "util",
+  "content": "# 파일 업로드 및 다운로드\n\n[← 목차로 돌아가기](README.md)\n\n---\n\n## 개요\n\n맑은프레임워크는 Form 클래스와 Malgn 클래스를 통해 간편한 파일 업로드 및 다운로드 기능을 제공합니다.\n\n### 주요 기능\n\n- **파일 업로드**: Form 클래스를 통한 멀티파트 파일 업로드\n- **파일 다운로드**: Malgn 클래스를 통한 파일 전송\n- **확장자 검증**: 허용/금지 확장자 제한\n- **여러 파일 처리**: 다중 파일 업로드 지원\n- **대역폭 제어**: 다운로드 속도 제한\n- **이미지 썸네일**: 자동 썸네일 생성\n\n---\n\n## 파일 업로드\n\n### 1. 기본 업로드\n\nf.saveFile(\"file\")로 파일을 저장하고 파일명, 경로, 크기 정보를 가져올 수 있습니다.\n\n### 2. 확장자 제한\n\nallow, deny 속성으로 허용/금지 확장자를 지정합니다.\n\n### 3. 파일 크기 제한\n\nweb.xml의 multipart-config 또는 코드에서 검증합니다.\n\n### 4. 여러 파일 업로드\n\nf.saveFiles()로 다중 파일, 개별 f.saveFile()로 개별 파일을 처리합니다.\n\n### 5. 저장 경로 커스터마이징\n\nConfig.getDataDir()을 사용하여 커스텀 경로에 저장합니다.\n\n### 6. 파일명 변경하여 저장\n\nMalgn.getUniqId()로 고유한 파일명을 생성합니다.\n\n---\n\n## 파일 다운로드\n\n### 1. 기본 다운로드\n\nm.download(filePath, fileName)으로 파일을 다운로드합니다.\n\n### 2. 대역폭 제한 다운로드\n\nm.download(filePath, fileName, 100)으로 100KB/s 제한합니다.\n\n### 3. 파일 브라우저 표시\n\nm.output(filePath, mimeType)으로 브라우저에서 직접 표시합니다.\n\n### 4. 조건부 다운로드\n\n권한 확인 후 다운로드합니다.\n\n---\n\n## 이미지 썸네일\n\nThumbnail 클래스로 다양한 크기의 썸네일을 생성합니다.\n\n---\n\n## 파일 관리\n\n- Malgn.getFileExt(): 파일 확장자\n- Malgn.getMimeType(): MIME 타입\n- Malgn.getFileSize(): 파일 크기 포맷\n- Malgn.readFile()/writeFile(): 파일 읽기/쓰기\n- Malgn.copyFile()/delFile(): 파일 복사/삭제\n\n---\n\n## 보안 가이드\n\n1. 확장자 검증 필수\n2. 파일명 검증\n3. 파일 크기 검증\n4. MIME 타입 검증\n5. 업로드 디렉토리 권한\n6. 다운로드 권한 체크\n7. 경로 조작 방지\n\n---\n\n[← 이전: 데이터 입력 및 유효성 체크](form-validation.md) | [목차로 돌아가기](README.md) | [다음: 목록 및 검색 →](list-search.md)",
+  "sections": [
+    { "heading": "개요", "content": "Form 클래스와 Malgn 클래스를 통한 파일 업로드/다운로드, 확장자 검증, 다중 파일, 대역폭 제어, 이미지 썸네일 기능을 제공합니다." },
+    { "heading": "파일 업로드", "content": "기본 업로드, 확장자 제한, 파일 크기 제한, 여러 파일 업로드, 저장 경로 커스터마이징, 파일명 변경 등의 업로드 기능입니다." },
+    { "heading": "파일 다운로드", "content": "기본 다운로드, 대역폭 제한, 브라우저 표시, 조건부 다운로드, 폼 방식, ZIP 다운로드 등의 다운로드 기능입니다." },
+    { "heading": "이미지 썸네일", "content": "Thumbnail 클래스로 이미지 업로드 시 자동 썸네일 생성, 다양한 크기, 정사각형 크롭 기능입니다." },
+    { "heading": "파일 관리", "content": "파일 정보 조회, 읽기/쓰기, 복사/이동/삭제, 업로드 경로 생성 기능입니다." },
+    { "heading": "보안 가이드", "content": "확장자 검증, 파일명 검증, 파일 크기 검증, MIME 타입 검증, 업로드 디렉토리 권한, 다운로드 권한 체크, 경로 조작 방지입니다." }
+  ],
+  "related_docs": ["email", "excel"],
+  "related_classes": ["Form", "Malgn", "Auth", "ListManager", "DataSet"]
+}

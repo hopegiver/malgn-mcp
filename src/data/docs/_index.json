@@ -1,0 +1,46 @@
+{
+  "total": 28,
+  "categories": {
+    "basic": [
+      { "slug": "introduction", "title": "프레임워크 소개" },
+      { "slug": "installation", "title": "설치 및 환경설정" },
+      { "slug": "getting-started", "title": "시작하기" },
+      { "slug": "coding-principles", "title": "코딩 원칙" },
+      { "slug": "configuration", "title": "환경 설정" }
+    ],
+    "core": [
+      { "slug": "template", "title": "맑은템플릿" },
+      { "slug": "database", "title": "데이터베이스 연동" },
+      { "slug": "dataobject", "title": "DataObject 클래스" },
+      { "slug": "dataset", "title": "DataSet 활용" },
+      { "slug": "form-validation", "title": "데이터 입력 및 유효성 체크" },
+      { "slug": "list-search", "title": "목록 및 검색" },
+      { "slug": "utility-methods", "title": "Malgn 유틸리티 메소드" }
+    ],
+    "web": [
+      { "slug": "json", "title": "JSON 처리" },
+      { "slug": "xml", "title": "XML 처리" },
+      { "slug": "restapi", "title": "REST API 개발" },
+      { "slug": "restapi-advanced", "title": "REST API 고급 라우팅" },
+      { "slug": "restapi-jwt", "title": "REST API JWT 인증" },
+      { "slug": "restapi-cors", "title": "REST API CORS 설정" },
+      { "slug": "restapi-response", "title": "REST API 응답 표준" },
+      { "slug": "http-client", "title": "HTTP 클라이언트" }
+    ],
+    "security": [
+      { "slug": "authentication", "title": "인증 처리" },
+      { "slug": "encryption", "title": "암호화" },
+      { "slug": "oauth", "title": "OAuth 소셜 로그인" }
+    ],
+    "util": [
+      { "slug": "file-upload-download", "title": "파일 업로드 및 다운로드" },
+      { "slug": "excel", "title": "Excel 처리" },
+      { "slug": "email", "title": "이메일 발송" },
+      { "slug": "calendar", "title": "달력 및 날짜 선택" },
+      { "slug": "i18n", "title": "다국어 지원" }
+    ],
+    "integration": [
+      { "slug": "openai", "title": "OpenAI 통합" }
+    ]
+  }
+}

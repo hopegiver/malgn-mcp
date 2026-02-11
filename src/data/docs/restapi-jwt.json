@@ -1,0 +1,34 @@
+{
+  "slug": "restapi-jwt",
+  "title": "REST API - JWT 인증",
+  "category": "web",
+  "content": "# REST API - JWT 인증\n\n맑은프레임워크는 `RestAPI` 클래스에서 JWT(JSON Web Token) 기반 인증을 지원합니다. 세션 기반 인증과 달리 stateless API에 적합합니다.\n\n---\n\n## 1. JWT 토큰 생성\n\n로그인 성공 시 JWT 토큰을 생성하여 클라이언트에 전달합니다.\n\n### /api/auth/login.jsp\n\n```jsp\n<%@ include file=\"/api/init.jsp\" %><%\n\n// POST /api/auth/login - 로그인\napi.post(\"/\", () -> {\n    String email = f.get(\"email\");\n    String password = f.get(\"password\");\n\n    // 사용자 인증 확인\n    UserDao user = new UserDao();\n    DataSet info = user.getByEmail(email);\n\n    if(info.next() && user.checkPassword(password, info.s(\"password\"))) {\n        // RestAPI 객체에 사용자 정보 저장\n        api.setData(\"user_id\", info.i(\"id\"));\n        api.setData(\"user_name\", info.s(\"name\"));\n        api.setData(\"user_level\", info.i(\"level\"));\n\n        // JWT 토큰 생성 (60분 유효)\n        String token = api.generateToken(60);\n\n        j.put(\"token\", token);\n        j.put(\"user_id\", info.i(\"id\"));\n        j.put(\"user_name\", info.s(\"name\"));\n        j.put(\"user_level\", info.i(\"level\"));\n        j.success(\"로그인되었습니다.\");\n    } else {\n        j.error(\"INVALID_CREDENTIALS\", \"이메일 또는 비밀번호가 일치하지 않습니다.\");\n    }\n});\n\n%>\n```\n\n---\n\n## 2. JWT 토큰 검증\n\n`/api/init.jsp`에서 `api.auth()`로 자동 검증합니다:\n\n```jsp\n// JWT 토큰 인증 (퍼블릭 라우팅 자동 체크)\nif(!api.auth()) return;\n\n// 인증된 사용자 정보\nint userId = api.getDataInt(\"user_id\");\nString userName = api.getData(\"user_name\");\nint userLevel = api.getDataInt(\"user_level\");\n```\n\n### `api.auth()` 메소드 동작\n\n1. 퍼블릭 라우팅이면 인증 불필요 (true 반환)\n2. `Authorization: Bearer <token>` 헤더에서 토큰 추출\n3. 토큰 서명 검증 및 만료 시간 확인\n4. 토큰이 유효하면 사용자 정보 자동 로드 (true 반환)\n5. 토큰이 없거나 유효하지 않으면 에러 응답 자동 출력 (false 반환)\n\n---\n\n## 3. 클라이언트 사용법\n\n### Authorization 헤더 방식 (권장)\n\nJavaScript (fetch API):\n\n```javascript\n// 1. 로그인하여 토큰 받기\nfetch('/api/auth/login', {\n    method: 'POST',\n    headers: {\n        'Content-Type': 'application/x-www-form-urlencoded',\n    },\n    body: 'email=user@example.com&password=1234'\n})\n.then(response => response.json())\n.then(data => {\n    // 토큰을 로컬스토리지에 저장\n    localStorage.setItem('token', data.token);\n    console.log('로그인 성공:', data);\n});\n\n// 2. 인증이 필요한 API 호출 시 토큰 전송\nconst token = localStorage.getItem('token');\n\nfetch('/api/user', {\n    method: 'GET',\n    headers: {\n        'Authorization': `Bearer ${token}`\n    }\n})\n.then(response => response.json())\n.then(data => console.log(data));\n\n// 3. POST 요청에도 토큰 전송\nfetch('/api/user', {\n    method: 'POST',\n    headers: {\n        'Authorization': `Bearer ${token}`,\n        'Content-Type': 'application/x-www-form-urlencoded',\n    },\n    body: 'name=홍길동&email=hong@example.com'\n})\n.then(response => response.json())\n.then(data => console.log(data));\n```\n\n---\n\n## 4. 권한 체크 예시\n\nJWT 토큰으로 인증된 사용자의 권한을 체크합니다.\n\n### /api/admin/stats.jsp\n\n```jsp\n<%@ include file=\"/api/init.jsp\" %><%\n\n// 관리자 권한 체크 (userLevel은 init.jsp의 api.auth()에서 자동 로드)\nif(userLevel < 10) {\n    j.error(\"FORBIDDEN\", \"관리자만 접근할 수 있습니다.\");\n    return;\n}\n\n// GET /api/admin/stats - 통계 조회\napi.get(\"/\", () -> {\n    StatsDao stats = new StatsDao();\n    DataSet data = stats.getMonthlyStats();\n\n    j.put(\"stats\", data);\n    j.put(\"requested_by\", userName);  // JWT 토큰에서 추출된 userName 사용\n    j.success();\n});\n\n%>\n```\n\n**설명:**\n- `init.jsp`의 `api.auth()`가 이미 로그인 체크를 완료\n- userId, userName, userLevel이 자동으로 설정됨\n- 추가 권한 체크만 수행하면 됨\n\n---\n\n## 5. 퍼블릭 라우팅\n\n인증이 필요 없는 API 경로를 지정할 수 있습니다.\n\n### init.jsp에서 설정\n\n```jsp\n// 퍼블릭 라우팅 설정 (인증 불필요)\napi.publicRoute(\n    \"/api/auth/login\",      // 로그인 API\n    \"/api/auth/register\",   // 회원가입 API\n    \"/api/public/*\"         // /api/public 하위 모든 경로\n);\n```\n\n### 와일드카드 패턴\n\n- `/api/auth/*` - `/api/auth` 하위 모든 경로\n- `/api/public/*` - `/api/public` 하위 모든 경로\n- 정확히 일치하는 경로는 와일드카드 없이 지정\n\n### `api.auth()` 메소드 동작\n\n1. 퍼블릭 라우팅이면 인증 불필요 (true 반환)\n2. 퍼블릭이 아니면 JWT 토큰 검증\n3. 토큰이 없거나 유효하지 않으면 에러 응답 자동 출력 (false 반환)\n4. 토큰이 유효하면 사용자 정보 자동 로드 (true 반환)\n\n### 장점\n\n- 퍼블릭 API는 인증 없이 접근 가능\n- 나머지 API는 자동으로 인증 체크\n- 각 API 파일에서 인증 코드 작성 불필요\n\n---\n\n## 6. 보안 고려사항\n\n1. **HTTPS 필수**: JWT 토큰은 반드시 HTTPS를 통해 전송해야 합니다.\n2. **토큰 만료 시간**: 보안을 위해 짧은 만료 시간(30~60분)을 권장합니다.\n3. **Refresh Token**: 장기 로그인이 필요한 경우 Refresh Token 패턴 구현을 고려하세요.\n4. **비밀키 관리**: `Config.getSecretId()`로 반환되는 비밀키는 안전하게 보관하세요.\n5. **토큰 저장**: XSS 공격 방지를 위해 `httpOnly` 쿠키 저장도 고려하세요.\n\n---\n\n## 관련 문서\n\n- [REST API 개발](restapi.md) - REST API 기본 가이드\n- [CORS 설정](restapi-cors.md) - CORS 설정 가이드\n- [응답 표준](restapi-response.md) - 에러/성공 응답 표준\n\n---\n\n[← 목차로 돌아가기](README.md)",
+  "sections": [
+    {
+      "heading": "1. JWT 토큰 생성",
+      "content": "로그인 성공 시 JWT 토큰을 생성하여 클라이언트에 전달합니다. api.setData()로 사용자 정보를 저장하고, api.generateToken(60)으로 60분 유효한 토큰을 생성합니다."
+    },
+    {
+      "heading": "2. JWT 토큰 검증",
+      "content": "/api/init.jsp에서 api.auth()로 자동 검증합니다. Authorization: Bearer 헤더에서 토큰을 추출하고, 서명 검증 및 만료 시간을 확인합니다."
+    },
+    {
+      "heading": "3. 클라이언트 사용법",
+      "content": "Authorization 헤더 방식으로 Bearer 토큰을 전송하는 방법입니다. localStorage에 토큰을 저장하고, API 호출 시 헤더에 포함합니다."
+    },
+    {
+      "heading": "4. 권한 체크 예시",
+      "content": "JWT 토큰으로 인증된 사용자의 권한을 체크하는 관리자 전용 API 예시입니다."
+    },
+    {
+      "heading": "5. 퍼블릭 라우팅",
+      "content": "인증이 필요 없는 API 경로를 publicRoute()로 지정할 수 있으며, 와일드카드 패턴을 지원합니다."
+    },
+    {
+      "heading": "6. 보안 고려사항",
+      "content": "HTTPS 필수, 토큰 만료 시간, Refresh Token, 비밀키 관리, 토큰 저장 등의 보안 고려사항입니다."
+    }
+  ],
+  "related_docs": ["restapi", "restapi-cors", "restapi-response", "authentication"],
+  "related_classes": ["RestAPI", "Malgn", "Form", "Json", "DataSet"]
+}

@@ -10,6 +10,7 @@ import rulesRoutes from './routes/rules.js';
 import patternsRoutes from './routes/patterns.js';
 import validateRoutes from './routes/validate.js';
 import contextRoutes from './routes/context.js';
+import promptRoutes from './routes/prompt.js';
 
 const app = new Hono();
 
@@ -19,7 +20,7 @@ app.use('*', cors());
 
 // 선택적 API 토큰 인증
 app.use('*', async (c, next) => {
-  if (c.req.path === '/health' || c.req.path === '/') {
+  if (c.req.path === '/health' || c.req.path === '/' || c.req.path === '/prompt') {
     return await next();
   }
 
@@ -41,6 +42,7 @@ app.route('/rules', rulesRoutes);
 app.route('/patterns', patternsRoutes);
 app.route('/validate', validateRoutes);
 app.route('/context', contextRoutes);
+app.route('/prompt', promptRoutes);
 
 // Root
 app.get('/', (c) => {
@@ -54,7 +56,8 @@ app.get('/', (c) => {
       'GET /rules', 'GET /rules/checklist',
       'GET /docs', 'GET /docs/:slug', 'POST /docs/search',
       'GET /patterns', 'GET /patterns/:type',
-      'POST /context'
+      'POST /context',
+      'GET /prompt'
     ]
   });
 });

@@ -1,0 +1,54 @@
+{
+  "slug": "dataset",
+  "title": "8. DataSet \ud65c\uc6a9",
+  "category": "core",
+  "content": "# 8. DataSet \ud65c\uc6a9\n\n[\u2190 \ubaa9\ucc28\ub85c \ub3cc\uc544\uac00\uae30](README.md)\n\n---\n\n## DataSet\uc774\ub780?\n\nDataSet\uc740 MalgnFramework\uc5d0\uc11c \ud14c\uc774\ube14 \ud615\ud0dc\uc758 \ub370\uc774\ud130\ub97c \ub2e4\ub8e8\uae30 \uc704\ud55c \ud575\uc2ec \ud074\ub798\uc2a4\uc785\ub2c8\ub2e4.\n\n### \uc8fc\uc694 \ud2b9\uc9d5\n\n- `List<Map<String, Object>>` \uad6c\uc870\n- \ub370\uc774\ud130\ubca0\uc774\uc2a4 \uc870\ud68c \uacb0\uacfc\ub97c \ub2f4\ub294 \ud45c\uc900 \ucee8\ud14c\uc774\ub108\n- \ud589(Row) \ub2e8\uc704 \uc21c\ud68c \ubc0f \uc870\uc791\n- \uc5f4(Column) \uac80\uc99d \uae30\ub2a5\n- JSON \ubcc0\ud658 \uc9c0\uc6d0\n\n---\n\n## \uae30\ubcf8 \uc0ac\uc6a9\ubc95\n\n### 1. DataSet \uc0dd\uc131\n\n```jsp\nDataSet ds = new DataSet();\nds.addRow();\nds.put(\"id\", 1);\nds.put(\"name\", \"\ud64d\uae38\ub3d9\");\nds.put(\"email\", \"hong@example.com\");\n```\n\n### 2. \ub370\uc774\ud130 \uc870\ud68c\n\n```jsp\nds.first();\nwhile(ds.next()) {\n    int id = ds.getInt(\"id\");\n    String name = ds.getString(\"name\");\n}\n```\n\n---\n\n## \ud589(Row) \uc870\uc791\n\n- addRow(): \uc0c8 \ud589 \ucd94\uac00\n- first(): \ucc98\uc74c\uc73c\ub85c \uc774\ub3d9\n- next(): \ub2e4\uc74c \ud589\uc73c\ub85c \uc774\ub3d9\n- moveRow(index): \ud2b9\uc815 \uc704\uce58\ub85c \uc774\ub3d9\n- getRow(): \ud604\uc7ac \ud589 DataMap \ubc18\ud658\n\n---\n\n## \ub370\uc774\ud130 \uac00\uc838\uc624\uae30\n\n```jsp\nString name = ds.getString(\"name\");\nint age = ds.getInt(\"age\");\nlong id = ds.getLong(\"id\");\ndouble price = ds.getDouble(\"price\");\nString title = ds.getString(\"title\", \"\uc81c\ubaa9 \uc5c6\uc74c\");\n```\n\n---\n\n## DataMap \ud074\ub798\uc2a4\n\nDataSet\uc758 \uac01 \ud589\uc740 DataMap \uac1d\uccb4\uc785\ub2c8\ub2e4.\n\n```jsp\nDataMap map = new DataMap();\nmap.put(\"subject\", \"\uc548\ub155\ud558\uc138\uc694\");\nString subject = map.getString(\"subject\");\nint status = map.getInt(\"status\");\n```\n\n### JSON \ubcc0\ud658\n\n```jsp\nString json = Json.encode(map);\n```\n\n---\n\n## \uc5f4(Column) \uac80\uc99d\n\n```jsp\nds.setCol(\"email\", \"type:email, required:Y\");\nds.setCol(\"age\", \"type:number, min:1, max:150\");\nif(!ds.validate()) {\n    m.p(\"\uac80\uc99d \uc2e4\ud328\");\n}\n```\n\n---\n\n## JSON \ucc98\ub9ac\n\n```jsp\nj.success(\"\uc870\ud68c \uc131\uacf5\", map);\nj.error(100, \"\uc798\ubabb\ub41c \uc694\uccad\uc785\ub2c8\ub2e4\");\n```\n\n---\n\n## \ub370\uc774\ud130\ubca0\uc774\uc2a4 \uc5f0\ub3d9\n\n```jsp\nUserDao user = new UserDao();\nDataSet list = user.query(\"WHERE status = 1 ORDER BY id DESC\");\nwhile(list.next()) {\n    m.p(list.getString(\"name\"));\n}\n```\n\n---\n\n## \uc720\ud2f8\ub9ac\ud2f0 \uba54\uc18c\ub4dc\n\n- \ub0a0\uc9dc/\uc2dc\uac04 \ucc98\ub9ac: m.time(), m.addDate(), m.diffDate()\n- \ubb38\uc790\uc5f4 \ucc98\ub9ac: m.cutString(), m.strpad(), Malgn.bytesToHex()\n\n---\n\n## \uc8fc\uc694 \uba54\uc18c\ub4dc \uc815\ub9ac\n\n### DataSet\n\n| \uba54\uc18c\ub4dc | \uc124\uba85 |\n|--------|------|\n| addRow() | \uc0c8 \ud589 \ucd94\uac00 |\n| first() | \uccab \ud589\uc73c\ub85c \uc774\ub3d9 |\n| next() | \ub2e4\uc74c \ud589\uc73c\ub85c \uc774\ub3d9 |\n| moveRow(index) | \ud2b9\uc815 \uc778\ub371\uc2a4\ub85c \uc774\ub3d9 |\n| getRow() | \ud604\uc7ac \ud589\uc758 DataMap \ubc18\ud658 |\n| size() | \uc804\uccb4 \ud589 \uac1c\uc218 |\n| put(key, value) | \ud604\uc7ac \ud589\uc5d0 \uac12 \uc124\uc815 |\n| getString(key) | \ubb38\uc790\uc5f4\ub85c \uac00\uc838\uc624\uae30 |\n| getInt(key) | \uc815\uc218\ub85c \uac00\uc838\uc624\uae30 |\n| setCol(name, rules) | \ucee8\ub7fc \uac80\uc99d \uaddc\uce59 \uc124\uc815 |\n| validate() | \uc804\uccb4 \ud589 \uac80\uc99d |\n\n### DataMap\n\n| \uba54\uc18c\ub4dc | \uc124\uba85 |\n|--------|------|\n| put(key, value) | \uac12 \uc124\uc815 |\n| getString(key) | \ubb38\uc790\uc5f4\ub85c \uac00\uc838\uc624\uae30 |\n| getInt(key) | \uc815\uc218\ub85c \uac00\uc838\uc624\uae30 |\n| getLong(key) | Long\uc73c\ub85c \uac00\uc838\uc624\uae30 |\n| getDouble(key) | Double\ub85c \uac00\uc838\uc624\uae30 |\n\n---\n\n[\u2190 \uc774\uc804: \ubaa9\ub85d \ubc0f \uac80\uc0c9](list-search.md) | [\ubaa9\ucc28\ub85c \ub3cc\uc544\uac00\uae30](README.md) | [\ub2e4\uc74c: XML \ucc98\ub9ac \u2192](xml.md)",
+  "sections": [
+    {
+      "heading": "DataSet\uc774\ub780?",
+      "content": "DataSet\uc740 \ud14c\uc774\ube14 \ud615\ud0dc\uc758 \ub370\uc774\ud130\ub97c \ub2e4\ub8e8\uae30 \uc704\ud55c \ud575\uc2ec \ud074\ub798\uc2a4\ub85c List<Map<String, Object>> \uad6c\uc870\ub97c \uac00\uc9d1\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\uae30\ubcf8 \uc0ac\uc6a9\ubc95",
+      "content": "DataSet \uc0dd\uc131, \ud589 \ucd94\uac00, \ub370\uc774\ud130 \uc870\ud68c \ubc29\ubc95\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\ud589(Row) \uc870\uc791",
+      "content": "addRow, first, next, moveRow, getRow \ub4f1\uc758 \ud589 \uc870\uc791 \uba54\uc18c\ub4dc\ub97c \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\ub370\uc774\ud130 \uac00\uc838\uc624\uae30",
+      "content": "getString, getInt, getLong, getDouble \ub4f1 \ud0c0\uc785\ubcc4 \uba54\uc18c\ub4dc\uc640 \uae30\ubcf8\uac12 \uc124\uc815\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "DataMap \ud074\ub798\uc2a4",
+      "content": "DataSet\uc758 \uac01 \ud589\uc778 DataMap \uac1d\uccb4\uc758 \uc0ac\uc6a9\ubc95\uacfc JSON \ubcc0\ud658\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\uc5f4(Column) \uac80\uc99d",
+      "content": "setCol()\uacfc validate()\ub97c \uc0ac\uc6a9\ud55c \ucee8\ub7fc \uac80\uc99d \ubc29\ubc95\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "JSON \ucc98\ub9ac",
+      "content": "Json \ud074\ub798\uc2a4\ub97c \uc0ac\uc6a9\ud55c JSON \uc751\ub2f5 \ucc98\ub9ac\ub97c \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\ub370\uc774\ud130\ubca0\uc774\uc2a4 \uc5f0\ub3d9",
+      "content": "DataObject\ub97c \uc0ac\uc6a9\ud55c DB \uc870\ud68c \uacb0\uacfc\ub97c DataSet\uc73c\ub85c \ucc98\ub9ac\ud558\ub294 \ubc29\ubc95\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\uc720\ud2f8\ub9ac\ud2f0 \uba54\uc18c\ub4dc",
+      "content": "\ub0a0\uc9dc/\uc2dc\uac04 \ucc98\ub9ac\uc640 \ubb38\uc790\uc5f4 \ucc98\ub9ac \uc720\ud2f8\ub9ac\ud2f0 \uba54\uc18c\ub4dc\ub97c \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\uc8fc\uc694 \uba54\uc18c\ub4dc \uc815\ub9ac",
+      "content": "DataSet\uacfc DataMap \ud074\ub798\uc2a4\uc758 \uc8fc\uc694 \uba54\uc18c\ub4dc\ub97c \ud45c\ub85c \uc815\ub9ac\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\ubca0\uc2a4\ud2b8 \ud504\ub799\ud2f0\uc2a4",
+      "content": "null \uccb4\ud06c, \ud0c0\uc785 \uba85\uc2dc, \uc21c\ud68c \ud328\ud134 \ub4f1\uc758 \ubca0\uc2a4\ud2b8 \ud504\ub799\ud2f0\uc2a4\ub97c \uc81c\uacf5\ud569\ub2c8\ub2e4."
+    }
+  ],
+  "related_docs": ["database", "dataobject", "list-search", "json", "xml", "form-validation", "utility-methods"],
+  "related_classes": ["DataSet", "DataObject", "Malgn", "Json", "ListManager", "Page", "Form"]
+}

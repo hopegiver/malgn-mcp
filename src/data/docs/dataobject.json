@@ -1,0 +1,58 @@
+{
+  "slug": "dataobject",
+  "title": "5-1. DataObject \ud074\ub798\uc2a4",
+  "category": "core",
+  "content": "# 5-1. DataObject \ud074\ub798\uc2a4\n\n[\u2190 \ubaa9\ucc28\ub85c \ub3cc\uc544\uac00\uae30](README.md)\n\n---\n\n## \uac1c\uc694\n\nDataObject\ub294 \ub9d1\uc740\ud504\ub808\uc784\uc6cc\ud06c\uc758 \ud575\uc2ec DAO(Data Access Object) \ubca0\uc774\uc2a4 \ud074\ub798\uc2a4\uc785\ub2c8\ub2e4. \ubaa8\ub4e0 \ub370\uc774\ud130 \uc811\uadfc \ub85c\uc9c1\uc744 \ub2e8\uc21c\ud654\ud558\uace0 \ud45c\uc900\ud654\ud558\uc5ec \ub370\uc774\ud130\ubca0\uc774\uc2a4 \uc791\uc5c5\uc744 \uc27d\uac8c \ucc98\ub9ac\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.\n\n### \uc8fc\uc694 \ud2b9\uc9d5\n\n- **DAO \ud328\ud134 \uad6c\ud604**: \ud14c\uc774\ube14\ubcc4 \ud074\ub798\uc2a4 \uc0dd\uc131\n- **CRUD \uc790\ub3d9\ud654**: insert, update, delete, find \uba54\uc18c\ub4dc \uc81c\uacf5\n- **SQL \ube4c\ub354**: \uc870\uac74\uc808, \uc815\ub82c, \uc870\uc778 \ub4f1 \ub3d9\uc801 SQL \uc0dd\uc131\n- **\ud2b8\ub79c\uc7ad\uc158 \uad00\ub9ac**: \uac04\ud3b8\ud55c \ud2b8\ub79c\uc7ad\uc158 \ucc98\ub9ac\n- **PreparedStatement**: SQL Injection \ubc29\uc9c0\n- **\ub2e4\uc911 DBMS \uc9c0\uc6d0**: MySQL, Oracle, MSSQL, DB2 \ub4f1\n\n---\n\n## DAO \ud074\ub798\uc2a4 \uc791\uc131\n\n```java\nimport malgnsoft.db.*;\n\npublic class UserDao extends DataObject {\n    public UserDao() {\n        this.table = \"tb_user\";\n        this.PK = \"id\";\n    }\n}\n```\n\n---\n\n## \ub370\uc774\ud130 \uc870\ud68c\n\n### find() - \ub808\ucf54\ub4dc \uc870\ud68c\n\n```jsp\nUserDao user = new UserDao();\nDataSet info = user.get(123);\nDataSet info2 = user.find(\"email = ?\", new Object[] { \"hong@example.com\" });\nDataSet list = user.find(\"status = 1\", \"*\", \"reg_date DESC\", 10);\n```\n\n### query() - \uc9c1\uc811 SQL \uc2e4\ud589\n\n```jsp\nDataSet list = user.query(\"SELECT * FROM tb_user WHERE status = 1 ORDER BY id DESC\");\n```\n\n---\n\n## \ub370\uc774\ud130 \uc785\ub825\n\n```jsp\nUserDao user = new UserDao();\nuser.item(\"name\", \"\ud64d\uae38\ub3d9\");\nuser.item(\"email\", \"hong@example.com\");\nif(user.insert()) {\n    int newId = user.getInsertId();\n}\n```\n\n---\n\n## \ub370\uc774\ud130 \uc218\uc815\n\n```jsp\nuser.item(\"name\", \"\uae40\ucca0\uc218\");\nif(user.update()) {\n    m.jsAlert(\"\uc218\uc815\ub418\uc5c8\uc2b5\ub2c8\ub2e4.\");\n}\n```\n\n---\n\n## \ub370\uc774\ud130 \uc0ad\uc81c\n\n```jsp\nif(user.delete(123)) {\n    m.p(\"\uc0ad\uc81c \uc644\ub8cc\");\n}\n```\n\n---\n\n## \ub3d9\uc801 SQL \ube4c\ub354\n\n### addWhere() - \uace0\uc815 \uc870\uac74 \ucd94\uac00\n\n```jsp\nuser.addWhere(\"status = 1\");\nuser.addWhere(\"type = ?\", new Object[] { \"premium\" });\nDataSet list = user.find();\n```\n\n### addSearch() - \ub3d9\uc801 \uac80\uc0c9 \uc870\uac74\n\n```jsp\nuser.addSearch(\"name,email\", keyword, \"LIKE\");\nuser.addSearch(\"age\", minAge, \">=\");\n```\n\n---\n\n## \uc870\uc778 \ucffc\ub9ac\n\n```jsp\nuser.setTable(\"tb_user u\");\nuser.addJoin(\"tb_city c\", \"INNER\", \"u.city_id = c.id\");\nuser.setFields(\"u.*, c.name AS city_name\");\n```\n\n---\n\n## \uc9d1\uacc4 \ud568\uc218\n\n```jsp\nint total = user.findCount(\"status = 1\");\nString email = user.getOne(\"SELECT email FROM tb_user WHERE id = ?\", new Object[] { 123 });\nint count = user.getOneInt(\"SELECT COUNT(*) FROM tb_user WHERE status = 1\");\n```\n\n---\n\n## \ud2b8\ub79c\uc7ad\uc158\n\n### \ub2e8\uc77c DAO \ud2b8\ub79c\uc7ad\uc158\n\n```jsp\nuser.startTrans();\nuser.insert();\nuser.endTrans();\n```\n\n### \uc5ec\ub7ec DAO \ud2b8\ub79c\uc7ad\uc158\n\n```jsp\nuser.startTransWith(order, point);\n// \uc5ec\ub7ec DAO \uc791\uc5c5...\nuser.endTrans();\n```\n\n---\n\n## \uc2dc\ud000\uc2a4 \uad00\ub9ac\n\n```jsp\nint seq = user.getSequence(\"tb_user\");\nlong id = user.getNextId();\n```\n\n---\n\n## SQL \ud568\uc218 \ud65c\uc6a9\n\n```jsp\nuser.item(\"reg_date\", \"\", \"NOW()\");\nuser.item(\"view_count\", \"\", \"view_count + 1\");\n```\n\n---\n\n## \uace0\uae09 \uae30\ub2a5\n\n- setInsertIgnore() - \uc911\ubcf5 \ubb34\uc2dc\n- setFields() - \uc870\ud68c \ud544\ub4dc \uc9c0\uc815\n- \ub514\ubc84\uadf8 \ubaa8\ub4dc\n- getQuery() - \uc0dd\uc131\ub41c SQL \ud655\uc778\n\n---\n\n[\u2190 \uc774\uc804: \ub370\uc774\ud130\ubca0\uc774\uc2a4 \uc5f0\ub3d9](database.md) | [\ubaa9\ucc28\ub85c \ub3cc\uc544\uac00\uae30](README.md) | [\ub2e4\uc74c: \ub370\uc774\ud130 \uc785\ub825 \ubc0f \uc720\ud6a8\uc131 \uccb4\ud06c \u2192](form-validation.md)",
+  "sections": [
+    {
+      "heading": "\uac1c\uc694",
+      "content": "DataObject\ub294 \ub9d1\uc740\ud504\ub808\uc784\uc6cc\ud06c\uc758 \ud575\uc2ec DAO \ubca0\uc774\uc2a4 \ud074\ub798\uc2a4\ub85c DAO \ud328\ud134, CRUD \uc790\ub3d9\ud654, SQL \ube4c\ub354, \ud2b8\ub79c\uc7ad\uc158, PreparedStatement, \ub2e4\uc911 DBMS \uc9c0\uc6d0\uc744 \ud2b9\uc9d5\uc73c\ub85c \ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "DAO \ud074\ub798\uc2a4 \uc791\uc131",
+      "content": "DataObject\ub97c \uc0c1\uc18d\ubc1b\uc544 \ud14c\uc774\ube14\ubcc4 DAO \ud074\ub798\uc2a4\ub97c \uc791\uc131\ud558\ub294 \ubc29\ubc95\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\ub370\uc774\ud130 \uc870\ud68c",
+      "content": "find(), get(), query() \uba54\uc18c\ub4dc\uc640 \ud30c\ub77c\ubbf8\ud130 \ubc14\uc778\ub529\uc744 \ud1b5\ud55c \ub370\uc774\ud130 \uc870\ud68c \ubc29\ubc95\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\ub370\uc774\ud130 \uc785\ub825",
+      "content": "item()\uacfc insert() \uba54\uc18c\ub4dc, \ud0c0\uc785\ubcc4 item, replace() \ub4f1\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\ub370\uc774\ud130 \uc218\uc815",
+      "content": "Primary Key\ub85c \uc218\uc815, \uc870\uac74\uc808\ub85c \uc218\uc815\ud558\ub294 \ubc29\ubc95\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\ub3d9\uc801 SQL \ube4c\ub354",
+      "content": "addWhere(), addSearch(), setOrderBy(), setLimit() \ub4f1\uc758 SQL \ube4c\ub354 \uba54\uc18c\ub4dc\ub97c \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\uc870\uc778 \ucffc\ub9ac",
+      "content": "addJoin(), addLeftJoin()\uc744 \uc0ac\uc6a9\ud55c \uc870\uc778 \ucffc\ub9ac \ubc29\ubc95\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\uc9d1\uacc4 \ud568\uc218",
+      "content": "findCount(), getOne(), getOneInt() \ub4f1\uc758 \uc9d1\uacc4 \ud568\uc218\ub97c \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\ud2b8\ub79c\uc7ad\uc158",
+      "content": "\ub2e8\uc77c DAO \ud2b8\ub79c\uc7ad\uc158\uacfc \uc5ec\ub7ec DAO \ud2b8\ub79c\uc7ad\uc158 \ucc98\ub9ac \ubc29\ubc95\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\uc2dc\ud000\uc2a4 \uad00\ub9ac",
+      "content": "getSequence(), getNextId()\ub97c \uc0ac\uc6a9\ud55c \uc2dc\ud000\uc2a4 \ubc88\ud638 \uc0dd\uc131\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "SQL \ud568\uc218 \ud65c\uc6a9",
+      "content": "item()\uc5d0\uc11c SQL \ud568\uc218\ub97c \uc0ac\uc6a9\ud558\ub294 \ubc29\ubc95\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\uace0\uae09 \uae30\ub2a5",
+      "content": "INSERT IGNORE, \ud544\ub4dc \uc9c0\uc815, \ub514\ubc84\uadf8, \uc0dd\uc131\ub41c SQL \ud655\uc778 \ub4f1\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    }
+  ],
+  "related_docs": ["database", "list-search", "dataset", "form-validation", "coding-principles"],
+  "related_classes": ["DataObject", "DataSet", "Malgn", "Form", "Page", "ListManager"]
+}

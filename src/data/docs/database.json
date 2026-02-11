@@ -1,0 +1,50 @@
+{
+  "slug": "database",
+  "title": "5. \ub370\uc774\ud130\ubca0\uc774\uc2a4 \uc5f0\ub3d9",
+  "category": "core",
+  "content": "# 5. \ub370\uc774\ud130\ubca0\uc774\uc2a4 \uc5f0\ub3d9\n\n[\u2190 \ubaa9\ucc28\ub85c \ub3cc\uc544\uac00\uae30](README.md)\n\n---\n\n## DataObject \ud074\ub798\uc2a4\n\n\ub370\uc774\ud130\ubca0\uc774\uc2a4 \uc5f0\ub3d9\uc744 \uc704\ud55c \uae30\ubcf8 \ud074\ub798\uc2a4\uc785\ub2c8\ub2e4.\n\n### \uae30\ubcf8 \uc0ac\uc6a9\ubc95\n\n```jsp\nDataObject dao = new DataObject();\nDataSet list = dao.query(\"SELECT name, email FROM tb_user\");\n\np.setLoop(\"list\", list);\n```\n\n### \ub514\ubc84\uae45\n\n```jsp\ndao.setDebug(out);  // \ube0c\ub77c\uc6b0\uc800\uc5d0 SQL \ucd9c\ub825\ndao.setDebug();     // \ub85c\uadf8\ud30c\uc77c\uc5d0 SQL \ucd9c\ub825\n```\n\n---\n\n## DAO \ud074\ub798\uc2a4 \uc791\uc131\n\n### \uae30\ubcf8 \uad6c\uc870\n\n```java\npackage dao;\n\nimport malgnsoft.db.*;\n\npublic class UserDao extends DataObject {\n    public UserDao() {\n        this.table = \"tb_user\";\n    }\n}\n```\n\n---\n\n## \ub370\uc774\ud130 \uc870\ud68c (SELECT)\n\n### query() \uba54\uc18c\ub4dc\n\n```jsp\nDataSet list = user.query(\"SELECT * FROM tb_user\");\nDataSet list = user.query(\"SELECT * FROM tb_user\", 5);\n```\n\n### find() \uba54\uc18c\ub4dc\n\n```jsp\nDataSet info = user.find(\"id = 'hong'\");\nDataSet list = user.find(\"status = 1 AND type = '02'\");\n```\n\n### \ub2e8\uc77c \ub808\ucf54\ub4dc \ucc98\ub9ac\n\n```jsp\nDataSet info = user.find(\"id = 'hong'\");\nif(!info.next()) {\n    m.jsError(\"\ud68c\uc6d0\uc815\ubcf4\ub97c \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.\");\n    return;\n}\n```\n\n---\n\n## \ub370\uc774\ud130 \ub4f1\ub85d (INSERT)\n\n```jsp\nUserDao user = new UserDao();\nuser.item(\"name\", \"\ud64d\uae38\ub3d9\");\nuser.item(\"email\", \"hong@gmail.com\");\nuser.item(\"reg_date\", \"NOW()\", \"function\");\n\nif(user.insert()) {\n    m.jsAlert(\"\ub4f1\ub85d\ub418\uc5c8\uc2b5\ub2c8\ub2e4.\");\n}\n```\n\n---\n\n## \ub370\uc774\ud130 \uc218\uc815 (UPDATE)\n\n```jsp\nUserDao user = new UserDao();\nuser.item(\"email\", \"newemail@gmail.com\");\nif(user.update(\"id = 'hong'\")) {\n    m.jsAlert(\"\uc218\uc815\ub418\uc5c8\uc2b5\ub2c8\ub2e4.\");\n}\n```\n\n---\n\n## \ub370\uc774\ud130 \uc0ad\uc81c (DELETE)\n\n```jsp\nUserDao user = new UserDao();\nif(user.delete(\"id = 'hong'\")) {\n    m.jsAlert(\"\uc0ad\uc81c\ub418\uc5c8\uc2b5\ub2c8\ub2e4.\");\n}\n```\n\n---\n\n## \uc8fc\uc694 \uba54\uc18c\ub4dc\n\n| \uba54\uc18c\ub4dc | \uc124\uba85 | \ubc18\ud658 |\n|--------|------|------|\n| query(sql) | SELECT \ucffc\ub9ac \uc2e4\ud589 | DataSet |\n| execute(sql) | INSERT/UPDATE/DELETE \uc2e4\ud589 | int |\n| find(where) | \uc870\uac74\uc73c\ub85c \uac80\uc0c9 | DataSet |\n| item(key, value) | \ub370\uc774\ud130 \ud56d\ubaa9 \uc124\uc815 | void |\n| insert() | \ub370\uc774\ud130 \uc0bd\uc785 | boolean |\n| update(where) | \ub370\uc774\ud130 \uc218\uc815 | boolean |\n| delete(where) | \ub370\uc774\ud130 \uc0ad\uc81c | boolean |\n| setOrderBy(order) | \uc815\ub82c \uc124\uc815 | void |\n| setDebug(out) | \ub514\ubc84\uae45 \uc124\uc815 | void |\n\n---\n\n## \uc77d\uae30/\uc4f0\uae30 \ubd84\ub9ac (Read/Write Splitting)\n\n### config.xml \uc124\uc815\n\n```xml\n<config>\n    <env>\n        <jndi>jdbc/myapp</jndi>\n        <rojndi>jdbc/myapp_ro</rojndi>\n    </env>\n</config>\n```\n\n### \uc790\ub3d9 \ubd84\ub9ac \uc6d0\ub9ac\n\n- **INSERT, UPDATE, DELETE**: `jndi` (Master DB) \uc0ac\uc6a9\n- **SELECT**: `rojndi` (Slave DB) \uc0ac\uc6a9\n\n---\n\n## \ub2e4\uc911 \ub370\uc774\ud130\ubca0\uc774\uc2a4 \uc5f0\ub3d9\n\n```jsp\nLogDao logDao = new LogDao();\nlogDao.setJndi(\"jdbc/log_db\");\nlogDao.item(\"action\", \"login\");\nlogDao.insert();\n```\n\n---\n\n## \ud2b8\ub79c\uc7ad\uc158\n\n```jsp\nDataObject dao = new DataObject();\ntry {\n    dao.beginTransaction();\n    dao.execute(\"INSERT INTO tb_user ...\");\n    dao.execute(\"UPDATE tb_point ...\");\n    dao.commit();\n} catch(Exception e) {\n    dao.rollback();\n}\n```\n\n---\n\n[\u2190 \uc774\uc804: \ub9d1\uc740\ud15c\ud50c\ub9bf](template.md) | [\ubaa9\ucc28\ub85c \ub3cc\uc544\uac00\uae30](README.md) | [\ub2e4\uc74c: \ub370\uc774\ud130 \uc785\ub825 \ubc0f \uc720\ud6a8\uc131 \uccb4\ud06c \u2192](form-validation.md)",
+  "sections": [
+    {
+      "heading": "DataObject \ud074\ub798\uc2a4",
+      "content": "\ub370\uc774\ud130\ubca0\uc774\uc2a4 \uc5f0\ub3d9\uc744 \uc704\ud55c \uae30\ubcf8 \ud074\ub798\uc2a4\uc785\ub2c8\ub2e4. \uae30\ubcf8 \uc0ac\uc6a9\ubc95\uacfc \ub514\ubc84\uae45\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "DAO \ud074\ub798\uc2a4 \uc791\uc131",
+      "content": "DataObject\ub97c \uc0c1\uc18d\ubc1b\uc544 \ud14c\uc774\ube14\ubcc4 DAO \ud074\ub798\uc2a4\ub97c \uc791\uc131\ud558\ub294 \ubc29\ubc95\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\ub370\uc774\ud130 \uc870\ud68c (SELECT)",
+      "content": "query(), find() \uba54\uc18c\ub4dc\ub97c \uc0ac\uc6a9\ud55c \ub370\uc774\ud130 \uc870\ud68c \ubc29\ubc95\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\ub370\uc774\ud130 \ub4f1\ub85d (INSERT)",
+      "content": "item()\uacfc insert() \uba54\uc18c\ub4dc\ub97c \uc0ac\uc6a9\ud55c \ub370\uc774\ud130 \ub4f1\ub85d \ubc29\ubc95\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\ub370\uc774\ud130 \uc218\uc815 (UPDATE)",
+      "content": "item()\uacfc update() \uba54\uc18c\ub4dc\ub97c \uc0ac\uc6a9\ud55c \ub370\uc774\ud130 \uc218\uc815 \ubc29\ubc95\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\ub370\uc774\ud130 \uc0ad\uc81c (DELETE)",
+      "content": "delete() \uba54\uc18c\ub4dc\ub97c \uc0ac\uc6a9\ud55c \ub370\uc774\ud130 \uc0ad\uc81c \ubc29\ubc95\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\uc8fc\uc694 \uba54\uc18c\ub4dc",
+      "content": "query, execute, find, item, insert, update, delete, setOrderBy, setDebug \ub4f1\uc758 \uc8fc\uc694 \uba54\uc18c\ub4dc\ub97c \ud45c\ub85c \uc815\ub9ac\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\uc77d\uae30/\uc4f0\uae30 \ubd84\ub9ac (Read/Write Splitting)",
+      "content": "Master-Slave \uad6c\uc870\ub97c \ud1b5\ud55c \uc77d\uae30/\uc4f0\uae30 \ubd84\ub9ac \uc124\uc815\uacfc \uc790\ub3d9 \ubd84\ub9ac \uc6d0\ub9ac\ub97c \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\ub2e4\uc911 \ub370\uc774\ud130\ubca0\uc774\uc2a4 \uc5f0\ub3d9",
+      "content": "setJndi()\ub97c \uc0ac\uc6a9\ud558\uc5ec \uc5ec\ub7ec \ub370\uc774\ud130\ubca0\uc774\uc2a4\ub97c \ub3d9\uc2dc\uc5d0 \uc0ac\uc6a9\ud558\ub294 \ubc29\ubc95\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    },
+    {
+      "heading": "\ud2b8\ub79c\uc7ad\uc158",
+      "content": "\uc218\ub3d9 \ud2b8\ub79c\uc7ad\uc158 \ucc98\ub9ac \ubc29\ubc95\uc744 \uc124\uba85\ud569\ub2c8\ub2e4."
+    }
+  ],
+  "related_docs": ["dataobject", "template", "form-validation", "list-search", "dataset", "configuration"],
+  "related_classes": ["DataObject", "DataSet", "Malgn", "Page", "ListManager", "DB"]
+}

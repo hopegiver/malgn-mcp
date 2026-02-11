@@ -1,0 +1,19 @@
+{
+  "slug": "oauth",
+  "title": "OAuth 소셜 로그인",
+  "category": "security",
+  "content": "# OAuth 소셜 로그인\n\n맑은프레임워크의 OAuthClient 클래스는 구글, 네이버, 카카오, 페이스북 등의 소셜 로그인을 간편하게 구현할 수 있게 합니다.\n\n## 목차\n\n- [OAuth 개요](#oauth-개요)\n- [기본 설정](#기본-설정)\n- [인증 플로우](#인증-플로우)\n- [지원 플랫폼](#지원-플랫폼)\n- [프로필 정보](#프로필-정보)\n- [실제 구현 예제](#실제-구현-예제)\n\n---\n\n## OAuth 개요\n\n### OAuth 2.0이란?\n\nOAuth 2.0은 사용자가 비밀번호를 공유하지 않고도 다른 웹사이트에서 자신의 정보에 접근할 수 있도록 하는 개방형 표준 프로토콜입니다.\n\n### 인증 프로세스\n\n1. **인증 요청**: 사용자를 OAuth 제공자의 로그인 페이지로 리다이렉트\n2. **사용자 승인**: 사용자가 로그인하고 권한 승인\n3. **인증 코드 수신**: 콜백 URL로 인증 코드 반환\n4. **액세스 토큰 교환**: 인증 코드를 액세스 토큰으로 교환\n5. **프로필 조회**: 액세스 토큰으로 사용자 정보 가져오기\n\n---\n\n## 기본 설정\n\n### OAuth 클라이언트 생성\n\n```jsp\nOAuthClient oauth = new OAuthClient(request, session);\noauth.setDebug(out);\n```\n\n### 클라이언트 정보 설정\n\n```jsp\n// 방법 1: 수동 설정\noauth.setClient(\"google\", \"your-client-id\", \"your-client-secret\");\n\n// 방법 2: 콜백 URL 지정\noauth.setClient(\"naver\", \"client-id\", \"client-secret\", \"https://yoursite.com/callback\");\n```\n\n---\n\n## 인증 플로우\n\n### 1단계: 로그인 버튼\n\n```jsp\nOAuthClient oauth = new OAuthClient(request, session);\noauth.setClient(\"google\", \"your-google-client-id\", \"your-google-client-secret\");\nString googleAuthUrl = oauth.getAuthUrl();\n```\n\n### 2단계: 콜백 처리\n\n```jsp\nString code = m.rs(\"code\");\nString state = m.rs(\"state\");\n\nif(!oauth.isValidState(state)) {\n    m.jsError(\"잘못된 요청입니다\");\n    return;\n}\n\nHashMap<String, Object> profile = oauth.getProfile(code);\n```\n\n---\n\n## 지원 플랫폼\n\n- 구글 (Google)\n- 네이버 (Naver)\n- 카카오 (Kakao)\n- 페이스북 (Facebook)\n\n---\n\n## 프로필 정보\n\n각 플랫폼마다 반환하는 프로필 정보가 다릅니다. 공통 필드: id, email, name\n\n---\n\n## 보안 고려사항\n\n- CSRF 공격 방지 (State 파라미터)\n- 클라이언트 시크릿 보호 (Config.get() 사용)\n\n---\n\n## 관련 문서\n\n- [인증 처리](authentication.md) - Auth 클래스\n- [HTTP 클라이언트](http-client.md) - OAuth가 내부적으로 사용\n- [JSON 처리](json.md) - 프로필 데이터 파싱\n- [환경설정 및 캐시](configuration.md) - OAuth 설정 관리",
+  "sections": [
+    { "heading": "OAuth 개요", "content": "OAuth 2.0 프로토콜 설명과 인증 요청, 사용자 승인, 인증 코드 수신, 액세스 토큰 교환, 프로필 조회의 5단계 인증 프로세스입니다." },
+    { "heading": "기본 설정", "content": "OAuthClient 객체 생성과 클라이언트 정보 설정(수동 설정, 콜백 URL 지정, 개별 설정) 방법입니다." },
+    { "heading": "인증 플로우", "content": "로그인 버튼(1단계)과 콜백 처리(2단계)의 인증 플로우입니다." },
+    { "heading": "지원 플랫폼", "content": "구글, 네이버, 카카오, 페이스북 등의 지원 플랫폼과 각 플랫폼별 클라이언트 ID 발급 방법입니다." },
+    { "heading": "프로필 정보", "content": "각 플랫폼(구글, 네이버, 카카오)별 프로필 데이터 구조와 접근 방법입니다." },
+    { "heading": "실제 구현 예제", "content": "다중 소셜 로그인(login.jsp, oauth_request.jsp, oauth_callback.jsp)과 데이터베이스 스키마 예제입니다." },
+    { "heading": "보안 고려사항", "content": "CSRF 공격 방지(State 파라미터)와 클라이언트 시크릿 보호 방법입니다." },
+    { "heading": "에러 처리", "content": "OAuth 제공자 에러 반환 및 프로필 조회 실패 시 에러 처리 방법입니다." },
+    { "heading": "추가 기능", "content": "연동 해제와 기존 계정에 OAuth 연동 추가 기능입니다." }
+  ],
+  "related_docs": ["authentication", "http-client", "encryption"],
+  "related_classes": ["Malgn", "Auth", "Form", "Page", "DataSet"]
+}
