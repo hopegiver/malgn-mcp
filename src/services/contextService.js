@@ -69,11 +69,21 @@ export class ContextService {
       critical: (allRules.rules || [])
         .filter(r => r.severity === 'error')
         .slice(0, 10)
-        .map(r => r.rule),
+        .map(r => ({
+          id: r.id,
+          rule: r.rule,
+          correct: r.correct || null,
+          incorrect: r.incorrect || null
+        })),
       relevant: (allRules.rules || [])
         .filter(r => r.severity === 'warning')
         .slice(0, 5)
-        .map(r => r.rule)
+        .map(r => ({
+          id: r.id,
+          rule: r.rule,
+          correct: r.correct || null,
+          incorrect: r.incorrect || null
+        }))
     };
   }
 

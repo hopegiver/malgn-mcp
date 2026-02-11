@@ -1,17 +1,21 @@
 const ANTIPATTERNS = [
   // 존재하지 않는 메소드
   { pattern: /m\.getInt\s*\(/, code: 'INVALID_METHOD', severity: 'error',
-    message: 'm.getInt() 메소드는 존재하지 않습니다.', suggestion: 'm.ri()를 사용하세요.' },
+    message: 'm.getInt() 메소드는 존재하지 않습니다.', suggestion: 'm.ri()를 사용하세요.',
+    fix: { search: /m\.getInt\s*\(/, replace: 'm.ri(' } },
   { pattern: /m\.getString\s*\(/, code: 'INVALID_METHOD', severity: 'error',
-    message: 'm.getString() 메소드는 존재하지 않습니다.', suggestion: 'm.rs()를 사용하세요.' },
+    message: 'm.getString() 메소드는 존재하지 않습니다.', suggestion: 'm.rs()를 사용하세요.',
+    fix: { search: /m\.getString\s*\(/, replace: 'm.rs(' } },
   { pattern: /m\.isSet\s*\(/, code: 'INVALID_METHOD', severity: 'error',
     message: 'm.isSet() 메소드는 존재하지 않습니다.',
     suggestion: 'm.rs()로 받은 후 !"".equals() 체크하세요.' },
   { pattern: /m\.getParameter\s*\(/, code: 'INVALID_METHOD', severity: 'error',
-    message: 'm.getParameter()는 사용하지 마세요.', suggestion: 'm.rs() 또는 m.ri()를 사용하세요.' },
+    message: 'm.getParameter()는 사용하지 마세요.', suggestion: 'm.rs() 또는 m.ri()를 사용하세요.',
+    fix: { search: /m\.getParameter\s*\(/, replace: 'm.rs(' } },
   { pattern: /request\.getParameter\s*\(/, code: 'RAW_PARAMETER', severity: 'error',
     message: 'request.getParameter() 직접 사용 금지.',
-    suggestion: 'GET: m.rs()/m.ri(), POST: f.get()/f.getInt() 사용.' },
+    suggestion: 'GET: m.rs()/m.ri(), POST: f.get()/f.getInt() 사용.',
+    fix: { search: /request\.getParameter\s*\(/, replace: 'm.rs(' } },
 
   // 명명 규칙 위반
   { pattern: /(\w+)Dao\s+\1Dao\s*=/, code: 'NAMING_VIOLATION', severity: 'error',
@@ -19,7 +23,8 @@ const ANTIPATTERNS = [
     suggestion: 'UserDao user = new UserDao(); 형태로 사용하세요.' },
   { pattern: /DataSet\s+ds\s*=/, code: 'NAMING_VIOLATION', severity: 'error',
     message: "DataSet 변수명으로 'ds'를 사용하지 마세요.",
-    suggestion: '단일: info/data, 복수: list 또는 xxxList를 사용하세요.' },
+    suggestion: '단일: info/data, 복수: list 또는 xxxList를 사용하세요.',
+    fix: { search: /DataSet\s+ds\s*=/, replace: 'DataSet info =' } },
 
   // 보안 위반
   { pattern: /query\s*\(\s*"[^"]*'\s*\+/, code: 'SQL_INJECTION', severity: 'error',
@@ -78,15 +83,26 @@ export class ValidateService {
       let match;
 
       while ((match = regex.exec(code)) !== null) {
-        const line = code.substring(0, match.index).split('\n').length;
+        const beforeMatch = code.substring(0, match.index);
+        const line = beforeMatch.split('\n').length;
+        const lastNewline = beforeMatch.lastIndexOf('\n');
+        const column = match.index - lastNewline;
 
-        issues.push({
+        const issue = {
           line,
+          column,
           severity: ap.severity,
           code: ap.code,
           message: ap.message,
+          matched: match[0],
           suggestion: ap.suggestion
-        });
+        };
+
+        if (ap.fix) {
+          issue.fix = match[0].replace(new RegExp(ap.fix.search.source), ap.fix.replace);
+        }
+
+        issues.push(issue);
       }
     }
 
