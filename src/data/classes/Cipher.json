@@ -1,0 +1,83 @@
+{
+  "name": "Cipher",
+  "fullClassName": "malgnsoft.util.AES",
+  "category": "security",
+  "description": "AES 암호화/복호화 (CBC 모드, PKCS5 패딩). 16/24/32바이트 키 지원.",
+  "variable_name": "aes",
+  "initialization": "AES aes = new AES(key);",
+  "initialized_in": "필요 시 직접 생성",
+  "methods": [
+    {
+      "name": "constructor",
+      "signature": "AES(String key)",
+      "description": "암호화 키로 생성",
+      "returnType": "AES",
+      "parameters": [{"name": "key", "type": "String", "description": "암호화 키 (16/24/32바이트)"}],
+      "usage": "AES aes = new AES(\"0123456789abcdef\");",
+      "notes": "키 길이에 따라 AES-128/192/256 자동 결정.",
+      "related": []
+    },
+    {
+      "name": "constructor",
+      "signature": "AES(String key, String iv)",
+      "description": "키와 IV로 생성",
+      "returnType": "AES",
+      "parameters": [
+        {"name": "key", "type": "String", "description": "암호화 키"},
+        {"name": "iv", "type": "String", "description": "초기화 벡터 (16바이트)"}
+      ],
+      "usage": "AES aes = new AES(key, iv);",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "encrypt",
+      "signature": "String encrypt(String value)",
+      "description": "문자열 암호화 (Base64 인코딩 결과)",
+      "returnType": "String",
+      "parameters": [{"name": "value", "type": "String", "description": "평문"}],
+      "usage": "String encrypted = aes.encrypt(\"민감한 정보\");",
+      "notes": "결과는 Base64 인코딩된 문자열.",
+      "related": ["decrypt()"]
+    },
+    {
+      "name": "decrypt",
+      "signature": "String decrypt(String value)",
+      "description": "Base64 암호문 복호화",
+      "returnType": "String",
+      "parameters": [{"name": "value", "type": "String", "description": "암호문 (Base64)"}],
+      "usage": "String decrypted = aes.decrypt(encrypted);",
+      "notes": "",
+      "related": ["encrypt()"]
+    },
+    {
+      "name": "setKey",
+      "signature": "void setKey(String keyString)",
+      "description": "암호화 키 변경",
+      "returnType": "void",
+      "parameters": [{"name": "keyString", "type": "String", "description": "새 키"}],
+      "usage": "aes.setKey(\"new-16byte-key!!\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "setKeyFile",
+      "signature": "void setKeyFile(String keyPath, String ivPath)",
+      "description": "키/IV를 파일에서 로드",
+      "returnType": "void",
+      "parameters": [
+        {"name": "keyPath", "type": "String", "description": "키 파일 경로"},
+        {"name": "ivPath", "type": "String", "description": "IV 파일 경로"}
+      ],
+      "usage": "aes.setKeyFile(\"/secure/key.hex\", \"/secure/iv.hex\");",
+      "notes": "파일에 hex 문자열로 저장.",
+      "related": []
+    }
+  ],
+  "method_count": 6,
+  "important_rules": [
+    "비밀번호는 Malgn.sha256()으로 해시 (AES X)",
+    "개인정보 등 양방향 암호화가 필요한 경우에만 AES 사용",
+    "SimpleAES 클래스로 static 간편 사용 가능"
+  ]
+}

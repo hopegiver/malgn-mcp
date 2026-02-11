@@ -1,0 +1,138 @@
+{
+  "name": "JSONArray",
+  "fullClassName": "malgnsoft.json.JSONArray",
+  "category": "web",
+  "description": "JSON 배열 파서/빌더. 순서가 있는 값의 시퀀스. 타입 변환, 인덱스 접근, Iterable 지원.",
+  "variable_name": "ja",
+  "initialization": "JSONArray ja = new JSONArray();",
+  "initialized_in": "필요 시 직접 생성 또는 JSON 문자열에서 파싱",
+  "methods": [
+    {
+      "name": "constructor (parse)",
+      "signature": "JSONArray(String source)",
+      "description": "JSON 문자열에서 파싱하여 생성",
+      "returnType": "JSONArray",
+      "parameters": [{"name": "source", "type": "String", "description": "JSON 배열 문자열"}],
+      "usage": "JSONArray ja = new JSONArray(\"[1,2,3]\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "constructor (collection)",
+      "signature": "JSONArray(Collection<?> collection)",
+      "description": "Collection에서 JSONArray 생성",
+      "returnType": "JSONArray",
+      "parameters": [{"name": "collection", "type": "Collection", "description": "소스 컬렉션"}],
+      "usage": "JSONArray ja = new JSONArray(list);",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "put",
+      "signature": "JSONArray put(Object value)",
+      "description": "끝에 값 추가. boolean, int, long, double, Collection, Map 오버로드 지원.",
+      "returnType": "JSONArray",
+      "parameters": [{"name": "value", "type": "Object", "description": "값"}],
+      "usage": "ja.put(\"item1\").put(\"item2\");",
+      "notes": "인덱스 지정 오버로드도 있음: put(int index, Object value).",
+      "related": ["get()"]
+    },
+    {
+      "name": "get",
+      "signature": "Object get(int index)",
+      "description": "인덱스로 값 조회. 범위 초과 시 JSONException.",
+      "returnType": "Object",
+      "parameters": [{"name": "index", "type": "int", "description": "인덱스"}],
+      "usage": "Object val = ja.get(0);",
+      "notes": "안전한 조회는 opt() 사용.",
+      "related": ["getString()", "getInt()"]
+    },
+    {
+      "name": "getString",
+      "signature": "String getString(int index)",
+      "description": "문자열로 값 조회",
+      "returnType": "String",
+      "parameters": [{"name": "index", "type": "int", "description": "인덱스"}],
+      "usage": "String item = ja.getString(0);",
+      "notes": "",
+      "related": ["getInt()", "getDouble()"]
+    },
+    {
+      "name": "getInt",
+      "signature": "int getInt(int index)",
+      "description": "정수로 값 조회",
+      "returnType": "int",
+      "parameters": [{"name": "index", "type": "int", "description": "인덱스"}],
+      "usage": "int num = ja.getInt(0);",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "getJSONObject",
+      "signature": "JSONObject getJSONObject(int index)",
+      "description": "중첩 JSONObject 조회",
+      "returnType": "JSONObject",
+      "parameters": [{"name": "index", "type": "int", "description": "인덱스"}],
+      "usage": "JSONObject item = ja.getJSONObject(0);",
+      "notes": "",
+      "related": ["getJSONArray()"]
+    },
+    {
+      "name": "getJSONArray",
+      "signature": "JSONArray getJSONArray(int index)",
+      "description": "중첩 JSONArray 조회",
+      "returnType": "JSONArray",
+      "parameters": [{"name": "index", "type": "int", "description": "인덱스"}],
+      "usage": "JSONArray sub = ja.getJSONArray(0);",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "length",
+      "signature": "int length()",
+      "description": "배열 크기 반환",
+      "returnType": "int",
+      "parameters": [],
+      "usage": "int size = ja.length();",
+      "notes": "",
+      "related": ["isEmpty()"]
+    },
+    {
+      "name": "join",
+      "signature": "String join(String separator)",
+      "description": "요소들을 구분자로 연결한 문자열 반환",
+      "returnType": "String",
+      "parameters": [{"name": "separator", "type": "String", "description": "구분자"}],
+      "usage": "String csv = ja.join(\",\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "remove",
+      "signature": "Object remove(int index)",
+      "description": "인덱스 위치 요소 제거 후 반환",
+      "returnType": "Object",
+      "parameters": [{"name": "index", "type": "int", "description": "인덱스"}],
+      "usage": "ja.remove(0);",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "toString",
+      "signature": "String toString(int indentFactor)",
+      "description": "들여쓰기 포함 JSON 문자열 출력",
+      "returnType": "String",
+      "parameters": [{"name": "indentFactor", "type": "int", "description": "들여쓰기 공백 수"}],
+      "usage": "String json = ja.toString(2);",
+      "notes": "",
+      "related": []
+    }
+  ],
+  "method_count": 12,
+  "important_rules": [
+    "org.json 라이브러리 (프레임워크 내장)",
+    "Iterable 구현 - for-each 루프 사용 가능",
+    "get*()은 범위 초과 시 예외, opt*()은 기본값 반환",
+    "인덱스 지정 put 시 빈 자리는 JSONObject.NULL로 채움"
+  ]
+}

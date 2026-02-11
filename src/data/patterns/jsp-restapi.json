@@ -1,0 +1,17 @@
+{
+  "type": "jsp-restapi",
+  "title": "REST API (JSP)",
+  "variables": {
+    "TABLE_NAME": { "description": "테이블명", "example": "tb_board" },
+    "DAO_CLASS": { "description": "DAO 클래스명", "example": "BoardDao" },
+    "DAO_VAR": { "description": "DAO 변수명", "example": "board" },
+    "API_BASE": { "description": "API 베이스 경로", "example": "/api/board" }
+  },
+  "jsp_template": "<%@ page contentType=\"application/json; charset=utf-8\" %><%@ include file=\"/init.jsp\" %><%\n\nRestAPI api = new RestAPI(request, response);\napi.cors();\nif(api.handlePreflight()) return;\n\napi.publicRoute(\"/list\", \"/view\");\nif(!api.auth()) return;\n\n{DAO_CLASS} {DAO_VAR} = new {DAO_CLASS}();\n\n// GET /list - 목록\napi.get(\"/list\", () -> {\n  DataSet list = {DAO_VAR}.find();\n  j.success(list);\n});\n\n// GET /view/:id - 상세\napi.get(\"/view/:id\", () -> {\n  int id = api.paramInt(\"id\");\n  DataSet info = {DAO_VAR}.get(id);\n  if(!info.next()) { api.error(404, \"데이터를 찾을 수 없습니다.\"); return; }\n  j.success(info);\n});\n\n// POST /insert - 등록\napi.post(\"/insert\", () -> {\n  {DAO_VAR}.item(\"title\", api.param(\"title\"));\n  {DAO_VAR}.item(\"content\", api.param(\"content\"));\n  {DAO_VAR}.item(\"created\", m.time());\n  if({DAO_VAR}.insert()) {\n    j.put(\"id\", {DAO_VAR}.getInsertId());\n    j.success(\"등록 완료\");\n  } else {\n    j.error({DAO_VAR}.getErrMsg());\n  }\n});\n\n// PUT /update/:id - 수정\napi.put(\"/update/:id\", () -> {\n  int id = api.paramInt(\"id\");\n  {DAO_VAR}.item(\"title\", api.param(\"title\"));\n  {DAO_VAR}.item(\"content\", api.param(\"content\"));\n  if({DAO_VAR}.update(\"WHERE id = ?\", new Object[]{id})) {\n    j.success(\"수정 완료\");\n  } else {\n    j.error({DAO_VAR}.getErrMsg());\n  }\n});\n\n// DELETE /delete/:id - 삭제\napi.delete(\"/delete/:id\", () -> {\n  int id = api.paramInt(\"id\");\n  if({DAO_VAR}.delete(\"WHERE id = ?\", new Object[]{id})) {\n    j.success(\"삭제 완료\");\n  } else {\n    j.error({DAO_VAR}.getErrMsg());\n  }\n});\n\napi.forward();\n\n%>",
+  "notes": [
+    "contentType은 application/json으로 설정",
+    "cors() + handlePreflight() 필수",
+    "publicRoute()로 인증 불필요 경로 설정",
+    "api.param()으로 경로/쿼리/JSON body 파라미터 통합 조회"
+  ]
+}

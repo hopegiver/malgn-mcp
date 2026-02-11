@@ -1,0 +1,14 @@
+{
+  "type": "dao-custom",
+  "title": "커스텀 DAO 클래스",
+  "variables": {
+    "TABLE_NAME": { "description": "테이블명", "example": "tb_board" },
+    "DAO_CLASS": { "description": "DAO 클래스명", "example": "BoardDao" }
+  },
+  "java_template": "package dao;\n\nimport malgnsoft.db.DataObject;\nimport malgnsoft.db.DataSet;\n\npublic class {DAO_CLASS} extends DataObject {\n  public {DAO_CLASS}() {\n    this.table = \"{TABLE_NAME}\";\n  }\n\n  // 커스텀 조회 메소드\n  public DataSet findByStatus(String status) {\n    return this.find(\"WHERE status = ?\", new Object[]{status});\n  }\n\n  // 커스텀 카운트 메소드\n  public int countByStatus(String status) {\n    return this.findCount(\"WHERE status = '\" + status + \"'\");\n  }\n\n  // 복잡한 JOIN 조회\n  public DataSet findWithUser() {\n    return this.query(\n      \"SELECT a.*, b.name as user_name \" +\n      \"FROM {TABLE_NAME} a \" +\n      \"LEFT JOIN tb_user b ON a.user_id = b.id \" +\n      \"ORDER BY a.id DESC\"\n    );\n  }\n}",
+  "notes": [
+    "기본 CRUD 외에 자주 사용하는 쿼리를 메소드로 정의",
+    "find(), query() 등 부모 메소드 활용",
+    "바인딩 파라미터 사용 권장"
+  ]
+}

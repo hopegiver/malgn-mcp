@@ -1,0 +1,102 @@
+{
+  "name": "ExcelWriter",
+  "fullClassName": "malgnsoft.util.ExcelWriter",
+  "category": "util",
+  "description": "Excel 파일 쓰기 (XLS). JXL 라이브러리 사용. DataSet을 엑셀로 내보내기, HTTP 다운로드 지원.",
+  "variable_name": "excel",
+  "initialization": "ExcelWriter excel = new ExcelWriter(path);",
+  "initialized_in": "필요 시 직접 생성",
+  "methods": [
+    {
+      "name": "constructor (file)",
+      "signature": "ExcelWriter(String path)",
+      "description": "파일 경로로 생성 (파일 저장용)",
+      "returnType": "ExcelWriter",
+      "parameters": [{"name": "path", "type": "String", "description": "저장할 XLS 파일 경로"}],
+      "usage": "ExcelWriter excel = new ExcelWriter(\"/data/export.xls\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "constructor (HTTP)",
+      "signature": "ExcelWriter(HttpServletResponse response, String filename)",
+      "description": "HTTP 다운로드 응답으로 생성",
+      "returnType": "ExcelWriter",
+      "parameters": [
+        {"name": "response", "type": "HttpServletResponse", "description": "HTTP 응답"},
+        {"name": "filename", "type": "String", "description": "다운로드 파일명"}
+      ],
+      "usage": "ExcelWriter excel = new ExcelWriter(response, \"report.xls\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "setSheet",
+      "signature": "void setSheet(String name)",
+      "description": "시트 생성 (자동 인덱스)",
+      "returnType": "void",
+      "parameters": [{"name": "name", "type": "String", "description": "시트 이름"}],
+      "usage": "excel.setSheet(\"사용자 목록\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "setData",
+      "signature": "void setData(DataSet rs, String[] cols)",
+      "description": "DataSet을 엑셀에 쓰기. 컬럼명 배열로 출력할 필드 지정.",
+      "returnType": "void",
+      "parameters": [
+        {"name": "rs", "type": "DataSet", "description": "데이터셋"},
+        {"name": "cols", "type": "String[]", "description": "컬럼명 배열 (field=>헤더명 형태 지원)"}
+      ],
+      "usage": "excel.setData(list, new String[]{\"name=>이름\", \"email=>이메일\"});",
+      "notes": "field=>DisplayName 형태로 헤더명 지정 가능.",
+      "related": []
+    },
+    {
+      "name": "put",
+      "signature": "void put(int x, int y, String str)",
+      "description": "특정 셀에 값 쓰기",
+      "returnType": "void",
+      "parameters": [
+        {"name": "x", "type": "int", "description": "열 인덱스"},
+        {"name": "y", "type": "int", "description": "행 인덱스"},
+        {"name": "str", "type": "String", "description": "값"}
+      ],
+      "usage": "excel.put(0, 0, \"제목\");",
+      "notes": "int, double 오버로드도 있음.",
+      "related": []
+    },
+    {
+      "name": "merge",
+      "signature": "void merge(int x, int y, int c, int r)",
+      "description": "셀 병합",
+      "returnType": "void",
+      "parameters": [
+        {"name": "x", "type": "int", "description": "시작 열"},
+        {"name": "y", "type": "int", "description": "시작 행"},
+        {"name": "c", "type": "int", "description": "끝 열"},
+        {"name": "r", "type": "int", "description": "끝 행"}
+      ],
+      "usage": "excel.merge(0, 0, 3, 0);",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "write",
+      "signature": "void write()",
+      "description": "워크북 저장/전송 후 닫기",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "excel.write();",
+      "notes": "반드시 마지막에 호출.",
+      "related": []
+    }
+  ],
+  "method_count": 7,
+  "important_rules": [
+    "XLS 형식 출력",
+    "컬럼 헤더 지정: field=>헤더명 형태",
+    "write() 호출 필수 (파일 저장/HTTP 전송 실행)"
+  ]
+}

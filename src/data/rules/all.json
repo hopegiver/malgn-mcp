@@ -1,0 +1,320 @@
+{
+  "total": 35,
+  "rules": [
+    {
+      "id": "naming-dao",
+      "category": "naming",
+      "severity": "error",
+      "title": "DAO 변수명 규칙",
+      "rule": "DAO 변수명은 테이블명에서 tb_ 제거 후 소문자 사용",
+      "correct": "UserDao user = new UserDao();",
+      "incorrect": "UserDao userDao = new UserDao();"
+    },
+    {
+      "id": "naming-dataset-single",
+      "category": "naming",
+      "severity": "error",
+      "title": "DataSet 변수명 (단일)",
+      "rule": "단일 행 DataSet은 info 또는 data 사용",
+      "correct": "DataSet info = user.get(id);",
+      "incorrect": "DataSet ds = user.get(id);"
+    },
+    {
+      "id": "naming-dataset-list",
+      "category": "naming",
+      "severity": "error",
+      "title": "DataSet 변수명 (복수)",
+      "rule": "복수 행 DataSet은 list 또는 xxxList 사용",
+      "correct": "DataSet list = user.find();",
+      "incorrect": "DataSet result = user.find();"
+    },
+    {
+      "id": "postback-pattern",
+      "category": "postback",
+      "severity": "error",
+      "title": "Postback 패턴",
+      "rule": "등록/수정은 같은 JSP에서 GET(폼표시)/POST(처리) 분기",
+      "correct": "if(m.isPost()) { /* 처리 */ } else { /* 폼 표시 */ }",
+      "incorrect": "별도 insert_ok.jsp 파일 사용"
+    },
+    {
+      "id": "postback-redirect",
+      "category": "postback",
+      "severity": "warning",
+      "title": "POST 처리 후 리다이렉트",
+      "rule": "POST 처리 성공 후 m.jsReplace()로 목록 페이지 이동",
+      "correct": "m.jsReplace(\"/list.jsp\");",
+      "incorrect": "m.redirect(\"/list.jsp\"); // 일반 폼에서는 가능하나 jsReplace 권장"
+    },
+    {
+      "id": "param-get",
+      "category": "parameter",
+      "severity": "error",
+      "title": "GET 파라미터 처리",
+      "rule": "GET 파라미터는 m.rs()/m.ri() 사용",
+      "correct": "String keyword = m.rs(\"keyword\");\nint id = m.ri(\"id\");",
+      "incorrect": "String keyword = request.getParameter(\"keyword\");"
+    },
+    {
+      "id": "param-post",
+      "category": "parameter",
+      "severity": "error",
+      "title": "POST 파라미터 처리",
+      "rule": "POST 파라미터는 f.get()/f.getInt() 사용",
+      "correct": "String title = f.get(\"title\");\nint price = f.getInt(\"price\");",
+      "incorrect": "String title = m.rs(\"title\"); // POST에 m.rs() 사용 금지"
+    },
+    {
+      "id": "param-invalid-method",
+      "category": "parameter",
+      "severity": "error",
+      "title": "존재하지 않는 메소드 사용 금지",
+      "rule": "m.getInt(), m.getString(), m.isSet(), m.getParameter() 등은 존재하지 않는 메소드",
+      "correct": "m.rs(), m.ri(), f.get(), f.getInt()",
+      "incorrect": "m.getInt(\"id\"), m.getString(\"name\")"
+    },
+    {
+      "id": "security-sql-injection",
+      "category": "security",
+      "severity": "error",
+      "title": "SQL Injection 방지",
+      "rule": "SQL에 변수를 직접 연결하지 말고 ? 바인딩 사용",
+      "correct": "user.find(\"WHERE id = ?\", new Object[]{id});",
+      "incorrect": "user.find(\"WHERE id = \" + id);"
+    },
+    {
+      "id": "security-xss",
+      "category": "security",
+      "severity": "warning",
+      "title": "XSS 방지",
+      "rule": "m.rs()와 f.get()은 XSS 자동 필터 적용",
+      "correct": "m.rs()와 f.get() 사용하면 자동 방지",
+      "incorrect": "request.getParameter()로 직접 처리"
+    },
+    {
+      "id": "template-separation",
+      "category": "template",
+      "severity": "error",
+      "title": "JSP/HTML 완전 분리",
+      "rule": "JSP에 HTML 코드 직접 작성 금지. HTML 템플릿 파일 분리 필수.",
+      "correct": "p.setBody(\"main.user_list\"); // HTML은 별도 파일",
+      "incorrect": "out.println(\"<h1>목록</h1>\"); // JSP에 HTML 작성"
+    },
+    {
+      "id": "template-no-scriptlet",
+      "category": "template",
+      "severity": "error",
+      "title": "JSP 표현식 태그 금지",
+      "rule": "<%= %> 사용 금지. HTML 템플릿에서 {{변수명}} 사용.",
+      "correct": "HTML: {{info.name}}",
+      "incorrect": "JSP: <%= info.s(\"name\") %>"
+    },
+    {
+      "id": "template-no-import",
+      "category": "template",
+      "severity": "error",
+      "title": "JSP import 금지",
+      "rule": "<%@ page import 금지. init.jsp에서 제공하는 import만 사용.",
+      "correct": "<%@ include file=\"/init.jsp\" %>",
+      "incorrect": "<%@ page import=\"java.util.*\" %>"
+    },
+    {
+      "id": "structure-jsp-start",
+      "category": "structure",
+      "severity": "error",
+      "title": "JSP 시작 구조",
+      "rule": "JSP는 반드시 contentType 선언 + init.jsp include로 시작",
+      "correct": "<%@ page contentType=\"text/html; charset=utf-8\" %><%@ include file=\"/init.jsp\" %><%",
+      "incorrect": "<%@ page contentType=\"text/html\" %>\n<html>"
+    },
+    {
+      "id": "structure-page-order",
+      "category": "structure",
+      "severity": "error",
+      "title": "Page 호출 순서",
+      "rule": "setLayout → setBody → setVar → setLoop → display 순서 엄수",
+      "correct": "p.setLayout(\"default\");\np.setBody(\"main.list\");\np.setVar(\"title\", \"목록\");\np.setLoop(\"list\", list);\np.display();",
+      "incorrect": "p.setVar(\"title\", \"목록\");\np.setBody(\"main.list\"); // 순서 위반"
+    },
+    {
+      "id": "structure-no-try-catch",
+      "category": "structure",
+      "severity": "error",
+      "title": "try-catch 사용 금지",
+      "rule": "try-catch 대신 boolean 리턴 체크 사용",
+      "correct": "if(user.insert()) { ... } else { m.jsError(user.getErrMsg()); }",
+      "incorrect": "try { user.insert(); } catch(Exception e) { ... }"
+    },
+    {
+      "id": "data-dataset-next",
+      "category": "data",
+      "severity": "error",
+      "title": "DataSet next() 호출 필수",
+      "rule": "DataSet에서 데이터 접근 전 반드시 next() 호출",
+      "correct": "if(info.next()) { String name = info.s(\"name\"); }",
+      "incorrect": "DataSet info = user.get(id);\nString name = info.s(\"name\"); // next() 누락"
+    },
+    {
+      "id": "data-null-safe",
+      "category": "data",
+      "severity": "warning",
+      "title": "DataSet.s() null 체크 불필요",
+      "rule": "DataSet.s()는 null 대신 빈 문자열 반환. null 체크 불필요.",
+      "correct": "String name = info.s(\"name\"); // 바로 사용",
+      "incorrect": "if(info.s(\"name\") != null) { ... } // 불필요한 체크"
+    },
+    {
+      "id": "data-rs-null-safe",
+      "category": "data",
+      "severity": "warning",
+      "title": "m.rs() null 체크 불필요",
+      "rule": "m.rs()는 null 대신 빈 문자열 반환. null 체크 및 빈 문자열 체크 불필요.",
+      "correct": "String keyword = m.rs(\"keyword\"); // 바로 사용",
+      "incorrect": "if(m.rs(\"keyword\") != null && !\"\".equals(m.rs(\"keyword\"))) { ... }"
+    },
+    {
+      "id": "data-setloop-cursor",
+      "category": "data",
+      "severity": "error",
+      "title": "setLoop 커서 자동 초기화",
+      "rule": "setLoop()에 전달된 DataSet은 커서가 자동 초기화됨. moveRow() 불필요.",
+      "correct": "p.setLoop(\"list\", list);",
+      "incorrect": "list.moveRow(0); // 존재하지 않는 메소드\np.setLoop(\"list\", list);"
+    },
+    {
+      "id": "message-jsreplace",
+      "category": "message",
+      "severity": "warning",
+      "title": "m.jsReplace 사용법",
+      "rule": "일반 폼 POST 성공 후 페이지 이동에 사용. AJAX 폼에서는 사용 불가.",
+      "correct": "// 일반 폼: m.jsReplace(\"/list.jsp\");\n// AJAX 폼: j.success(\"저장 완료\");",
+      "incorrect": "AJAX 폼에서 m.jsReplace() 사용"
+    },
+    {
+      "id": "message-jserror",
+      "category": "message",
+      "severity": "warning",
+      "title": "에러 메시지 표시",
+      "rule": "DB 에러 시 getErrMsg()로 메시지 표시",
+      "correct": "if(!user.insert()) { m.jsError(user.getErrMsg()); }",
+      "incorrect": "if(!user.insert()) { m.jsError(\"저장 실패\"); } // 실제 에러 메시지 미표시"
+    },
+    {
+      "id": "ajax-response",
+      "category": "ajax",
+      "severity": "error",
+      "title": "AJAX 폼 응답",
+      "rule": "data-ajax=\"true\" 폼의 응답은 반드시 j.success()/j.error() 사용",
+      "correct": "j.success(\"저장되었습니다.\");\n// 또는\nj.error(\"오류가 발생했습니다.\");",
+      "incorrect": "m.jsReplace(\"/list.jsp\"); // AJAX에서는 작동하지 않음"
+    },
+    {
+      "id": "ajax-json",
+      "category": "ajax",
+      "severity": "warning",
+      "title": "AJAX 데이터 전달",
+      "rule": "AJAX 응답에 데이터 포함 시 j.put() 사용",
+      "correct": "j.put(\"id\", newId);\nj.success();",
+      "incorrect": "out.print(\"{\\\"id\\\":\" + newId + \"}\"); // 직접 출력 금지"
+    },
+    {
+      "id": "style-form-element",
+      "category": "style",
+      "severity": "warning",
+      "title": "폼 요소 정의",
+      "rule": "f.addElement()로 폼 필드를 정의하고, 검색값 유지에 활용",
+      "correct": "f.addElement(\"keyword\", m.rs(\"keyword\"), \"\");\n// 검색 시 keyword 값이 자동 유지됨",
+      "incorrect": "// addElement 없이 m.rs()만 사용하면 검색값 유지 안 됨"
+    },
+    {
+      "id": "style-listmanager-search",
+      "category": "style",
+      "severity": "warning",
+      "title": "ListManager 검색",
+      "rule": "addSearch()는 빈 값을 자동 무시하므로 별도 빈 값 체크 불필요",
+      "correct": "lm.addSearch(\"title\", m.rs(\"keyword\"), \"like\");",
+      "incorrect": "if(!\"\".equals(m.rs(\"keyword\"))) {\n  lm.addSearch(\"title\", m.rs(\"keyword\"), \"like\");\n}"
+    },
+    {
+      "id": "style-dao-class",
+      "category": "style",
+      "severity": "error",
+      "title": "DAO 클래스 작성법",
+      "rule": "DataObject를 상속하고 생성자에서 table 설정",
+      "correct": "public class UserDao extends DataObject {\n  public UserDao() { this.table = \"tb_user\"; }\n}",
+      "incorrect": "public class UserDao { ... } // DataObject 미상속"
+    },
+    {
+      "id": "template-if-boolean",
+      "category": "template",
+      "severity": "error",
+      "title": "템플릿 조건문에 비교연산자 불가",
+      "rule": "조건문에 비교연산자 사용 불가. JSP에서 boolean 변수로 변환 필수.",
+      "correct": "JSP: p.setVar(\"isAdmin\", auth.getString(\"role\").equals(\"admin\"));\nHTML: <!--@if(isAdmin)-->관리자 메뉴<!--/if(isAdmin)-->",
+      "incorrect": "HTML: <!--@if(role == 'admin')-->  // 작동하지 않음"
+    },
+    {
+      "id": "template-loop",
+      "category": "template",
+      "severity": "warning",
+      "title": "템플릿 반복문",
+      "rule": "setLoop()으로 DataSet을 전달하고 HTML에서 @loop 사용",
+      "correct": "JSP: p.setLoop(\"list\", list);\nHTML: <!--@loop(list)-->{{list.name}}<!--/loop(list)-->",
+      "incorrect": "JSP에서 while 루프로 HTML 직접 생성"
+    },
+    {
+      "id": "template-include",
+      "category": "template",
+      "severity": "warning",
+      "title": "HTML 템플릿 포함",
+      "rule": "공통 HTML 조각은 @include로 포함",
+      "correct": "<!--@include(/common/header.html)-->",
+      "incorrect": "각 HTML 파일에 공통 코드 복사"
+    },
+    {
+      "id": "security-password",
+      "category": "security",
+      "severity": "error",
+      "title": "비밀번호 해싱",
+      "rule": "비밀번호는 Malgn.sha256()으로 단방향 해시 저장",
+      "correct": "user.item(\"password\", Malgn.sha256(f.get(\"password\")));",
+      "incorrect": "user.item(\"password\", f.get(\"password\")); // 평문 저장"
+    },
+    {
+      "id": "data-bind-param",
+      "category": "data",
+      "severity": "error",
+      "title": "바인딩 파라미터 사용",
+      "rule": "SQL 쿼리에서 변수는 ? 플레이스홀더와 Object[] 사용",
+      "correct": "user.find(\"WHERE id = ? AND status = ?\", new Object[]{id, \"active\"});",
+      "incorrect": "user.find(\"WHERE id = '\" + id + \"'\");"
+    },
+    {
+      "id": "structure-form-validate",
+      "category": "structure",
+      "severity": "warning",
+      "title": "서버 검증",
+      "rule": "POST 처리 시 f.validate()로 서버사이드 검증 수행",
+      "correct": "if(!f.validate()) {\n  m.jsError(f.getErrMsg());\n  return;\n}",
+      "incorrect": "// 클라이언트 검증만으로 충분하다고 생각"
+    },
+    {
+      "id": "structure-init-objects",
+      "category": "structure",
+      "severity": "warning",
+      "title": "init.jsp 자동 초기화 객체",
+      "rule": "m, f, p, auth, j 등은 init.jsp에서 자동 초기화됨. 직접 import/생성 불필요.",
+      "correct": "// init.jsp include 후 바로 사용\nString keyword = m.rs(\"keyword\");",
+      "incorrect": "import malgnsoft.util.Malgn;\nMalgn m = new Malgn(request, response, out);"
+    },
+    {
+      "id": "data-addsearch-empty",
+      "category": "data",
+      "severity": "warning",
+      "title": "addSearch 빈 값 자동 무시",
+      "rule": "addSearch()는 keyword가 빈 문자열이면 자동으로 조건을 추가하지 않음",
+      "correct": "lm.addSearch(\"name\", m.rs(\"keyword\"), \"like\"); // 빈 값이면 무시됨",
+      "incorrect": "String kw = m.rs(\"keyword\");\nif(!kw.isEmpty()) { lm.addSearch(\"name\", kw, \"like\"); }"
+    }
+  ]
+}

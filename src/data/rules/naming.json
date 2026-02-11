@@ -1,0 +1,33 @@
+{
+  "category": "naming",
+  "total": 3,
+  "rules": [
+    {
+      "id": "naming-dao",
+      "category": "naming",
+      "severity": "error",
+      "title": "DAO 변수명 규칙",
+      "rule": "DAO 변수명은 테이블명에서 tb_ 제거 후 소문자 사용",
+      "correct": "UserDao user = new UserDao();",
+      "incorrect": "UserDao userDao = new UserDao();"
+    },
+    {
+      "id": "naming-dataset-single",
+      "category": "naming",
+      "severity": "error",
+      "title": "DataSet 변수명 (단일)",
+      "rule": "단일 행 DataSet은 info 또는 data 사용",
+      "correct": "DataSet info = user.get(id);",
+      "incorrect": "DataSet ds = user.get(id);"
+    },
+    {
+      "id": "naming-dataset-list",
+      "category": "naming",
+      "severity": "error",
+      "title": "DataSet 변수명 (복수)",
+      "rule": "복수 행 DataSet은 list 또는 xxxList 사용",
+      "correct": "DataSet list = user.find();",
+      "incorrect": "DataSet result = user.find();"
+    }
+  ]
+}

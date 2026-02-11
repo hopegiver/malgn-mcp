@@ -1,0 +1,51 @@
+{
+  "category": "template",
+  "total": 5,
+  "rules": [
+    {
+      "id": "template-separation",
+      "category": "template",
+      "severity": "error",
+      "title": "JSP/HTML 완전 분리",
+      "rule": "JSP에 HTML 코드 직접 작성 금지. HTML 템플릿 파일 분리 필수.",
+      "correct": "p.setBody(\"main.user_list\"); // HTML은 별도 파일",
+      "incorrect": "out.println(\"<h1>목록</h1>\"); // JSP에 HTML 작성"
+    },
+    {
+      "id": "template-no-scriptlet",
+      "category": "template",
+      "severity": "error",
+      "title": "JSP 표현식 태그 금지",
+      "rule": "<%= %> 사용 금지. HTML 템플릿에서 {{변수명}} 사용.",
+      "correct": "HTML: {{info.name}}",
+      "incorrect": "JSP: <%= info.s(\"name\") %>"
+    },
+    {
+      "id": "template-no-import",
+      "category": "template",
+      "severity": "error",
+      "title": "JSP import 금지",
+      "rule": "<%@ page import 금지. init.jsp에서 제공하는 import만 사용.",
+      "correct": "<%@ include file=\"/init.jsp\" %>",
+      "incorrect": "<%@ page import=\"java.util.*\" %>"
+    },
+    {
+      "id": "template-if-boolean",
+      "category": "template",
+      "severity": "error",
+      "title": "템플릿 조건문에 비교연산자 불가",
+      "rule": "조건문에 비교연산자 사용 불가. JSP에서 boolean 변수로 변환 필수. 단, <!--@if(변수명:값)-->으로 문자열 비교는 가능하나 비추천.",
+      "correct": "// 권장: boolean 변수 사용\nJSP: p.setVar(\"isAdmin\", auth.getString(\"role\").equals(\"admin\"));\nHTML: <!--@if(isAdmin)-->관리자 메뉴<!--/if(isAdmin)-->\n// 가능하나 비추천: 문자열 비교\nHTML: <!--@if(isAdmin:Y)-->관리자 메뉴<!--/if(isAdmin:Y)-->",
+      "incorrect": "HTML: <!--@if(role == 'admin')-->  // 작동하지 않음"
+    },
+    {
+      "id": "template-loop",
+      "category": "template",
+      "severity": "warning",
+      "title": "템플릿 반복문",
+      "rule": "setLoop()으로 DataSet을 전달하고 HTML에서 @loop 사용",
+      "correct": "JSP: p.setLoop(\"list\", list);\nHTML: <!--@loop(list)-->{{list.name}}<!--/loop(list)-->",
+      "incorrect": "JSP에서 while 루프로 HTML 직접 생성"
+    }
+  ]
+}

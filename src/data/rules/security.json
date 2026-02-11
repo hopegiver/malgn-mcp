@@ -1,0 +1,33 @@
+{
+  "category": "security",
+  "total": 3,
+  "rules": [
+    {
+      "id": "security-sql-injection",
+      "category": "security",
+      "severity": "error",
+      "title": "SQL Injection 방지",
+      "rule": "SQL에 변수를 직접 연결하지 말고 ? 바인딩 사용",
+      "correct": "user.find(\"WHERE id = ?\", new Object[]{id});",
+      "incorrect": "user.find(\"WHERE id = \" + id);"
+    },
+    {
+      "id": "security-xss",
+      "category": "security",
+      "severity": "warning",
+      "title": "XSS 방지",
+      "rule": "m.rs()와 f.get()은 XSS 자동 필터 적용",
+      "correct": "m.rs()와 f.get() 사용하면 자동 방지",
+      "incorrect": "request.getParameter()로 직접 처리"
+    },
+    {
+      "id": "security-password",
+      "category": "security",
+      "severity": "error",
+      "title": "비밀번호 해싱",
+      "rule": "비밀번호는 Malgn.sha256()으로 단방향 해시 저장",
+      "correct": "user.item(\"password\", Malgn.sha256(f.get(\"password\")));",
+      "incorrect": "user.item(\"password\", f.get(\"password\")); // 평문 저장"
+    }
+  ]
+}

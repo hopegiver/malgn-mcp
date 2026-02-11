@@ -1,0 +1,70 @@
+{
+  "name": "Zip",
+  "fullClassName": "malgnsoft.util.Zip",
+  "category": "util",
+  "description": "ZIP 파일 압축/해제. 파일/폴더 압축, HTTP 다운로드 응답, 압축 해제 지원.",
+  "variable_name": "zip",
+  "initialization": "Zip zip = new Zip();",
+  "initialized_in": "필요 시 직접 생성",
+  "methods": [
+    {
+      "name": "compress",
+      "signature": "boolean compress(String path, String filename)",
+      "description": "파일/폴더를 ZIP으로 압축",
+      "returnType": "boolean",
+      "parameters": [
+        {"name": "path", "type": "String", "description": "압축할 파일/폴더 경로"},
+        {"name": "filename", "type": "String", "description": "생성할 ZIP 파일 경로"}
+      ],
+      "usage": "zip.compress(\"/data/files\", \"/data/archive.zip\");",
+      "notes": "폴더는 재귀적으로 압축.",
+      "related": ["extract()"]
+    },
+    {
+      "name": "compress (multiple)",
+      "signature": "boolean compress(String[] paths, String filename)",
+      "description": "여러 파일/폴더를 하나의 ZIP으로 압축",
+      "returnType": "boolean",
+      "parameters": [
+        {"name": "paths", "type": "String[]", "description": "압축할 경로 배열"},
+        {"name": "filename", "type": "String", "description": "생성할 ZIP 파일 경로"}
+      ],
+      "usage": "zip.compress(new String[]{\"/data/a.txt\", \"/data/b.txt\"}, \"/data/archive.zip\");",
+      "notes": "경로에 =>를 사용하면 파일명 변경 가능 (file.txt=>newname.txt).",
+      "related": []
+    },
+    {
+      "name": "compress (HTTP)",
+      "signature": "boolean compress(String[] paths, String filename, HttpServletResponse response)",
+      "description": "압축 후 HTTP 응답으로 다운로드 전송",
+      "returnType": "boolean",
+      "parameters": [
+        {"name": "paths", "type": "String[]", "description": "압축할 경로 배열"},
+        {"name": "filename", "type": "String", "description": "다운로드 파일명"},
+        {"name": "response", "type": "HttpServletResponse", "description": "HTTP 응답"}
+      ],
+      "usage": "zip.compress(files, \"download.zip\", response);",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "extract",
+      "signature": "boolean extract(String file, String folder)",
+      "description": "ZIP 파일 압축 해제",
+      "returnType": "boolean",
+      "parameters": [
+        {"name": "file", "type": "String", "description": "ZIP 파일 경로"},
+        {"name": "folder", "type": "String", "description": "해제할 대상 폴더"}
+      ],
+      "usage": "zip.extract(\"/data/archive.zip\", \"/data/extracted\");",
+      "notes": "폴더 자동 생성.",
+      "related": ["compress()"]
+    }
+  ],
+  "method_count": 4,
+  "important_rules": [
+    "파일명 변경: path=>newname 형태 지원",
+    "한국어 파일명: KSC5601 인코딩 사용",
+    "errMsg 필드로 오류 확인"
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "name": "SqlMap",
+  "fullClassName": "malgnsoft.db.SqlMap",
+  "category": "data",
+  "description": "MyBatis SqlSession 래퍼. 간소화된 CRUD, 트랜잭션, 연결 관리.",
+  "variable_name": "sm",
+  "initialization": "SqlMap sm = new SqlMap();",
+  "initialized_in": "필요 시 직접 생성",
+  "methods": [
+    {
+      "name": "begin",
+      "signature": "void begin()",
+      "description": "트랜잭션 시작 (autoCommit=false)",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "sm.begin();",
+      "notes": "errMsg 초기화됨.",
+      "related": ["commit()", "close()"]
+    },
+    {
+      "name": "commit",
+      "signature": "void commit()",
+      "description": "커밋 또는 롤백 (에러 발생 시 자동 롤백)",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "sm.commit();",
+      "notes": "errMsg가 있으면 롤백, 없으면 커밋.",
+      "related": ["begin()"]
+    },
+    {
+      "name": "close",
+      "signature": "void close()",
+      "description": "세션 닫기",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "sm.close();",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "select",
+      "signature": "DataSet select(String statement, Object parameters)",
+      "description": "SELECT 실행 (MyBatis 매퍼 ID)",
+      "returnType": "DataSet",
+      "parameters": [
+        {"name": "statement", "type": "String", "description": "MyBatis 매퍼 statement ID"},
+        {"name": "parameters", "type": "Object", "description": "파라미터 객체"}
+      ],
+      "usage": "DataSet list = sm.select(\"user.selectList\", params);",
+      "notes": "파라미터 없는 오버로드도 있음.",
+      "related": []
+    },
+    {
+      "name": "insert",
+      "signature": "int insert(String statement, Object parameters)",
+      "description": "INSERT 실행",
+      "returnType": "int",
+      "parameters": [
+        {"name": "statement", "type": "String", "description": "MyBatis 매퍼 statement ID"},
+        {"name": "parameters", "type": "Object", "description": "파라미터 객체"}
+      ],
+      "usage": "int result = sm.insert(\"user.insert\", params);",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "update",
+      "signature": "int update(String statement, Object parameters)",
+      "description": "UPDATE 실행",
+      "returnType": "int",
+      "parameters": [
+        {"name": "statement", "type": "String", "description": "MyBatis 매퍼 statement ID"},
+        {"name": "parameters", "type": "Object", "description": "파라미터 객체"}
+      ],
+      "usage": "int result = sm.update(\"user.update\", params);",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "delete",
+      "signature": "int delete(String statement, Object parameters)",
+      "description": "DELETE 실행",
+      "returnType": "int",
+      "parameters": [
+        {"name": "statement", "type": "String", "description": "MyBatis 매퍼 statement ID"},
+        {"name": "parameters", "type": "Object", "description": "파라미터 객체"}
+      ],
+      "usage": "int result = sm.delete(\"user.delete\", params);",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "reload",
+      "signature": "void reload()",
+      "description": "캐시된 SqlSessionFactory 초기화",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "sm.reload();",
+      "notes": "",
+      "related": []
+    }
+  ],
+  "method_count": 8,
+  "important_rules": [
+    "MyBatis 설정: ../mybatis-config.xml",
+    "트랜잭션: begin() → 작업 → commit() → close()",
+    "에러 발생 시 commit()에서 자동 롤백",
+    "errMsg 필드로 오류 확인"
+  ]
+}

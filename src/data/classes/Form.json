@@ -1,0 +1,142 @@
+{
+  "name": "Form",
+  "fullClassName": "malgnsoft.util.Form",
+  "category": "core",
+  "description": "폼 데이터 처리 및 유효성 검증 클래스",
+  "variable_name": "f",
+  "initialization": "Form f = new Form();",
+  "initialized_in": "init.jsp",
+  "methods": [
+    {
+      "name": "addElement",
+      "signature": "void addElement(String name, String defaultValue, String rules)",
+      "description": "폼 필드 정의 (이름, 기본값, 검증 규칙)",
+      "returnType": "void",
+      "parameters": [
+        {"name": "name", "type": "String", "description": "필드명"},
+        {"name": "defaultValue", "type": "String", "description": "기본값 (GET 파라미터 자동 바인딩)"},
+        {"name": "rules", "type": "String", "description": "검증 규칙 (required, maxbyte:100, type:email 등)"}
+      ],
+      "usage": "f.addElement(\"title\", \"\", \"required,maxbyte:200\");",
+      "notes": "GET 요청 시 m.rs(name)로 기본값 자동 설정. 검증 규칙은 쉼표로 구분.",
+      "related": ["f.validate()", "f.get()"]
+    },
+    {
+      "name": "get",
+      "signature": "String get(String name)",
+      "description": "POST 데이터를 문자열로 가져옴 (XSS 자동 필터)",
+      "returnType": "String",
+      "parameters": [{"name": "name", "type": "String", "description": "필드명"}],
+      "usage": "String title = f.get(\"title\");",
+      "notes": "POST 데이터 전용. GET 파라미터는 m.rs() 사용.",
+      "related": ["m.rs()", "f.getInt()"]
+    },
+    {
+      "name": "getInt",
+      "signature": "int getInt(String name)",
+      "description": "POST 데이터를 정수로 가져옴",
+      "returnType": "int",
+      "parameters": [{"name": "name", "type": "String", "description": "필드명"}],
+      "usage": "int price = f.getInt(\"price\");",
+      "notes": "",
+      "related": ["f.get()", "f.getLong()"]
+    },
+    {
+      "name": "getLong",
+      "signature": "long getLong(String name)",
+      "description": "POST 데이터를 long으로 가져옴",
+      "returnType": "long",
+      "parameters": [{"name": "name", "type": "String", "description": "필드명"}],
+      "usage": "long amount = f.getLong(\"amount\");",
+      "notes": "",
+      "related": ["f.getInt()"]
+    },
+    {
+      "name": "getDouble",
+      "signature": "double getDouble(String name)",
+      "description": "POST 데이터를 double로 가져옴",
+      "returnType": "double",
+      "parameters": [{"name": "name", "type": "String", "description": "필드명"}],
+      "usage": "double rate = f.getDouble(\"rate\");",
+      "notes": "",
+      "related": ["f.getInt()"]
+    },
+    {
+      "name": "validate",
+      "signature": "boolean validate()",
+      "description": "서버사이드 유효성 검증 실행",
+      "returnType": "boolean",
+      "parameters": [],
+      "usage": "if(!f.validate()) { m.jsError(f.getErrMsg()); return; }",
+      "notes": "addElement()의 규칙 기반으로 검증. 실패 시 getErrMsg()로 메시지 확인.",
+      "related": ["f.addElement()", "f.getErrMsg()"]
+    },
+    {
+      "name": "getErrMsg",
+      "signature": "String getErrMsg()",
+      "description": "유효성 검증 실패 메시지 반환",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "m.jsError(f.getErrMsg());",
+      "notes": "validate() 실패 후 호출.",
+      "related": ["f.validate()"]
+    },
+    {
+      "name": "getScript",
+      "signature": "String getScript()",
+      "description": "클라이언트사이드 JavaScript 검증 코드 생성",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "p.setVar(\"formScript\", f.getScript());",
+      "notes": "HTML 폼의 onsubmit에 연결.",
+      "related": ["f.addElement()"]
+    },
+    {
+      "name": "saveFile",
+      "signature": "boolean saveFile(String name)",
+      "description": "업로드 파일 저장",
+      "returnType": "boolean",
+      "parameters": [{"name": "name", "type": "String", "description": "파일 필드명"}],
+      "usage": "if(f.saveFile(\"photo\")) { String path = f.getFileName(\"photo\"); }",
+      "notes": "addElement()에서 allow 속성으로 허용 확장자 제한.",
+      "related": ["f.getFileName()", "f.getFileType()"]
+    },
+    {
+      "name": "getFileName",
+      "signature": "String getFileName(String name)",
+      "description": "업로드된 파일의 저장 경로 반환",
+      "returnType": "String",
+      "parameters": [{"name": "name", "type": "String", "description": "파일 필드명"}],
+      "usage": "String path = f.getFileName(\"photo\");",
+      "notes": "saveFile() 성공 후 호출.",
+      "related": ["f.saveFile()"]
+    },
+    {
+      "name": "getFileType",
+      "signature": "String getFileType(String name)",
+      "description": "업로드된 파일의 MIME 타입 반환",
+      "returnType": "String",
+      "parameters": [{"name": "name", "type": "String", "description": "파일 필드명"}],
+      "usage": "String type = f.getFileType(\"photo\");",
+      "notes": "",
+      "related": ["f.saveFile()"]
+    },
+    {
+      "name": "isset",
+      "signature": "boolean isset(String name)",
+      "description": "POST 데이터 존재 여부 확인",
+      "returnType": "boolean",
+      "parameters": [{"name": "name", "type": "String", "description": "필드명"}],
+      "usage": "if(f.isset(\"agree\")) { ... }",
+      "notes": "체크박스 등 선택적 필드 확인용.",
+      "related": []
+    }
+  ],
+  "method_count": 12,
+  "important_rules": [
+    "init.jsp에서 자동 초기화됨",
+    "addElement()의 검증 속성: required, maxbyte, minbyte, type(email/userid/url/number), allow(파일 확장자)",
+    "GET 요청 시 addElement()의 defaultValue에 m.rs(name) 자동 설정",
+    "POST 데이터는 반드시 f.get() 사용 (request.getParameter() 금지)"
+  ]
+}

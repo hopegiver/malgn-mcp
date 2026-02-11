@@ -1,0 +1,132 @@
+{
+  "name": "ListManager",
+  "fullClassName": "malgnsoft.db.ListManager",
+  "category": "data",
+  "description": "목록 조회 + 페이징 + 검색 통합 관리. 목록 페이지 구현의 핵심 클래스.",
+  "variable_name": "lm",
+  "initialization": "ListManager lm = new ListManager();",
+  "initialized_in": "목록 JSP에서 직접 생성",
+  "methods": [
+    {
+      "name": "setRequest",
+      "signature": "void setRequest(HttpServletRequest request)",
+      "description": "HTTP 요청 객체 설정 (페이징 파라미터 자동 추출)",
+      "returnType": "void",
+      "parameters": [{"name": "request", "type": "HttpServletRequest", "description": "요청 객체"}],
+      "usage": "lm.setRequest(request);",
+      "notes": "page 파라미터를 자동으로 추출하여 페이징 처리.",
+      "related": []
+    },
+    {
+      "name": "setListNum",
+      "signature": "void setListNum(int size)",
+      "description": "페이지당 목록 개수 설정",
+      "returnType": "void",
+      "parameters": [{"name": "size", "type": "int", "description": "페이지당 표시 개수"}],
+      "usage": "lm.setListNum(20);",
+      "notes": "기본값 10.",
+      "related": ["setNaviNum()"]
+    },
+    {
+      "name": "setNaviNum",
+      "signature": "void setNaviNum(int size)",
+      "description": "페이지 네비게이션 개수 설정",
+      "returnType": "void",
+      "parameters": [{"name": "size", "type": "int", "description": "네비게이션에 표시할 페이지 수"}],
+      "usage": "lm.setNaviNum(10);",
+      "notes": "기본값 10.",
+      "related": ["setListNum()"]
+    },
+    {
+      "name": "setTable",
+      "signature": "void setTable(String table)",
+      "description": "조회할 테이블명 설정",
+      "returnType": "void",
+      "parameters": [{"name": "table", "type": "String", "description": "테이블명"}],
+      "usage": "lm.setTable(\"tb_board\");",
+      "notes": "JOIN 사용 시: lm.setTable(\"tb_board a LEFT JOIN tb_user b ON a.user_id = b.id\")",
+      "related": ["setFields()"]
+    },
+    {
+      "name": "setFields",
+      "signature": "void setFields(String fields)",
+      "description": "조회할 필드 설정",
+      "returnType": "void",
+      "parameters": [{"name": "fields", "type": "String", "description": "필드 목록"}],
+      "usage": "lm.setFields(\"a.*, b.name as user_name\");",
+      "notes": "기본값 *.",
+      "related": ["setTable()"]
+    },
+    {
+      "name": "setOrderBy",
+      "signature": "void setOrderBy(String orderby)",
+      "description": "정렬 조건 설정",
+      "returnType": "void",
+      "parameters": [{"name": "orderby", "type": "String", "description": "정렬 기준"}],
+      "usage": "lm.setOrderBy(\"id DESC\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "addWhere",
+      "signature": "void addWhere(String where)",
+      "description": "고정 조건 추가",
+      "returnType": "void",
+      "parameters": [{"name": "where", "type": "String", "description": "WHERE 조건"}],
+      "usage": "lm.addWhere(\"AND status = 'active'\");",
+      "notes": "AND로 시작. 항상 적용되는 조건.",
+      "related": ["addSearch()"]
+    },
+    {
+      "name": "addSearch",
+      "signature": "void addSearch(String field, String keyword, String oper)",
+      "description": "검색 조건 추가 (빈 값 자동 무시)",
+      "returnType": "void",
+      "parameters": [
+        {"name": "field", "type": "String", "description": "검색 필드 (콤마로 복수 가능)"},
+        {"name": "keyword", "type": "String", "description": "검색어"},
+        {"name": "oper", "type": "String", "description": "연산자 (like, =, >, < 등)"}
+      ],
+      "usage": "lm.addSearch(\"title,content\", m.rs(\"keyword\"), \"like\");",
+      "notes": "keyword가 빈 문자열이면 자동으로 무시됨. 빈 값 체크 불필요.",
+      "related": ["addWhere()"]
+    },
+    {
+      "name": "getDataSet",
+      "signature": "DataSet getDataSet()",
+      "description": "목록 데이터 조회 (페이징 적용)",
+      "returnType": "DataSet",
+      "parameters": [],
+      "usage": "DataSet list = lm.getDataSet();",
+      "notes": "ROW_CLASS, __ord, __asc 필드가 자동 추가됨. while(list.next())로 순회.",
+      "related": ["getTotalNum()", "getPaging()"]
+    },
+    {
+      "name": "getTotalNum",
+      "signature": "int getTotalNum()",
+      "description": "전체 데이터 수 반환",
+      "returnType": "int",
+      "parameters": [],
+      "usage": "int total = lm.getTotalNum();",
+      "notes": "getDataSet() 호출 후 사용 가능.",
+      "related": ["getDataSet()"]
+    },
+    {
+      "name": "getPaging",
+      "signature": "String getPaging()",
+      "description": "페이징 HTML 반환",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "p.setVar(\"paging\", lm.getPaging());",
+      "notes": "getDataSet() 호출 후 사용 가능. HTML 문자열 반환.",
+      "related": ["getDataSet()"]
+    }
+  ],
+  "method_count": 11,
+  "important_rules": [
+    "설정 순서: setRequest → setTable → setFields → setOrderBy → addWhere/addSearch → getDataSet",
+    "addSearch()는 빈 값을 자동으로 무시하므로 빈 값 체크 불필요",
+    "getDataSet()은 ROW_CLASS, __ord, __asc 필드를 자동 추가",
+    "getPaging()으로 생성된 HTML을 p.setVar()로 템플릿에 전달"
+  ]
+}

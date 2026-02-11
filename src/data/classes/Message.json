@@ -1,0 +1,94 @@
+{
+  "name": "Message",
+  "fullClassName": "malgnsoft.util.Message",
+  "category": "util",
+  "description": "다국어 메시지 관리 (properties 파일 기반). 로케일별 메시지 로드, 파라미터 치환, MessageFormat 지원.",
+  "variable_name": "msg",
+  "initialization": "Message msg = new Message(\"ko\");",
+  "initialized_in": "필요 시 직접 생성",
+  "methods": [
+    {
+      "name": "constructor",
+      "signature": "Message(String locale)",
+      "description": "로케일을 지정하여 생성",
+      "returnType": "Message",
+      "parameters": [{"name": "locale", "type": "String", "description": "로케일 (ko, en 등)"}],
+      "usage": "Message msg = new Message(\"ko\");",
+      "notes": "기본 로케일: default",
+      "related": []
+    },
+    {
+      "name": "setLocale",
+      "signature": "void setLocale(String locale)",
+      "description": "현재 로케일 변경",
+      "returnType": "void",
+      "parameters": [{"name": "locale", "type": "String", "description": "로케일"}],
+      "usage": "msg.setLocale(\"en\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "get",
+      "signature": "String get(String key)",
+      "description": "메시지 조회. 없으면 키 자체를 반환.",
+      "returnType": "String",
+      "parameters": [{"name": "key", "type": "String", "description": "메시지 키"}],
+      "usage": "String label = msg.get(\"login.title\");",
+      "notes": "",
+      "related": ["format()"]
+    },
+    {
+      "name": "get (with params)",
+      "signature": "String get(String key, String[] param)",
+      "description": "파라미터 치환 포함 메시지 조회. {{key}} 형태 치환.",
+      "returnType": "String",
+      "parameters": [
+        {"name": "key", "type": "String", "description": "메시지 키"},
+        {"name": "param", "type": "String[]", "description": "key=>value 배열"}
+      ],
+      "usage": "msg.get(\"welcome\", new String[]{\"name=>홍길동\"});",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "format",
+      "signature": "String format(String key, Object... params)",
+      "description": "MessageFormat 기반 포맷팅. {0}, {1} 플레이스홀더 사용.",
+      "returnType": "String",
+      "parameters": [
+        {"name": "key", "type": "String", "description": "메시지 키"},
+        {"name": "params", "type": "Object...", "description": "포맷 파라미터"}
+      ],
+      "usage": "msg.format(\"item.count\", 5);",
+      "notes": "",
+      "related": ["get()"]
+    },
+    {
+      "name": "reload",
+      "signature": "void reload()",
+      "description": "현재 로케일 메시지 캐시 초기화",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "msg.reload();",
+      "notes": "",
+      "related": ["reloadAll()"]
+    },
+    {
+      "name": "reloadAll",
+      "signature": "void reloadAll()",
+      "description": "모든 로케일 메시지 캐시 초기화",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "msg.reloadAll();",
+      "notes": "",
+      "related": []
+    }
+  ],
+  "method_count": 7,
+  "important_rules": [
+    "메시지 파일 위치: /WEB-INF/message/message.properties (기본), message_ko.properties (로케일별)",
+    "UTF-8 인코딩으로 읽기",
+    "static 캐시로 인스턴스 간 공유",
+    "파라미터 치환: {{key}} 형태 또는 MessageFormat {0} 형태"
+  ]
+}

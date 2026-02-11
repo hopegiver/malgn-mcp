@@ -1,0 +1,97 @@
+{
+  "name": "Page",
+  "fullClassName": "malgnsoft.util.Page",
+  "category": "core",
+  "description": "템플릿 엔진 기반 페이지 렌더링 클래스 (Template 상속)",
+  "variable_name": "p",
+  "initialization": "Page p = new Page();",
+  "initialized_in": "init.jsp",
+  "methods": [
+    {
+      "name": "setLayout",
+      "signature": "void setLayout(String name)",
+      "description": "레이아웃 파일 설정",
+      "returnType": "void",
+      "parameters": [{"name": "name", "type": "String", "description": "레이아웃명"}],
+      "usage": "p.setLayout(\"default\");",
+      "notes": "layout/layout_{name}.html 파일 로드. 반드시 첫 번째로 호출.",
+      "related": ["p.setBody()"]
+    },
+    {
+      "name": "setBody",
+      "signature": "void setBody(String path)",
+      "description": "본문 템플릿 파일 설정",
+      "returnType": "void",
+      "parameters": [{"name": "path", "type": "String", "description": "본문 경로 (점으로 구분)"}],
+      "usage": "p.setBody(\"main.user_list\");",
+      "notes": "점(.)은 디렉토리 구분자로 변환: main/user_list.html → /html/main/user_list.html",
+      "related": ["p.setLayout()"]
+    },
+    {
+      "name": "setVar",
+      "signature": "void setVar(String key, String value)",
+      "description": "템플릿 변수 설정",
+      "returnType": "void",
+      "parameters": [
+        {"name": "key", "type": "String", "description": "변수명"},
+        {"name": "value", "type": "String", "description": "변수값"}
+      ],
+      "usage": "p.setVar(\"title\", \"사용자 목록\");",
+      "notes": "HTML에서 {{title}}로 출력. setBody() 이후에 호출.",
+      "related": ["p.setLoop()"]
+    },
+    {
+      "name": "setVar",
+      "signature": "void setVar(String name, DataSet values)",
+      "description": "DataSet의 현재 행을 변수로 설정",
+      "returnType": "void",
+      "parameters": [
+        {"name": "name", "type": "String", "description": "변수 접두사"},
+        {"name": "values", "type": "DataSet", "description": "데이터셋"}
+      ],
+      "usage": "p.setVar(\"info\", info);",
+      "notes": "HTML에서 {{info.title}}, {{info.name}} 등으로 접근.",
+      "related": []
+    },
+    {
+      "name": "setLoop",
+      "signature": "void setLoop(String key, DataSet dataset)",
+      "description": "반복 데이터 설정 (목록용)",
+      "returnType": "void",
+      "parameters": [
+        {"name": "key", "type": "String", "description": "루프명"},
+        {"name": "dataset", "type": "DataSet", "description": "데이터셋"}
+      ],
+      "usage": "p.setLoop(\"list\", list);",
+      "notes": "HTML에서 <!--@loop(list)-->{{list.title}}<!--/loop(list)--> 사용. 커서 자동 초기화.",
+      "related": ["p.setVar()"]
+    },
+    {
+      "name": "display",
+      "signature": "void display()",
+      "description": "페이지 렌더링 및 출력",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "p.display();",
+      "notes": "반드시 마지막에 호출. setLayout→setBody→setVar→setLoop→display 순서 엄수.",
+      "related": ["p.fetchAll()"]
+    },
+    {
+      "name": "fetchAll",
+      "signature": "String fetchAll()",
+      "description": "렌더링 결과를 문자열로 반환 (출력하지 않음)",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "String html = p.fetchAll();",
+      "notes": "display() 대신 사용. 결과를 변수에 저장하고 싶을 때.",
+      "related": ["p.display()"]
+    }
+  ],
+  "method_count": 7,
+  "important_rules": [
+    "호출 순서 반드시 엄수: setLayout() → setBody() → setVar() → setLoop() → display()",
+    "setVar()를 setBody() 전에 호출하면 안 됨",
+    "setLoop()에 전달한 DataSet은 커서가 자동 초기화됨 (moveRow() 불필요)",
+    "JSP에 HTML 코드 직접 작성 금지 - 반드시 HTML 템플릿 파일 분리"
+  ]
+}

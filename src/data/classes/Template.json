@@ -1,0 +1,174 @@
+{
+  "name": "Template",
+  "fullClassName": "malgnsoft.util.Template",
+  "category": "core",
+  "description": "HTML 템플릿 엔진. 변수 치환({{변수}}), 루프, 조건문, 파일 인클루드 지원. Page 클래스의 내부 엔진.",
+  "variable_name": "tpl",
+  "initialization": "Template tpl = new Template(tplRoot);",
+  "initialized_in": "Page 클래스 내부에서 자동 생성. 직접 사용도 가능.",
+  "methods": [
+    {
+      "name": "constructor",
+      "signature": "Template(String path)",
+      "description": "템플릿 루트 경로를 지정하여 생성",
+      "returnType": "Template",
+      "parameters": [{"name": "path", "type": "String", "description": "템플릿 루트 디렉토리 경로"}],
+      "usage": "Template tpl = new Template(Config.getTplRoot());",
+      "notes": "",
+      "related": ["setRoot()"]
+    },
+    {
+      "name": "setRoot",
+      "signature": "void setRoot(String path)",
+      "description": "템플릿 루트 디렉토리 설정",
+      "returnType": "void",
+      "parameters": [{"name": "path", "type": "String", "description": "템플릿 루트 경로"}],
+      "usage": "tpl.setRoot(\"/web/templates\");",
+      "notes": "",
+      "related": ["setBaseRoot()"]
+    },
+    {
+      "name": "setBaseRoot",
+      "signature": "void setBaseRoot(String path)",
+      "description": "기본 폴백 템플릿 루트 설정 (테마 미존재 시 기본 경로)",
+      "returnType": "void",
+      "parameters": [{"name": "path", "type": "String", "description": "기본 템플릿 루트 경로"}],
+      "usage": "tpl.setBaseRoot(\"/web/default\");",
+      "notes": "setRoot 경로에 파일이 없으면 이 경로에서 탐색.",
+      "related": ["setRoot()"]
+    },
+    {
+      "name": "setRequest",
+      "signature": "void setRequest(HttpServletRequest request, HttpServletResponse response)",
+      "description": "요청/응답 객체 설정. 요청 파라미터를 자동으로 템플릿 변수로 등록.",
+      "returnType": "void",
+      "parameters": [
+        {"name": "request", "type": "HttpServletRequest", "description": "HTTP 요청"},
+        {"name": "response", "type": "HttpServletResponse", "description": "HTTP 응답"}
+      ],
+      "usage": "tpl.setRequest(request, response);",
+      "notes": "XSS 필터링 자동 적용 (따옴표, 스크립트 태그 등).",
+      "related": []
+    },
+    {
+      "name": "setVar",
+      "signature": "void setVar(String name, String value)",
+      "description": "템플릿 변수 설정. HTML에서 {{name}}으로 출력.",
+      "returnType": "void",
+      "parameters": [
+        {"name": "name", "type": "String", "description": "변수명"},
+        {"name": "value", "type": "String", "description": "값"}
+      ],
+      "usage": "tpl.setVar(\"title\", \"게시판\");",
+      "notes": "int, long, boolean 타입 오버로드도 지원.",
+      "related": ["setLoop()"]
+    },
+    {
+      "name": "setVar (DataSet)",
+      "signature": "void setVar(String prefix, DataSet ds)",
+      "description": "DataSet 현재 행의 모든 컬럼을 prefix.컬럼명 변수로 등록",
+      "returnType": "void",
+      "parameters": [
+        {"name": "prefix", "type": "String", "description": "변수 접두사"},
+        {"name": "ds", "type": "DataSet", "description": "데이터셋"}
+      ],
+      "usage": "tpl.setVar(\"user\", info); // {{user.name}}, {{user.email}}",
+      "notes": "",
+      "related": ["setVar()"]
+    },
+    {
+      "name": "setLoop",
+      "signature": "void setLoop(String name, DataSet ds)",
+      "description": "루프 데이터 설정. HTML에서 <!--@loop(name)-->으로 반복 출력.",
+      "returnType": "void",
+      "parameters": [
+        {"name": "name", "type": "String", "description": "루프명"},
+        {"name": "ds", "type": "DataSet", "description": "반복할 데이터셋"}
+      ],
+      "usage": "tpl.setLoop(\"list\", boardList);",
+      "notes": "루프 내에서 {{list.컬럼명}}으로 접근.",
+      "related": ["setVar()"]
+    },
+    {
+      "name": "setLanguage",
+      "signature": "void setLanguage(Language lang)",
+      "description": "다국어 메시지 프로바이더 설정",
+      "returnType": "void",
+      "parameters": [{"name": "lang", "type": "Language", "description": "Language 객체"}],
+      "usage": "tpl.setLanguage(lang);",
+      "notes": "템플릿에서 #{key} 형태로 다국어 메시지 출력 가능.",
+      "related": ["setMessage()"]
+    },
+    {
+      "name": "fetch",
+      "signature": "String fetch(String filename)",
+      "description": "템플릿 파일을 파싱하여 결과 문자열 반환",
+      "returnType": "String",
+      "parameters": [{"name": "filename", "type": "String", "description": "템플릿 파일 경로 (루트 기준 상대경로)"}],
+      "usage": "String html = tpl.fetch(\"board/list.html\");",
+      "notes": "",
+      "related": ["fetchString()", "print()"]
+    },
+    {
+      "name": "fetchString",
+      "signature": "String fetchString(String str)",
+      "description": "문자열을 템플릿으로 파싱하여 결과 반환",
+      "returnType": "String",
+      "parameters": [{"name": "str", "type": "String", "description": "템플릿 문자열"}],
+      "usage": "String result = tpl.fetchString(\"안녕하세요 {{name}}님\");",
+      "notes": "",
+      "related": ["fetch()"]
+    },
+    {
+      "name": "print",
+      "signature": "void print(Writer out, String filename)",
+      "description": "템플릿 파싱 결과를 Writer로 출력",
+      "returnType": "void",
+      "parameters": [
+        {"name": "out", "type": "Writer", "description": "출력 대상"},
+        {"name": "filename", "type": "String", "description": "템플릿 파일 경로"}
+      ],
+      "usage": "tpl.print(out, \"board/list.html\");",
+      "notes": "",
+      "related": ["fetch()"]
+    },
+    {
+      "name": "parseString",
+      "signature": "String parseString(String str)",
+      "description": "문자열 내 {{변수}} 플레이스홀더를 치환",
+      "returnType": "String",
+      "parameters": [{"name": "str", "type": "String", "description": "치환할 문자열"}],
+      "usage": "String url = tpl.parseString(\"/view.jsp?id={{id}}\");",
+      "notes": "",
+      "related": ["fetchString()"]
+    },
+    {
+      "name": "printJSON",
+      "signature": "void printJSON(Writer out)",
+      "description": "설정된 변수와 루프 데이터를 JSON 형식으로 출력",
+      "returnType": "void",
+      "parameters": [{"name": "out", "type": "Writer", "description": "출력 대상"}],
+      "usage": "tpl.printJSON(out);",
+      "notes": "REST API에서 템플릿 데이터를 JSON으로 반환할 때 사용.",
+      "related": []
+    },
+    {
+      "name": "clear",
+      "signature": "void clear()",
+      "description": "모든 변수와 루프 데이터 초기화",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "tpl.clear();",
+      "notes": "",
+      "related": []
+    }
+  ],
+  "method_count": 14,
+  "important_rules": [
+    "변수 치환: {{변수명}} 문법 사용",
+    "루프: <!--@loop(name)-->...<!--/loop(name)--> 또는 <!-- LOOP START 'name' -->...<!-- LOOP END 'name' -->",
+    "조건문: <!--@if(변수)-->...<!--/if(변수)--> 또는 <!-- IF START '변수' -->...<!-- IF END '변수' -->",
+    "인클루드: <!--@include('파일경로')--> 또는 <!-- INCLUDE '파일경로' -->",
+    "XSS 필터링 자동 적용 (요청 파라미터)"
+  ]
+}

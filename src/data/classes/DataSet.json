@@ -1,0 +1,179 @@
+{
+  "name": "DataSet",
+  "fullClassName": "malgnsoft.db.DataSet",
+  "category": "data",
+  "description": "데이터 행/열 컬렉션 (커서 기반 탐색). DB 조회 결과를 담는 핵심 데이터 구조.",
+  "variable_name": "단일: info/data, 복수: list 또는 xxxList",
+  "initialization": "DataSet info = user.get(id);",
+  "initialized_in": "find()/get()/query() 반환값",
+  "methods": [
+    {
+      "name": "next",
+      "signature": "boolean next()",
+      "description": "다음 행으로 커서 이동 (반드시 호출!)",
+      "returnType": "boolean",
+      "parameters": [],
+      "usage": "if(info.next()) {\n  String name = info.s(\"name\");\n}\n// 또는\nwhile(list.next()) {\n  String name = list.s(\"name\");\n}",
+      "notes": "데이터 접근 전 반드시 호출. 단일 행: if(info.next()), 복수 행: while(list.next())",
+      "related": ["first()", "prev()"]
+    },
+    {
+      "name": "s",
+      "signature": "String s(String name)",
+      "description": "문자열 값 반환 (null 대신 빈 문자열)",
+      "returnType": "String",
+      "parameters": [{"name": "name", "type": "String", "description": "컬럼명"}],
+      "usage": "String name = info.s(\"name\");",
+      "notes": "null을 반환하지 않으므로 null 체크 불필요. getString()의 약칭.",
+      "related": ["i()", "l()", "d()"]
+    },
+    {
+      "name": "i",
+      "signature": "int i(String name)",
+      "description": "정수 값 반환",
+      "returnType": "int",
+      "parameters": [{"name": "name", "type": "String", "description": "컬럼명"}],
+      "usage": "int id = info.i(\"id\");",
+      "notes": "getInt()의 약칭.",
+      "related": ["s()", "l()"]
+    },
+    {
+      "name": "l",
+      "signature": "long l(String name)",
+      "description": "long 값 반환",
+      "returnType": "long",
+      "parameters": [{"name": "name", "type": "String", "description": "컬럼명"}],
+      "usage": "long amount = info.l(\"amount\");",
+      "notes": "getLong()의 약칭.",
+      "related": ["i()"]
+    },
+    {
+      "name": "d",
+      "signature": "double d(String name)",
+      "description": "double 값 반환",
+      "returnType": "double",
+      "parameters": [{"name": "name", "type": "String", "description": "컬럼명"}],
+      "usage": "double rate = info.d(\"rate\");",
+      "notes": "getDouble()의 약칭.",
+      "related": ["i()"]
+    },
+    {
+      "name": "b",
+      "signature": "boolean b(String name)",
+      "description": "boolean 값 반환",
+      "returnType": "boolean",
+      "parameters": [{"name": "name", "type": "String", "description": "컬럼명"}],
+      "usage": "boolean isActive = info.b(\"is_active\");",
+      "notes": "getBoolean()의 약칭.",
+      "related": []
+    },
+    {
+      "name": "put",
+      "signature": "void put(String name, String value)",
+      "description": "현재 행에 필드 추가/수정",
+      "returnType": "void",
+      "parameters": [
+        {"name": "name", "type": "String", "description": "컬럼명"},
+        {"name": "value", "type": "String", "description": "값"}
+      ],
+      "usage": "info.put(\"full_name\", info.s(\"first_name\") + \" \" + info.s(\"last_name\"));",
+      "notes": "DB에 저장되지 않음. 화면 표시용 가공 데이터 추가에 사용.",
+      "related": []
+    },
+    {
+      "name": "addRow",
+      "signature": "void addRow()",
+      "description": "새로운 빈 행 추가",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "DataSet ds = new DataSet();\nds.addRow();\nds.put(\"name\", \"홍길동\");",
+      "notes": "프로그래밍으로 DataSet 구성 시 사용.",
+      "related": ["put()"]
+    },
+    {
+      "name": "first",
+      "signature": "void first()",
+      "description": "커서를 처음으로 이동",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "list.first();",
+      "notes": "커서 리셋. 다시 순회할 때 사용.",
+      "related": ["next()", "last()"]
+    },
+    {
+      "name": "last",
+      "signature": "void last()",
+      "description": "커서를 마지막 행으로 이동",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "list.last();",
+      "notes": "",
+      "related": ["first()"]
+    },
+    {
+      "name": "prev",
+      "signature": "boolean prev()",
+      "description": "이전 행으로 커서 이동",
+      "returnType": "boolean",
+      "parameters": [],
+      "usage": "list.prev();",
+      "notes": "",
+      "related": ["next()"]
+    },
+    {
+      "name": "search",
+      "signature": "DataSet search(String key, String value, String op)",
+      "description": "메모리 내 필터링 (새 DataSet 반환)",
+      "returnType": "DataSet",
+      "parameters": [
+        {"name": "key", "type": "String", "description": "검색 필드"},
+        {"name": "value", "type": "String", "description": "검색 값"},
+        {"name": "op", "type": "String", "description": "연산자 (=, like 등)"}
+      ],
+      "usage": "DataSet filtered = list.search(\"status\", \"active\", \"=\");",
+      "notes": "DB 재조회 없이 메모리에서 필터링.",
+      "related": ["sort()"]
+    },
+    {
+      "name": "sort",
+      "signature": "void sort(String key, String ord)",
+      "description": "메모리 내 정렬",
+      "returnType": "void",
+      "parameters": [
+        {"name": "key", "type": "String", "description": "정렬 필드"},
+        {"name": "ord", "type": "String", "description": "정렬 방향 (asc/desc)"}
+      ],
+      "usage": "list.sort(\"name\", \"asc\");",
+      "notes": "DB 재조회 없이 메모리에서 정렬.",
+      "related": ["search()"]
+    },
+    {
+      "name": "serialize",
+      "signature": "String serialize()",
+      "description": "DataSet을 JSON 문자열로 변환",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "String json = list.serialize();",
+      "notes": "",
+      "related": ["unserialize()"]
+    },
+    {
+      "name": "unserialize",
+      "signature": "static DataSet unserialize(String str)",
+      "description": "JSON 문자열을 DataSet으로 변환",
+      "returnType": "DataSet",
+      "parameters": [{"name": "str", "type": "String", "description": "JSON 문자열"}],
+      "usage": "DataSet list = DataSet.unserialize(jsonStr);",
+      "notes": "static 메소드.",
+      "related": ["serialize()"]
+    }
+  ],
+  "method_count": 15,
+  "important_rules": [
+    "next() 호출 없이 s(), i() 등 데이터 접근 금지",
+    "단일 행: if(info.next()), 복수 행: while(list.next())",
+    "s()는 null을 반환하지 않음 (null 체크 불필요)",
+    "변수명: 단일 데이터는 info/data, 복수 데이터는 list 또는 xxxList (ds 사용 금지)",
+    "setLoop()에 전달 시 커서가 자동 초기화됨"
+  ]
+}

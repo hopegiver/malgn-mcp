@@ -1,0 +1,33 @@
+{
+  "category": "style",
+  "total": 3,
+  "rules": [
+    {
+      "id": "style-form-element",
+      "category": "style",
+      "severity": "warning",
+      "title": "폼 요소 정의",
+      "rule": "f.addElement()로 폼 필드를 정의하고, 검색값 유지에 활용",
+      "correct": "f.addElement(\"keyword\", m.rs(\"keyword\"), \"\");",
+      "incorrect": "// addElement 없이 m.rs()만 사용하면 검색값 유지 안 됨"
+    },
+    {
+      "id": "style-listmanager-search",
+      "category": "style",
+      "severity": "warning",
+      "title": "ListManager 검색",
+      "rule": "addSearch()는 빈 값을 자동 무시하므로 별도 빈 값 체크 불필요",
+      "correct": "lm.addSearch(\"title\", m.rs(\"keyword\"), \"like\");",
+      "incorrect": "if(!\"\".equals(m.rs(\"keyword\"))) {\n  lm.addSearch(\"title\", m.rs(\"keyword\"), \"like\");\n}"
+    },
+    {
+      "id": "style-dao-class",
+      "category": "style",
+      "severity": "error",
+      "title": "DAO 클래스 작성법",
+      "rule": "DataObject를 상속하고 생성자에서 table 설정",
+      "correct": "public class UserDao extends DataObject {\n  public UserDao() { this.table = \"tb_user\"; }\n}",
+      "incorrect": "public class UserDao { ... } // DataObject 미상속"
+    }
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "name": "Mail",
+  "fullClassName": "malgnsoft.util.Gmail",
+  "category": "util",
+  "description": "이메일 발송 유틸리티. SMTP/Gmail/SES 지원. 첨부파일 및 HTML 이메일 지원.",
+  "variable_name": "mail",
+  "initialization": "Gmail mail = new Gmail(id, pw);",
+  "initialized_in": "필요 시 직접 생성",
+  "methods": [
+    {
+      "name": "constructor",
+      "signature": "Gmail(String id, String pw)",
+      "description": "Gmail 인증으로 생성",
+      "returnType": "Gmail",
+      "parameters": [
+        {"name": "id", "type": "String", "description": "Gmail 계정"},
+        {"name": "pw", "type": "String", "description": "앱 비밀번호"}
+      ],
+      "usage": "Gmail mail = new Gmail(\"user@gmail.com\", \"app-password\");",
+      "notes": "Gmail 앱 비밀번호 사용.",
+      "related": []
+    },
+    {
+      "name": "constructor",
+      "signature": "Gmail(String host, String id, String pw)",
+      "description": "SMTP 서버 지정 생성",
+      "returnType": "Gmail",
+      "parameters": [
+        {"name": "host", "type": "String", "description": "SMTP 호스트"},
+        {"name": "id", "type": "String", "description": "계정"},
+        {"name": "pw", "type": "String", "description": "비밀번호"}
+      ],
+      "usage": "Gmail mail = new Gmail(\"smtp.example.com\", \"user\", \"pass\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "setFrom",
+      "signature": "void setFrom(String from)",
+      "description": "발신자 이메일 설정",
+      "returnType": "void",
+      "parameters": [{"name": "from", "type": "String", "description": "발신자 이메일"}],
+      "usage": "mail.setFrom(\"noreply@example.com\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "setPort",
+      "signature": "void setPort(int port)",
+      "description": "SMTP 포트 설정",
+      "returnType": "void",
+      "parameters": [{"name": "port", "type": "int", "description": "포트 번호"}],
+      "usage": "mail.setPort(587);",
+      "notes": "Gmail: 465(SSL) 또는 587(TLS).",
+      "related": ["setSSL()"]
+    },
+    {
+      "name": "setSSL",
+      "signature": "void setSSL(boolean flag)",
+      "description": "SSL 사용 여부",
+      "returnType": "void",
+      "parameters": [{"name": "flag", "type": "boolean", "description": "SSL 사용 여부"}],
+      "usage": "mail.setSSL(true);",
+      "notes": "",
+      "related": ["setPort()"]
+    },
+    {
+      "name": "send",
+      "signature": "void send(String mailTo, String subject, String body)",
+      "description": "이메일 발송",
+      "returnType": "void",
+      "parameters": [
+        {"name": "mailTo", "type": "String", "description": "수신자 이메일"},
+        {"name": "subject", "type": "String", "description": "제목"},
+        {"name": "body", "type": "String", "description": "본문 (HTML 가능)"}
+      ],
+      "usage": "mail.send(\"user@example.com\", \"제목\", \"<h1>본문</h1>\");",
+      "notes": "HTML 태그 사용 가능.",
+      "related": []
+    },
+    {
+      "name": "send",
+      "signature": "void send(String mailTo, String subject, String body, String[] files)",
+      "description": "첨부파일과 함께 이메일 발송",
+      "returnType": "void",
+      "parameters": [
+        {"name": "mailTo", "type": "String", "description": "수신자"},
+        {"name": "subject", "type": "String", "description": "제목"},
+        {"name": "body", "type": "String", "description": "본문"},
+        {"name": "files", "type": "String[]", "description": "첨부파일 경로 배열"}
+      ],
+      "usage": "mail.send(\"user@example.com\", \"제목\", \"본문\", new String[]{\"/path/file.pdf\"});",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "send",
+      "signature": "void send(String[] mailTo, String subject, String body)",
+      "description": "복수 수신자에게 이메일 발송",
+      "returnType": "void",
+      "parameters": [
+        {"name": "mailTo", "type": "String[]", "description": "수신자 배열"},
+        {"name": "subject", "type": "String", "description": "제목"},
+        {"name": "body", "type": "String", "description": "본문"}
+      ],
+      "usage": "mail.send(new String[]{\"a@test.com\", \"b@test.com\"}, \"제목\", \"본문\");",
+      "notes": "",
+      "related": []
+    }
+  ],
+  "method_count": 8,
+  "important_rules": [
+    "Gmail 사용 시 앱 비밀번호 필요 (일반 비밀번호 X)",
+    "HTML 이메일 지원 (body에 HTML 태그 사용)"
+  ]
+}

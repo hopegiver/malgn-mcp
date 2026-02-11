@@ -1,0 +1,96 @@
+{
+  "name": "Calendar",
+  "fullClassName": "malgnsoft.util.MCal",
+  "category": "util",
+  "description": "달력 날짜 범위 생성 유틸리티. 년/월/일/시/분 선택 DataSet 생성.",
+  "variable_name": "cal",
+  "initialization": "MCal cal = new MCal();",
+  "initialized_in": "필요 시 직접 생성",
+  "methods": [
+    {
+      "name": "getYears",
+      "signature": "DataSet getYears()",
+      "description": "현재 연도 기준 년도 목록",
+      "returnType": "DataSet",
+      "parameters": [],
+      "usage": "DataSet years = cal.getYears();",
+      "notes": "기본 ±5년 범위.",
+      "related": ["setYearRange()"]
+    },
+    {
+      "name": "getMonths",
+      "signature": "DataSet getMonths()",
+      "description": "월 목록 (01~12)",
+      "returnType": "DataSet",
+      "parameters": [],
+      "usage": "DataSet months = cal.getMonths();",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "getDays",
+      "signature": "DataSet getDays()",
+      "description": "일 목록 (01~31)",
+      "returnType": "DataSet",
+      "parameters": [],
+      "usage": "DataSet days = cal.getDays();",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "getHours",
+      "signature": "DataSet getHours()",
+      "description": "시간 목록 (00~23)",
+      "returnType": "DataSet",
+      "parameters": [],
+      "usage": "DataSet hours = cal.getHours();",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "getMinutes",
+      "signature": "DataSet getMinutes(int step)",
+      "description": "분 목록 (지정 간격)",
+      "returnType": "DataSet",
+      "parameters": [{"name": "step", "type": "int", "description": "간격 (분)"}],
+      "usage": "DataSet minutes = cal.getMinutes(10);  // 00,10,20,...",
+      "notes": "기본 1분 간격.",
+      "related": []
+    },
+    {
+      "name": "setYearRange",
+      "signature": "void setYearRange(int range)",
+      "description": "년도 범위 설정",
+      "returnType": "void",
+      "parameters": [{"name": "range", "type": "int", "description": "±범위"}],
+      "usage": "cal.setYearRange(10);",
+      "notes": "getYears() 전에 호출.",
+      "related": ["getYears()"]
+    },
+    {
+      "name": "getMonthDays",
+      "signature": "DataSet getMonthDays(String date)",
+      "description": "월별 달력 데이터 생성",
+      "returnType": "DataSet",
+      "parameters": [{"name": "date", "type": "String", "description": "기준 날짜 (yyyyMMdd)"}],
+      "usage": "DataSet days = cal.getMonthDays(\"20240115\");",
+      "notes": "이전/다음 월 날짜 포함. 캘린더 UI 구현용.",
+      "related": []
+    },
+    {
+      "name": "getWeekNum",
+      "signature": "int getWeekNum(String date)",
+      "description": "요일 번호 반환 (1=월 ~ 7=일)",
+      "returnType": "int",
+      "parameters": [{"name": "date", "type": "String", "description": "날짜 (yyyyMMdd)"}],
+      "usage": "int weekday = cal.getWeekNum(\"20240115\");",
+      "notes": "",
+      "related": []
+    }
+  ],
+  "method_count": 8,
+  "important_rules": [
+    "select box 등 날짜 선택 UI 구현에 사용",
+    "getMonthDays()로 캘린더 UI 데이터 생성"
+  ]
+}

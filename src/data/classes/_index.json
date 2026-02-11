@@ -1,0 +1,300 @@
+{
+  "total": 36,
+  "categories": {
+    "core": ["Malgn", "Form", "Page", "Template", "Config"],
+    "data": ["DataObject", "DataSet", "Database", "ListManager", "DataMap", "RecordSet", "SQL", "SqlMap", "QueryLog"],
+    "web": ["Json", "RestAPI", "Http", "OpenAI", "JSONObject", "JSONArray"],
+    "util": ["Mail", "ExcelX", "ExcelReader", "ExcelWriter", "ExcelTemplate", "SimpleParser", "FileManager", "Calendar", "Pager", "Message", "Cache", "Zip", "Base64"],
+    "security": ["Auth", "Cipher", "OAuthClient"]
+  },
+  "classes": [
+    {
+      "name": "Malgn",
+      "category": "core",
+      "description": "프레임워크 핵심 유틸리티 클래스 - 요청 파라미터, 리다이렉트, 시간, 암호화 등",
+      "variable_name": "m",
+      "initialization": "Malgn m = new Malgn(request, response, out);",
+      "method_count": 45
+    },
+    {
+      "name": "Form",
+      "category": "core",
+      "description": "폼 데이터 처리 및 유효성 검증 클래스",
+      "variable_name": "f",
+      "initialization": "Form f = new Form();",
+      "method_count": 15
+    },
+    {
+      "name": "Page",
+      "category": "core",
+      "description": "템플릿 엔진 기반 페이지 렌더링 클래스",
+      "variable_name": "p",
+      "initialization": "Page p = new Page();",
+      "method_count": 8
+    },
+    {
+      "name": "Template",
+      "category": "core",
+      "description": "HTML 템플릿 엔진 - 변수 치환({{변수}}), 루프, 조건문, 인클루드",
+      "variable_name": "tpl",
+      "initialization": "Template tpl = new Template(tplRoot);",
+      "method_count": 14
+    },
+    {
+      "name": "Config",
+      "category": "core",
+      "description": "전역 설정 관리자 (config.xml) - 경로, URL, JNDI, 인코딩",
+      "variable_name": "Config (static)",
+      "initialization": "Config.load(request);",
+      "method_count": 16
+    },
+    {
+      "name": "DataObject",
+      "category": "data",
+      "description": "DAO 기반 데이터베이스 CRUD 추상 클래스",
+      "variable_name": "테이블명 (tb_ 제거)",
+      "initialization": "UserDao user = new UserDao();",
+      "method_count": 25
+    },
+    {
+      "name": "DataSet",
+      "category": "data",
+      "description": "데이터 행/열 컬렉션 (커서 기반 탐색)",
+      "variable_name": "단일: info, 복수: list",
+      "initialization": "DataSet info = user.get(id);",
+      "method_count": 20
+    },
+    {
+      "name": "Database",
+      "category": "data",
+      "description": "데이터베이스 연결 및 쿼리 실행 (JNDI/JDBC)",
+      "variable_name": "db",
+      "initialization": "DB db = new DB();",
+      "method_count": 30
+    },
+    {
+      "name": "ListManager",
+      "category": "data",
+      "description": "목록 조회 + 페이징 + 검색 통합 관리",
+      "variable_name": "lm",
+      "initialization": "ListManager lm = new ListManager();",
+      "method_count": 15
+    },
+    {
+      "name": "DataMap",
+      "category": "data",
+      "description": "타입 변환 지원 Map - 단축 접근자(s, i, l, d, b)",
+      "variable_name": "map",
+      "initialization": "DataMap map = new DataMap();",
+      "method_count": 9
+    },
+    {
+      "name": "RecordSet",
+      "category": "data",
+      "description": "JDBC ResultSet → DataSet 변환, 메타데이터 자동 추출",
+      "variable_name": "rs",
+      "initialization": "RecordSet rs = new RecordSet(resultSet);",
+      "method_count": 3
+    },
+    {
+      "name": "SQL",
+      "category": "data",
+      "description": "플루언트 SQL 빌더 - 메소드 체이닝, 바인드 파라미터",
+      "variable_name": "sql",
+      "initialization": "SQL sql = new SQL();",
+      "method_count": 13
+    },
+    {
+      "name": "SqlMap",
+      "category": "data",
+      "description": "MyBatis SqlSession 래퍼 - CRUD, 트랜잭션 관리",
+      "variable_name": "sm",
+      "initialization": "SqlMap sm = new SqlMap();",
+      "method_count": 8
+    },
+    {
+      "name": "QueryLog",
+      "category": "data",
+      "description": "DB 쿼리 감사 로그 - 사용자/IP/쿼리 기록",
+      "variable_name": "qlog",
+      "initialization": "QueryLog qlog = new QueryLog(userId, userName, ipAddr);",
+      "method_count": 3
+    },
+    {
+      "name": "Json",
+      "category": "web",
+      "description": "JSON 응답 및 파싱 유틸리티",
+      "variable_name": "j",
+      "initialization": "Json j = new Json(out);",
+      "method_count": 12
+    },
+    {
+      "name": "RestAPI",
+      "category": "web",
+      "description": "REST API 라우팅, JWT 인증, CORS 처리",
+      "variable_name": "api",
+      "initialization": "RestAPI api = new RestAPI(request, response);",
+      "method_count": 25
+    },
+    {
+      "name": "Http",
+      "category": "web",
+      "description": "HTTP 클라이언트 (GET/POST/PUT/DELETE)",
+      "variable_name": "http",
+      "initialization": "Http http = new Http(url);",
+      "method_count": 14
+    },
+    {
+      "name": "OpenAI",
+      "category": "web",
+      "description": "OpenAI API 클라이언트 - Chat, 스트리밍, 히스토리 관리",
+      "variable_name": "ai",
+      "initialization": "OpenAI ai = new OpenAI();",
+      "method_count": 11
+    },
+    {
+      "name": "JSONObject",
+      "category": "web",
+      "description": "JSON 객체 파서/빌더 (org.json 내장)",
+      "variable_name": "jo",
+      "initialization": "JSONObject jo = new JSONObject();",
+      "method_count": 12
+    },
+    {
+      "name": "JSONArray",
+      "category": "web",
+      "description": "JSON 배열 파서/빌더 (org.json 내장)",
+      "variable_name": "ja",
+      "initialization": "JSONArray ja = new JSONArray();",
+      "method_count": 12
+    },
+    {
+      "name": "Mail",
+      "category": "util",
+      "description": "이메일 발송 (SMTP/Gmail/SES)",
+      "variable_name": "mail",
+      "initialization": "Gmail mail = new Gmail(id, pw);",
+      "method_count": 10
+    },
+    {
+      "name": "ExcelX",
+      "category": "util",
+      "description": "Excel 파일 읽기/쓰기 (XLSX)",
+      "variable_name": "excel",
+      "initialization": "ExcelX excel = new ExcelX(path);",
+      "method_count": 18
+    },
+    {
+      "name": "ExcelReader",
+      "category": "util",
+      "description": "Excel 파일 읽기 (XLS, JXL)",
+      "variable_name": "reader",
+      "initialization": "ExcelReader reader = new ExcelReader(path);",
+      "method_count": 6
+    },
+    {
+      "name": "ExcelWriter",
+      "category": "util",
+      "description": "Excel 파일 쓰기 (XLS, JXL) - DataSet 내보내기",
+      "variable_name": "excel",
+      "initialization": "ExcelWriter excel = new ExcelWriter(path);",
+      "method_count": 7
+    },
+    {
+      "name": "ExcelTemplate",
+      "category": "util",
+      "description": "JXLS 기반 엑셀 템플릿 변환",
+      "variable_name": "et",
+      "initialization": "ExcelTemplate et = new ExcelTemplate();",
+      "method_count": 4
+    },
+    {
+      "name": "SimpleParser",
+      "category": "util",
+      "description": "XML 파싱 및 XPath 조회, 노드를 DataSet으로 변환",
+      "variable_name": "xml",
+      "initialization": "SimpleParser xml = new SimpleParser(path);",
+      "method_count": 10
+    },
+    {
+      "name": "FileManager",
+      "category": "util",
+      "description": "FTP 파일 전송 클라이언트",
+      "variable_name": "ftp",
+      "initialization": "SimpleFTP ftp = new SimpleFTP();",
+      "method_count": 10
+    },
+    {
+      "name": "Calendar",
+      "category": "util",
+      "description": "달력 날짜 범위 생성 유틸리티",
+      "variable_name": "cal",
+      "initialization": "MCal cal = new MCal();",
+      "method_count": 12
+    },
+    {
+      "name": "Pager",
+      "category": "util",
+      "description": "페이징 유틸리티 - 네비게이션 HTML, 메타데이터",
+      "variable_name": "pager",
+      "initialization": "Pager pager = new Pager(request);",
+      "method_count": 10
+    },
+    {
+      "name": "Message",
+      "category": "util",
+      "description": "다국어 메시지 관리 (properties 파일 기반)",
+      "variable_name": "msg",
+      "initialization": "Message msg = new Message(\"ko\");",
+      "method_count": 7
+    },
+    {
+      "name": "Cache",
+      "category": "util",
+      "description": "파일 시스템 기반 객체 캐시 (타임아웃 지원)",
+      "variable_name": "cache",
+      "initialization": "Cache cache = new Cache();",
+      "method_count": 7
+    },
+    {
+      "name": "Zip",
+      "category": "util",
+      "description": "ZIP 압축/해제, HTTP 다운로드 지원",
+      "variable_name": "zip",
+      "initialization": "Zip zip = new Zip();",
+      "method_count": 4
+    },
+    {
+      "name": "Base64",
+      "category": "security",
+      "description": "Base64 인코딩/디코딩 (static 유틸리티)",
+      "variable_name": "Base64 (static)",
+      "initialization": "Base64.encode(str);",
+      "method_count": 5
+    },
+    {
+      "name": "Auth",
+      "category": "security",
+      "description": "인증 처리 (쿠키/세션 기반, AES 암호화)",
+      "variable_name": "auth",
+      "initialization": "Auth auth = new Auth(request, response);",
+      "method_count": 8
+    },
+    {
+      "name": "Cipher",
+      "category": "security",
+      "description": "AES 암호화/복호화 (CBC 모드, PKCS5)",
+      "variable_name": "aes",
+      "initialization": "AES aes = new AES(key);",
+      "method_count": 6
+    },
+    {
+      "name": "OAuthClient",
+      "category": "security",
+      "description": "OAuth 2.0 소셜 로그인 (Google, Facebook, Naver 등)",
+      "variable_name": "oauth",
+      "initialization": "OAuthClient oauth = new OAuthClient(request, session);",
+      "method_count": 7
+    }
+  ]
+}

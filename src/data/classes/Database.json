@@ -1,0 +1,148 @@
+{
+  "name": "Database",
+  "fullClassName": "malgnsoft.db.DB",
+  "category": "data",
+  "description": "데이터베이스 연결 및 쿼리 실행 (JNDI/JDBC). MySQL, Oracle, MSSQL, MariaDB 지원.",
+  "variable_name": "db",
+  "initialization": "DB db = new DB();",
+  "initialized_in": "필요 시 직접 생성 (보통 DataObject 사용)",
+  "methods": [
+    {
+      "name": "query",
+      "signature": "RecordSet query(String sql)",
+      "description": "SELECT 쿼리 실행",
+      "returnType": "RecordSet",
+      "parameters": [{"name": "sql", "type": "String", "description": "SELECT 쿼리"}],
+      "usage": "RecordSet rs = db.query(\"SELECT * FROM tb_user\");",
+      "notes": "보통 DataObject를 대신 사용. 복잡한 쿼리에서만 직접 사용.",
+      "related": ["query(sql, args)"]
+    },
+    {
+      "name": "query",
+      "signature": "RecordSet query(String sql, Object[] args)",
+      "description": "바인딩 파라미터를 사용한 SELECT",
+      "returnType": "RecordSet",
+      "parameters": [
+        {"name": "sql", "type": "String", "description": "SQL (? 플레이스홀더)"},
+        {"name": "args", "type": "Object[]", "description": "바인딩 파라미터"}
+      ],
+      "usage": "RecordSet rs = db.query(\"SELECT * FROM tb_user WHERE id = ?\", new Object[]{id});",
+      "notes": "SQL Injection 방지.",
+      "related": []
+    },
+    {
+      "name": "execute",
+      "signature": "int execute(String sql)",
+      "description": "INSERT/UPDATE/DELETE 실행",
+      "returnType": "int",
+      "parameters": [{"name": "sql", "type": "String", "description": "SQL 쿼리"}],
+      "usage": "int affected = db.execute(\"DELETE FROM tb_log WHERE created < '2024-01-01'\");",
+      "notes": "영향받은 행 수 반환.",
+      "related": ["execute(sql, args)"]
+    },
+    {
+      "name": "execute",
+      "signature": "int execute(String sql, Object[] args)",
+      "description": "바인딩 파라미터를 사용한 INSERT/UPDATE/DELETE",
+      "returnType": "int",
+      "parameters": [
+        {"name": "sql", "type": "String", "description": "SQL (? 플레이스홀더)"},
+        {"name": "args", "type": "Object[]", "description": "바인딩 파라미터"}
+      ],
+      "usage": "db.execute(\"UPDATE tb_user SET name = ? WHERE id = ?\", new Object[]{name, id});",
+      "notes": "SQL Injection 방지.",
+      "related": []
+    },
+    {
+      "name": "begin",
+      "signature": "void begin()",
+      "description": "트랜잭션 시작",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "db.begin();",
+      "notes": "",
+      "related": ["commit()", "rollback()"]
+    },
+    {
+      "name": "commit",
+      "signature": "boolean commit()",
+      "description": "트랜잭션 커밋",
+      "returnType": "boolean",
+      "parameters": [],
+      "usage": "db.commit();",
+      "notes": "",
+      "related": ["begin()", "rollback()"]
+    },
+    {
+      "name": "rollback",
+      "signature": "void rollback()",
+      "description": "트랜잭션 롤백",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "db.rollback();",
+      "notes": "",
+      "related": ["begin()"]
+    },
+    {
+      "name": "close",
+      "signature": "void close()",
+      "description": "DB 연결 종료",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "db.close();",
+      "notes": "사용 후 반드시 호출.",
+      "related": []
+    },
+    {
+      "name": "connect",
+      "signature": "void connect(String url, String user, String pass)",
+      "description": "JDBC 직접 연결",
+      "returnType": "void",
+      "parameters": [
+        {"name": "url", "type": "String", "description": "JDBC URL"},
+        {"name": "user", "type": "String", "description": "DB 사용자"},
+        {"name": "pass", "type": "String", "description": "DB 비밀번호"}
+      ],
+      "usage": "db.connect(\"jdbc:mysql://localhost/mydb\", \"root\", \"pass\");",
+      "notes": "보통 JNDI 사용. 테스트 시에만 직접 연결.",
+      "related": []
+    },
+    {
+      "name": "getInsertId",
+      "signature": "int getInsertId()",
+      "description": "마지막 INSERT ID 조회",
+      "returnType": "int",
+      "parameters": [],
+      "usage": "int id = db.getInsertId();",
+      "notes": "execute() 직후 호출.",
+      "related": []
+    },
+    {
+      "name": "getError",
+      "signature": "String getError()",
+      "description": "마지막 에러 메시지",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "String err = db.getError();",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "setDebug",
+      "signature": "void setDebug(Writer out)",
+      "description": "디버그 모드 활성화",
+      "returnType": "void",
+      "parameters": [{"name": "out", "type": "Writer", "description": "출력 Writer"}],
+      "usage": "db.setDebug(out);",
+      "notes": "실행 SQL을 화면에 출력.",
+      "related": []
+    }
+  ],
+  "method_count": 12,
+  "important_rules": [
+    "보통 DataObject(DAO)를 통해 간접적으로 사용",
+    "직접 사용은 복잡한 JOIN이나 집계 쿼리에서만",
+    "사용 후 반드시 close() 호출",
+    "SQL 파라미터는 ? 바인딩 사용"
+  ]
+}

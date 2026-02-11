@@ -1,0 +1,17 @@
+{
+  "type": "jsp-modify",
+  "title": "수정 페이지 (JSP)",
+  "variables": {
+    "TABLE_NAME": { "description": "테이블명", "example": "tb_board" },
+    "DAO_CLASS": { "description": "DAO 클래스명", "example": "BoardDao" },
+    "DAO_VAR": { "description": "DAO 변수명", "example": "board" }
+  },
+  "jsp_template": "<%@ page contentType=\"text/html; charset=utf-8\" %><%@ include file=\"/init.jsp\" %><%\n\nint id = m.ri(\"id\");\nif(id == 0) { m.jsError(\"잘못된 접근입니다.\"); return; }\n\n// 폼 요소 정의\nf.addElement(\"title\", \"\", \"required,maxbyte:200\");\nf.addElement(\"content\", \"\", \"required\");\n\n// POST 처리\nif(m.isPost()) {\n  if(!f.validate()) {\n    m.jsError(f.getErrMsg());\n    return;\n  }\n\n  {DAO_CLASS} {DAO_VAR} = new {DAO_CLASS}();\n  {DAO_VAR}.item(\"title\", f.get(\"title\"));\n  {DAO_VAR}.item(\"content\", f.get(\"content\"));\n  {DAO_VAR}.item(\"updated\", m.time());\n\n  if({DAO_VAR}.update(\"WHERE id = ?\", new Object[]{id})) {\n    m.jsReplace(\"view.jsp?id=\" + id);\n  } else {\n    m.jsError({DAO_VAR}.getErrMsg());\n  }\n  return;\n}\n\n// GET: 기존 데이터 조회 + 폼 표시\n{DAO_CLASS} {DAO_VAR} = new {DAO_CLASS}();\nDataSet info = {DAO_VAR}.get(id);\nif(!info.next()) { m.jsError(\"데이터를 찾을 수 없습니다.\"); return; }\n\np.setLayout(\"default\");\np.setBody(\"board.modify\");\np.setVar(\"info\", info);\np.setVar(\"formScript\", f.getScript());\np.display();\n\n%>",
+  "html_template": "<form name=\"form1\" method=\"post\">\n  <table>\n    <tr>\n      <th>제목</th>\n      <td><input type=\"text\" name=\"title\" value=\"{{info.title}}\"></td>\n    </tr>\n    <tr>\n      <th>내용</th>\n      <td><textarea name=\"content\">{{info.content}}</textarea></td>\n    </tr>\n  </table>\n  <button type=\"submit\">수정</button>\n  <a href=\"view.jsp?id={{info.id}}\">취소</a>\n</form>\n<script>{{formScript}}</script>",
+  "notes": [
+    "GET: 기존 데이터 조회 → 폼에 채움",
+    "POST: 검증 → 수정 → 리다이렉트",
+    "update()에 바인딩 파라미터 사용 (SQL Injection 방지)",
+    "info.next() 필수 체크"
+  ]
+}

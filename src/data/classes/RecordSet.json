@@ -1,0 +1,48 @@
+{
+  "name": "RecordSet",
+  "fullClassName": "malgnsoft.db.RecordSet",
+  "category": "data",
+  "description": "JDBC ResultSet을 DataSet으로 변환. 컬럼 메타데이터 추출, 순번/첫번째/마지막 메타필드 자동 추가.",
+  "variable_name": "rs",
+  "initialization": "RecordSet rs = new RecordSet(resultSet);",
+  "initialized_in": "DB 클래스 내부에서 자동 생성. 직접 사용 가능.",
+  "methods": [
+    {
+      "name": "constructor",
+      "signature": "RecordSet(ResultSet rs)",
+      "description": "JDBC ResultSet을 파싱하여 DataSet으로 변환",
+      "returnType": "RecordSet",
+      "parameters": [{"name": "rs", "type": "ResultSet", "description": "JDBC ResultSet"}],
+      "usage": "RecordSet rs = new RecordSet(stmt.executeQuery());",
+      "notes": "ResultSet을 소비 후 자동 close. __first, __ord, __last 메타필드 추가.",
+      "related": []
+    },
+    {
+      "name": "getRow",
+      "signature": "DataSet getRow(ResultSet rs)",
+      "description": "ResultSet의 현재 행 하나를 DataSet으로 변환",
+      "returnType": "DataSet",
+      "parameters": [{"name": "rs", "type": "ResultSet", "description": "JDBC ResultSet"}],
+      "usage": "DataSet row = rs.getRow(resultSet);",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "setColumnData",
+      "signature": "void setColumnData(ResultSet rs)",
+      "description": "ResultSet에서 컬럼 메타데이터 추출",
+      "returnType": "void",
+      "parameters": [{"name": "rs", "type": "ResultSet", "description": "JDBC ResultSet"}],
+      "usage": "",
+      "notes": "컬럼명 소문자 변환 (labelLower=true 기본값).",
+      "related": []
+    }
+  ],
+  "method_count": 3,
+  "important_rules": [
+    "DataSet 상속 - DataSet의 모든 메소드 사용 가능",
+    "CLOB → String, DATE → Timestamp 자동 변환",
+    "메타필드: __first(첫행), __ord(순번), __last(마지막행)",
+    "ResultSet을 소비 후 자동 close"
+  ]
+}

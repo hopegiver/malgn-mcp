@@ -1,0 +1,33 @@
+{
+  "category": "parameter",
+  "total": 3,
+  "rules": [
+    {
+      "id": "param-get",
+      "category": "parameter",
+      "severity": "error",
+      "title": "GET 파라미터 처리",
+      "rule": "GET 파라미터는 m.rs()/m.ri() 사용",
+      "correct": "String keyword = m.rs(\"keyword\");\nint id = m.ri(\"id\");",
+      "incorrect": "String keyword = request.getParameter(\"keyword\");"
+    },
+    {
+      "id": "param-post",
+      "category": "parameter",
+      "severity": "error",
+      "title": "POST 파라미터 처리",
+      "rule": "POST 파라미터는 f.get()/f.getInt() 사용",
+      "correct": "String title = f.get(\"title\");\nint price = f.getInt(\"price\");",
+      "incorrect": "String title = m.rs(\"title\"); // POST에 m.rs() 사용 금지"
+    },
+    {
+      "id": "param-invalid-method",
+      "category": "parameter",
+      "severity": "error",
+      "title": "존재하지 않는 메소드 사용 금지",
+      "rule": "m.getInt(), m.getString(), m.isSet(), m.getParameter() 등은 존재하지 않는 메소드",
+      "correct": "m.rs(), m.ri(), f.get(), f.getInt()",
+      "incorrect": "m.getInt(\"id\"), m.getString(\"name\")"
+    }
+  ]
+}

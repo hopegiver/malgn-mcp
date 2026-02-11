@@ -1,0 +1,11 @@
+{
+  "type": "html-form",
+  "title": "폼 HTML 템플릿 (등록/수정 공용)",
+  "html_template": "<form name=\"form1\" method=\"post\" enctype=\"multipart/form-data\">\n  <table class=\"table-form\">\n    <tr>\n      <th>제목 <span class=\"required\">*</span></th>\n      <td><input type=\"text\" name=\"title\" value=\"{{info.title}}\" class=\"input-full\"></td>\n    </tr>\n    <tr>\n      <th>카테고리</th>\n      <td>\n        <select name=\"category\">\n          <option value=\"\">선택</option>\n          <!--@loop(categories)-->\n          <option value=\"{{categories.code}}\" <!--@if(categories.selected)-->selected<!--/if(categories.selected)-->>{{categories.name}}</option>\n          <!--/loop(categories)-->\n        </select>\n      </td>\n    </tr>\n    <tr>\n      <th>내용 <span class=\"required\">*</span></th>\n      <td><textarea name=\"content\" class=\"input-full\" rows=\"10\">{{info.content}}</textarea></td>\n    </tr>\n    <tr>\n      <th>첨부파일</th>\n      <td>\n        <input type=\"file\" name=\"attach\">\n        <!--@if(hasFile)-->\n        <p>현재 파일: {{info.file_name}}</p>\n        <!--/if(hasFile)-->\n      </td>\n    </tr>\n  </table>\n  <div class=\"btn-area\">\n    <button type=\"submit\" class=\"btn-primary\">{{submitText}}</button>\n    <a href=\"list.jsp\" class=\"btn-cancel\">취소</a>\n  </div>\n</form>\n<script>{{formScript}}</script>",
+  "notes": [
+    "등록/수정 폼 공용 (info 변수 여부로 구분)",
+    "enctype=\"multipart/form-data\"는 파일 업로드 시 필수",
+    "{{formScript}}는 f.getScript()가 생성한 클라이언트 검증 JS",
+    "select 옵션에서 selected 처리는 JSP에서 boolean 변수로 미리 설정"
+  ]
+}

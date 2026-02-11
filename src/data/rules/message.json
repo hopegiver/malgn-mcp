@@ -1,0 +1,24 @@
+{
+  "category": "message",
+  "total": 2,
+  "rules": [
+    {
+      "id": "message-jsreplace",
+      "category": "message",
+      "severity": "warning",
+      "title": "m.jsAlert + m.jsReplace 사용법",
+      "rule": "m.jsReplace()는 m.jsAlert()과 쌍으로 사용하여 메시지 표시 후 페이지 이동 시 사용. 메시지가 필요 없으면 m.redirect()가 더 간편함. AJAX 폼에서는 사용 불가.",
+      "correct": "// 메시지 필요 시: m.jsAlert(\"저장되었습니다.\"); m.jsReplace(\"/list.jsp\");\n// 메시지 불필요 시: m.redirect(\"/list.jsp\");\n// AJAX 폼: j.success(\"저장 완료\");",
+      "incorrect": "// 메시지 없이 jsReplace만 사용 (불필요하게 복잡)\nm.jsReplace(\"/list.jsp\");\n// AJAX 폼에서 m.jsReplace() 사용"
+    },
+    {
+      "id": "message-jserror",
+      "category": "message",
+      "severity": "warning",
+      "title": "에러 메시지 표시",
+      "rule": "DB 에러 시 getErrMsg()로 메시지 표시",
+      "correct": "if(!user.insert()) { m.jsError(user.getErrMsg()); }",
+      "incorrect": "if(!user.insert()) { m.jsError(\"저장 실패\"); }"
+    }
+  ]
+}

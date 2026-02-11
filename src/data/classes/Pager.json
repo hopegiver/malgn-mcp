@@ -1,0 +1,117 @@
+{
+  "name": "Pager",
+  "fullClassName": "malgnsoft.util.Pager",
+  "category": "util",
+  "description": "페이징 유틸리티. 페이지 네비게이션 HTML 생성, 페이지 메타데이터 제공.",
+  "variable_name": "pager",
+  "initialization": "Pager pager = new Pager(request);",
+  "initialized_in": "필요 시 직접 생성. ListManager 내부에서도 사용.",
+  "methods": [
+    {
+      "name": "constructor",
+      "signature": "Pager(HttpServletRequest req)",
+      "description": "요청 객체로 생성 (page 파라미터 자동 추출)",
+      "returnType": "Pager",
+      "parameters": [{"name": "req", "type": "HttpServletRequest", "description": "HTTP 요청"}],
+      "usage": "Pager pager = new Pager(request);",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "setTotalNum",
+      "signature": "void setTotalNum(int num)",
+      "description": "전체 항목 수 설정",
+      "returnType": "void",
+      "parameters": [{"name": "num", "type": "int", "description": "전체 건수"}],
+      "usage": "pager.setTotalNum(150);",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "setListNum",
+      "signature": "void setListNum(int num)",
+      "description": "페이지당 항목 수 설정 (기본: 20)",
+      "returnType": "void",
+      "parameters": [{"name": "num", "type": "int", "description": "페이지당 건수"}],
+      "usage": "pager.setListNum(10);",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "setNaviNum",
+      "signature": "void setNaviNum(int num)",
+      "description": "네비게이션 블록 크기 (기본: 10)",
+      "returnType": "void",
+      "parameters": [{"name": "num", "type": "int", "description": "블록당 페이지 수"}],
+      "usage": "pager.setNaviNum(5);",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "setLink",
+      "signature": "void setLink(String link)",
+      "description": "페이지 링크 기본 URL 설정",
+      "returnType": "void",
+      "parameters": [{"name": "link", "type": "String", "description": "기본 URL"}],
+      "usage": "pager.setLink(\"/board/list.jsp\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "setPageVar",
+      "signature": "void setPageVar(String str)",
+      "description": "페이지 번호 쿼리 파라미터명 설정 (기본: page)",
+      "returnType": "void",
+      "parameters": [{"name": "str", "type": "String", "description": "파라미터명"}],
+      "usage": "pager.setPageVar(\"p\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "getPager",
+      "signature": "String getPager()",
+      "description": "페이지 네비게이션 HTML 생성",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "String html = pager.getPager();",
+      "notes": "Bootstrap pagination 클래스 포함.",
+      "related": ["getPageData()"]
+    },
+    {
+      "name": "getPageData",
+      "signature": "DataSet getPageData()",
+      "description": "페이지 메타데이터를 DataSet으로 반환",
+      "returnType": "DataSet",
+      "parameters": [],
+      "usage": "DataSet pageInfo = pager.getPageData();",
+      "notes": "",
+      "related": ["getPager()"]
+    },
+    {
+      "name": "getPageNum",
+      "signature": "int getPageNum()",
+      "description": "현재 페이지 번호 반환",
+      "returnType": "int",
+      "parameters": [],
+      "usage": "int page = pager.getPageNum();",
+      "notes": "",
+      "related": ["getTotalPage()"]
+    },
+    {
+      "name": "getTotalPage",
+      "signature": "int getTotalPage()",
+      "description": "전체 페이지 수 계산",
+      "returnType": "int",
+      "parameters": [],
+      "usage": "int total = pager.getTotalPage();",
+      "notes": "",
+      "related": []
+    }
+  ],
+  "method_count": 10,
+  "important_rules": [
+    "기본 페이지당 20건, 네비게이션 10개 블록",
+    "ListManager가 내부적으로 Pager를 사용하므로 목록에서는 ListManager 사용 권장",
+    "단독으로 커스텀 페이징이 필요할 때 직접 사용"
+  ]
+}

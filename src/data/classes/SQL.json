@@ -1,0 +1,151 @@
+{
+  "name": "SQL",
+  "fullClassName": "malgnsoft.db.SQL",
+  "category": "data",
+  "description": "플루언트 SQL 빌더. 메소드 체이닝으로 SELECT/FROM/JOIN/WHERE/ORDER BY 등 구성. 바인드 파라미터 지원.",
+  "variable_name": "sql",
+  "initialization": "SQL sql = new SQL();",
+  "initialized_in": "필요 시 직접 생성",
+  "methods": [
+    {
+      "name": "select",
+      "signature": "SQL select(String fields)",
+      "description": "SELECT 절 추가",
+      "returnType": "SQL",
+      "parameters": [{"name": "fields", "type": "String", "description": "필드 목록"}],
+      "usage": "sql.select(\"id, name, email\")",
+      "notes": "여러 번 호출 가능 (누적). ifSelect() 조건부 오버로드 있음.",
+      "related": ["from()"]
+    },
+    {
+      "name": "from",
+      "signature": "SQL from(String table)",
+      "description": "FROM 절 추가",
+      "returnType": "SQL",
+      "parameters": [{"name": "table", "type": "String", "description": "테이블명"}],
+      "usage": "sql.from(\"tb_user u\")",
+      "notes": "",
+      "related": ["join()"]
+    },
+    {
+      "name": "join",
+      "signature": "SQL join(String table)",
+      "description": "JOIN 절 추가",
+      "returnType": "SQL",
+      "parameters": [{"name": "table", "type": "String", "description": "JOIN 절"}],
+      "usage": "sql.join(\"tb_dept d ON u.dept_id = d.id\")",
+      "notes": "innerJoin(), leftJoin(), rightJoin() 오버로드 있음.",
+      "related": []
+    },
+    {
+      "name": "where",
+      "signature": "SQL where(String cond)",
+      "description": "WHERE 조건 추가 (AND로 연결)",
+      "returnType": "SQL",
+      "parameters": [{"name": "cond", "type": "String", "description": "조건식"}],
+      "usage": "sql.where(\"status = 1\")",
+      "notes": "바인드 파라미터 오버로드: where(String cond, Object... param). ifWhere() 조건부 있음.",
+      "related": ["in()", "exists()"]
+    },
+    {
+      "name": "where (bind)",
+      "signature": "SQL where(String cond, Object... param)",
+      "description": "바인드 파라미터 포함 WHERE 조건 추가",
+      "returnType": "SQL",
+      "parameters": [
+        {"name": "cond", "type": "String", "description": "? 플레이스홀더 포함 조건식"},
+        {"name": "param", "type": "Object...", "description": "바인드 값"}
+      ],
+      "usage": "sql.where(\"name LIKE ?\", \"%홍%\")",
+      "notes": "",
+      "related": ["getParams()"]
+    },
+    {
+      "name": "in",
+      "signature": "SQL in(String cond)",
+      "description": "IN 조건 추가",
+      "returnType": "SQL",
+      "parameters": [{"name": "cond", "type": "String", "description": "IN 조건"}],
+      "usage": "sql.in(\"status IN (1, 2, 3)\")",
+      "notes": "notIn() 오버로드 있음.",
+      "related": ["exists()"]
+    },
+    {
+      "name": "exists",
+      "signature": "SQL exists(String cond)",
+      "description": "EXISTS 서브쿼리 조건 추가",
+      "returnType": "SQL",
+      "parameters": [{"name": "cond", "type": "String", "description": "EXISTS 서브쿼리"}],
+      "usage": "sql.exists(\"SELECT 1 FROM tb_order WHERE user_id = u.id\")",
+      "notes": "notExists() 오버로드 있음.",
+      "related": []
+    },
+    {
+      "name": "groupBy",
+      "signature": "SQL groupBy(String group)",
+      "description": "GROUP BY 절 추가",
+      "returnType": "SQL",
+      "parameters": [{"name": "group", "type": "String", "description": "그룹 필드"}],
+      "usage": "sql.groupBy(\"dept_id\")",
+      "notes": "",
+      "related": ["having()"]
+    },
+    {
+      "name": "having",
+      "signature": "SQL having(String cond)",
+      "description": "HAVING 절 추가",
+      "returnType": "SQL",
+      "parameters": [{"name": "cond", "type": "String", "description": "조건식"}],
+      "usage": "sql.having(\"COUNT(*) > 5\")",
+      "notes": "",
+      "related": ["groupBy()"]
+    },
+    {
+      "name": "orderBy",
+      "signature": "SQL orderBy(String order)",
+      "description": "ORDER BY 절 추가",
+      "returnType": "SQL",
+      "parameters": [{"name": "order", "type": "String", "description": "정렬 조건"}],
+      "usage": "sql.orderBy(\"created_at DESC\")",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "limit",
+      "signature": "SQL limit(int cnt)",
+      "description": "LIMIT 절 추가",
+      "returnType": "SQL",
+      "parameters": [{"name": "cnt", "type": "int", "description": "제한 건수"}],
+      "usage": "sql.limit(10)",
+      "notes": "limit(cnt, offset) 오버로드 있음.",
+      "related": []
+    },
+    {
+      "name": "getParams",
+      "signature": "Object[] getParams()",
+      "description": "바인드 파라미터 배열 반환",
+      "returnType": "Object[]",
+      "parameters": [],
+      "usage": "db.query(sql.toString(), sql.getParams());",
+      "notes": "",
+      "related": ["toString()"]
+    },
+    {
+      "name": "toString",
+      "signature": "String toString()",
+      "description": "완성된 SQL 문자열 반환",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "String query = sql.toString();",
+      "notes": "",
+      "related": ["getParams()"]
+    }
+  ],
+  "method_count": 13,
+  "important_rules": [
+    "빌더 패턴 - 모든 메소드가 this 반환 (체이닝)",
+    "if* 메소드: 조건이 true일 때만 절 추가 (ifWhere, ifSelect 등)",
+    "바인드 파라미터 지원: where(\"name = ?\", value)",
+    "getParams()로 파라미터 배열 추출 후 DB 쿼리에 전달"
+  ]
+}

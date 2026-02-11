@@ -1,0 +1,51 @@
+{
+  "category": "structure",
+  "total": 5,
+  "rules": [
+    {
+      "id": "structure-jsp-start",
+      "category": "structure",
+      "severity": "error",
+      "title": "JSP 시작 구조",
+      "rule": "JSP는 반드시 contentType 선언 + init.jsp include로 시작",
+      "correct": "<%@ page contentType=\"text/html; charset=utf-8\" %><%@ include file=\"/init.jsp\" %><%",
+      "incorrect": "<%@ page contentType=\"text/html\" %>\n<html>"
+    },
+    {
+      "id": "structure-page-order",
+      "category": "structure",
+      "severity": "error",
+      "title": "Page 호출 순서",
+      "rule": "setLayout → setBody → setVar → setLoop → display 순서 엄수",
+      "correct": "p.setLayout(\"default\");\np.setBody(\"main.list\");\np.setVar(\"title\", \"목록\");\np.setLoop(\"list\", list);\np.display();",
+      "incorrect": "p.setVar(\"title\", \"목록\");\np.setBody(\"main.list\"); // 순서 위반"
+    },
+    {
+      "id": "structure-no-try-catch",
+      "category": "structure",
+      "severity": "error",
+      "title": "try-catch 사용 금지",
+      "rule": "try-catch 대신 boolean 리턴 체크 사용",
+      "correct": "if(user.insert()) { ... } else { m.jsError(user.getErrMsg()); }",
+      "incorrect": "try { user.insert(); } catch(Exception e) { ... }"
+    },
+    {
+      "id": "structure-form-validate",
+      "category": "structure",
+      "severity": "warning",
+      "title": "서버 검증",
+      "rule": "POST 처리 시 f.validate()로 서버사이드 검증 수행",
+      "correct": "if(!f.validate()) {\n  m.jsError(f.getErrMsg());\n  return;\n}",
+      "incorrect": "// 클라이언트 검증만으로 충분하다고 생각"
+    },
+    {
+      "id": "structure-init-objects",
+      "category": "structure",
+      "severity": "warning",
+      "title": "init.jsp 자동 초기화 객체",
+      "rule": "m, f, p, auth, j 등은 init.jsp에서 자동 초기화됨. 직접 import/생성 불필요.",
+      "correct": "// init.jsp include 후 바로 사용\nString keyword = m.rs(\"keyword\");",
+      "incorrect": "import malgnsoft.util.Malgn;\nMalgn m = new Malgn(request, response, out);"
+    }
+  ]
+}

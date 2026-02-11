@@ -1,0 +1,10 @@
+{
+  "type": "html-view",
+  "title": "상세 조회 HTML 템플릿",
+  "html_template": "<table class=\"table-view\">\n  <tr>\n    <th>제목</th>\n    <td>{{info.title}}</td>\n  </tr>\n  <tr>\n    <th>작성자</th>\n    <td>{{info.user_name}}</td>\n  </tr>\n  <tr>\n    <th>작성일</th>\n    <td>{{info.created}}</td>\n  </tr>\n  <tr>\n    <th>조회수</th>\n    <td>{{info.hit}}</td>\n  </tr>\n  <tr>\n    <th>내용</th>\n    <td class=\"content\">{{info.content}}</td>\n  </tr>\n  <!--@if(hasFile)-->\n  <tr>\n    <th>첨부파일</th>\n    <td><a href=\"{{info.file_path}}\">{{info.file_name}}</a></td>\n  </tr>\n  <!--/if(hasFile)-->\n</table>\n\n<div class=\"btn-area\">\n  <a href=\"modify.jsp?id={{info.id}}\" class=\"btn-edit\">수정</a>\n  <form name=\"deleteForm\" method=\"post\" action=\"delete.jsp\" style=\"display:inline\">\n    <input type=\"hidden\" name=\"id\" value=\"{{info.id}}\">\n    <button type=\"submit\" class=\"btn-delete\" onclick=\"return confirm('삭제하시겠습니까?')\">삭제</button>\n  </form>\n  <a href=\"list.jsp\" class=\"btn-list\">목록</a>\n</div>",
+  "notes": [
+    "{{info.필드명}}으로 DataSet 데이터 출력",
+    "@if(hasFile)로 첨부파일 있을 때만 표시",
+    "삭제는 POST 폼으로 처리 (GET 금지)"
+  ]
+}

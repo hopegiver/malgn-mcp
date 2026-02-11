@@ -1,0 +1,60 @@
+{
+  "name": "QueryLog",
+  "fullClassName": "malgnsoft.db.QueryLog",
+  "category": "data",
+  "description": "DB 쿼리 감사 로그. DataObject 상속. 테이블/쿼리/사용자/IP 등 기록.",
+  "variable_name": "qlog",
+  "initialization": "QueryLog qlog = new QueryLog(userId, userName, ipAddr);",
+  "initialized_in": "필요 시 직접 생성",
+  "methods": [
+    {
+      "name": "constructor",
+      "signature": "QueryLog(String userId, String userName, String ipAddr)",
+      "description": "사용자 정보로 생성",
+      "returnType": "QueryLog",
+      "parameters": [
+        {"name": "userId", "type": "String", "description": "사용자 ID"},
+        {"name": "userName", "type": "String", "description": "사용자명"},
+        {"name": "ipAddr", "type": "String", "description": "IP 주소"}
+      ],
+      "usage": "QueryLog qlog = new QueryLog(auth.getString(\"user_id\"), auth.getString(\"user_name\"), m.getRemoteAddr());",
+      "notes": "기본 테이블: tb_query_log",
+      "related": []
+    },
+    {
+      "name": "log",
+      "signature": "void log(DataObject dao, String type)",
+      "description": "DAO 작업을 로그에 기록 (생성자에서 설정한 사용자 정보 사용)",
+      "returnType": "void",
+      "parameters": [
+        {"name": "dao", "type": "DataObject", "description": "대상 DAO"},
+        {"name": "type", "type": "String", "description": "작업 유형 (INSERT, UPDATE, DELETE 등)"}
+      ],
+      "usage": "qlog.log(user, \"INSERT\");",
+      "notes": "쿼리 텍스트, 파라미터, 타임스탬프 자동 기록.",
+      "related": []
+    },
+    {
+      "name": "log (full)",
+      "signature": "void log(DataObject dao, String type, String userId, String userName, String ipAddr)",
+      "description": "사용자 정보를 직접 지정하여 로그 기록",
+      "returnType": "void",
+      "parameters": [
+        {"name": "dao", "type": "DataObject", "description": "대상 DAO"},
+        {"name": "type", "type": "String", "description": "작업 유형"},
+        {"name": "userId", "type": "String", "description": "사용자 ID"},
+        {"name": "userName", "type": "String", "description": "사용자명"},
+        {"name": "ipAddr", "type": "String", "description": "IP 주소"}
+      ],
+      "usage": "qlog.log(user, \"UPDATE\", \"admin\", \"관리자\", \"127.0.0.1\");",
+      "notes": "",
+      "related": []
+    }
+  ],
+  "method_count": 3,
+  "important_rules": [
+    "DataObject 상속 - DAO처럼 사용 가능",
+    "기본 테이블: tb_query_log",
+    "타임스탬프 자동 기록 (yyyyMMddHHmmss)"
+  ]
+}

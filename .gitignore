@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+public_html/
+malgnsoft/
+docs/
+.claude/
+scripts/
+
+# Build output
+dist/
+.wrangler/
+
+# Environment variables
+.env
+.dev.vars
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

@@ -1,0 +1,24 @@
+{
+  "category": "ajax",
+  "total": 2,
+  "rules": [
+    {
+      "id": "ajax-response",
+      "category": "ajax",
+      "severity": "error",
+      "title": "AJAX 폼 응답",
+      "rule": "data-ajax=\"true\" 폼의 응답은 반드시 j.success()/j.error() 사용",
+      "correct": "j.success(\"저장되었습니다.\");",
+      "incorrect": "m.jsReplace(\"/list.jsp\"); // AJAX에서는 작동하지 않음"
+    },
+    {
+      "id": "ajax-json",
+      "category": "ajax",
+      "severity": "warning",
+      "title": "AJAX 데이터 전달",
+      "rule": "AJAX 응답에 데이터 포함 시 j.put() 사용",
+      "correct": "j.put(\"id\", newId);\nj.success();",
+      "incorrect": "out.print(\"{\\\"id\\\":\" + newId + \"}\"); // 직접 출력 금지"
+    }
+  ]
+}

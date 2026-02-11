@@ -1,0 +1,18 @@
+{
+  "type": "jsp-list",
+  "title": "목록 페이지 (JSP)",
+  "variables": {
+    "TABLE_NAME": { "description": "테이블명", "example": "tb_board" },
+    "DAO_CLASS": { "description": "DAO 클래스명", "example": "BoardDao" },
+    "DAO_VAR": { "description": "DAO 변수명", "example": "board" },
+    "PAGE_TITLE": { "description": "페이지 제목", "example": "게시판 목록" }
+  },
+  "jsp_template": "<%@ page contentType=\"text/html; charset=utf-8\" %><%@ include file=\"/init.jsp\" %><%\n\n// 검색 파라미터\nf.addElement(\"keyword\", m.rs(\"keyword\"), \"\");\nf.addElement(\"search_field\", m.rs(\"search_field\"), \"\");\n\n// 목록 조회\nListManager lm = new ListManager();\nlm.setRequest(request);\nlm.setTable(\"{TABLE_NAME}\");\nlm.setOrderBy(\"id DESC\");\nlm.setListNum(20);\nlm.addSearch(\"title,content\", m.rs(\"keyword\"), \"like\");\n\nDataSet list = lm.getDataSet();\n\n// 화면 출력\np.setLayout(\"default\");\np.setBody(\"board.list\");\np.setVar(\"pageTitle\", \"{PAGE_TITLE}\");\np.setVar(\"totalNum\", String.valueOf(lm.getTotalNum()));\np.setVar(\"paging\", lm.getPaging());\np.setVar(\"keyword\", m.rs(\"keyword\"));\np.setLoop(\"list\", list);\np.display();\n\n%>",
+  "html_template": "<!-- 검색 -->\n<form name=\"form1\" method=\"get\">\n  <input type=\"text\" name=\"keyword\" value=\"{{keyword}}\" placeholder=\"검색어\">\n  <button type=\"submit\">검색</button>\n</form>\n\n<!-- 목록 -->\n<p>총 {{totalNum}}건</p>\n<table>\n  <thead>\n    <tr><th>번호</th><th>제목</th><th>작성일</th></tr>\n  </thead>\n  <tbody>\n    <!--@loop(list)-->\n    <tr>\n      <td>{{list.__ord}}</td>\n      <td><a href=\"view.jsp?id={{list.id}}\">{{list.title}}</a></td>\n      <td>{{list.created}}</td>\n    </tr>\n    <!--/loop(list)-->\n  </tbody>\n</table>\n\n<!-- 페이징 -->\n<div class=\"paging\">{{paging}}</div>",
+  "notes": [
+    "ListManager가 페이징 자동 처리",
+    "addSearch()는 빈 값 자동 무시 (별도 체크 불필요)",
+    "list.__ord는 자동 생성되는 순번",
+    "f.addElement()로 검색어 유지"
+  ]
+}

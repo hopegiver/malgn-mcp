@@ -1,0 +1,120 @@
+{
+  "name": "ExcelX",
+  "fullClassName": "malgnsoft.util.ExcelX",
+  "category": "util",
+  "description": "Excel 파일 읽기/쓰기 (XLSX). 비밀번호 보호, DataSet 통합, 셀 타입 처리 지원.",
+  "variable_name": "excel",
+  "initialization": "ExcelX excel = new ExcelX(path);",
+  "initialized_in": "필요 시 직접 생성",
+  "methods": [
+    {
+      "name": "read",
+      "signature": "DataSet read()",
+      "description": "Excel 파일 읽기",
+      "returnType": "DataSet",
+      "parameters": [],
+      "usage": "ExcelX excel = new ExcelX(\"/data/users.xlsx\");\nDataSet list = excel.read();",
+      "notes": "첫 행을 컬럼명으로 사용.",
+      "related": ["read(path)"]
+    },
+    {
+      "name": "read",
+      "signature": "DataSet read(String path)",
+      "description": "지정 경로 Excel 파일 읽기",
+      "returnType": "DataSet",
+      "parameters": [{"name": "path", "type": "String", "description": "파일 경로"}],
+      "usage": "DataSet list = excel.read(\"/data/users.xlsx\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "setSheet",
+      "signature": "void setSheet(int i)",
+      "description": "활성 시트 설정 (인덱스)",
+      "returnType": "void",
+      "parameters": [{"name": "i", "type": "int", "description": "시트 인덱스 (0부터)"}],
+      "usage": "excel.setSheet(1);",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "setSheet",
+      "signature": "void setSheet(String name)",
+      "description": "활성 시트 설정 (이름)",
+      "returnType": "void",
+      "parameters": [{"name": "name", "type": "String", "description": "시트 이름"}],
+      "usage": "excel.setSheet(\"사용자\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "setPassword",
+      "signature": "void setPassword(String pass)",
+      "description": "암호화된 엑셀 파일 비밀번호 설정",
+      "returnType": "void",
+      "parameters": [{"name": "pass", "type": "String", "description": "비밀번호"}],
+      "usage": "excel.setPassword(\"secret\");",
+      "notes": "read() 전에 호출.",
+      "related": []
+    },
+    {
+      "name": "setData",
+      "signature": "void setData(DataSet rs)",
+      "description": "DataSet으로 엑셀 데이터 설정",
+      "returnType": "void",
+      "parameters": [{"name": "rs", "type": "DataSet", "description": "데이터셋"}],
+      "usage": "excel.setData(list);",
+      "notes": "write() 전에 호출.",
+      "related": ["write()"]
+    },
+    {
+      "name": "write",
+      "signature": "void write(String path)",
+      "description": "엑셀 파일 저장",
+      "returnType": "void",
+      "parameters": [{"name": "path", "type": "String", "description": "저장 경로"}],
+      "usage": "excel.write(\"/data/export.xlsx\");",
+      "notes": "",
+      "related": ["setData()"]
+    },
+    {
+      "name": "write",
+      "signature": "void write(HttpServletResponse response, String filename)",
+      "description": "HTTP 다운로드로 엑셀 전송",
+      "returnType": "void",
+      "parameters": [
+        {"name": "response", "type": "HttpServletResponse", "description": "응답 객체"},
+        {"name": "filename", "type": "String", "description": "다운로드 파일명"}
+      ],
+      "usage": "excel.write(response, \"사용자목록.xlsx\");",
+      "notes": "브라우저 다운로드 대화상자 표시.",
+      "related": []
+    },
+    {
+      "name": "getSheetCount",
+      "signature": "int getSheetCount()",
+      "description": "시트 개수 반환",
+      "returnType": "int",
+      "parameters": [],
+      "usage": "int count = excel.getSheetCount();",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "close",
+      "signature": "void close()",
+      "description": "리소스 해제",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "excel.close();",
+      "notes": "사용 후 반드시 호출.",
+      "related": []
+    }
+  ],
+  "method_count": 10,
+  "important_rules": [
+    "사용 후 반드시 close() 호출",
+    "읽기: read() → DataSet 반환",
+    "쓰기: setData() → write()"
+  ]
+}

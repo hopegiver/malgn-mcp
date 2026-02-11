@@ -1,0 +1,357 @@
+{
+  "name": "Malgn",
+  "fullClassName": "malgnsoft.util.Malgn",
+  "category": "core",
+  "description": "프레임워크 핵심 유틸리티 클래스 - 요청 파라미터, 리다이렉트, 시간, 암호화 등",
+  "variable_name": "m",
+  "initialization": "Malgn m = new Malgn(request, response, out);",
+  "initialized_in": "init.jsp",
+  "methods": [
+    {
+      "name": "rs",
+      "signature": "String rs(String key)",
+      "description": "GET 파라미터를 문자열로 가져옴 (XSS 자동 필터)",
+      "returnType": "String",
+      "parameters": [{"name": "key", "type": "String", "description": "파라미터명"}],
+      "usage": "String keyword = m.rs(\"keyword\");",
+      "notes": "GET 파라미터 전용. POST 데이터는 f.get() 사용. null 대신 빈 문자열 반환.",
+      "related": ["m.ri()", "f.get()"]
+    },
+    {
+      "name": "ri",
+      "signature": "int ri(String key)",
+      "description": "GET 파라미터를 정수로 가져옴",
+      "returnType": "int",
+      "parameters": [{"name": "key", "type": "String", "description": "파라미터명"}],
+      "usage": "int id = m.ri(\"id\");",
+      "notes": "숫자가 아닌 값은 0 반환.",
+      "related": ["m.rs()", "f.getInt()"]
+    },
+    {
+      "name": "isPost",
+      "signature": "boolean isPost()",
+      "description": "POST 요청 여부 확인",
+      "returnType": "boolean",
+      "parameters": [],
+      "usage": "if(m.isPost()) { /* POST 처리 */ }",
+      "notes": "Postback 패턴에서 GET/POST 분기에 사용.",
+      "related": []
+    },
+    {
+      "name": "redirect",
+      "signature": "void redirect(String url)",
+      "description": "서버사이드 리다이렉트 (302)",
+      "returnType": "void",
+      "parameters": [{"name": "url", "type": "String", "description": "이동할 URL"}],
+      "usage": "m.redirect(\"/list.jsp\");",
+      "notes": "return 문 없이 사용 가능.",
+      "related": ["m.jsReplace()"]
+    },
+    {
+      "name": "jsReplace",
+      "signature": "void jsReplace(String url)",
+      "description": "JavaScript로 페이지 이동 (history.replaceState)",
+      "returnType": "void",
+      "parameters": [{"name": "url", "type": "String", "description": "이동할 URL"}],
+      "usage": "m.jsReplace(\"/list.jsp\");",
+      "notes": "AJAX 폼에서는 사용 불가. j.success() 사용.",
+      "related": ["m.redirect()", "m.jsAlert()"]
+    },
+    {
+      "name": "jsAlert",
+      "signature": "void jsAlert(String msg)",
+      "description": "JavaScript alert 후 뒤로가기",
+      "returnType": "void",
+      "parameters": [{"name": "msg", "type": "String", "description": "알림 메시지"}],
+      "usage": "m.jsAlert(\"저장되었습니다.\");",
+      "notes": "",
+      "related": ["m.jsError()"]
+    },
+    {
+      "name": "jsError",
+      "signature": "void jsError(String msg)",
+      "description": "JavaScript alert 후 뒤로가기 (에러용)",
+      "returnType": "void",
+      "parameters": [{"name": "msg", "type": "String", "description": "에러 메시지"}],
+      "usage": "m.jsError(user.getErrMsg());",
+      "notes": "DB 에러 시 getErrMsg()와 함께 사용.",
+      "related": ["m.jsAlert()"]
+    },
+    {
+      "name": "time",
+      "signature": "String time()",
+      "description": "현재 시간 (yyyy-MM-dd HH:mm:ss)",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "String now = m.time();",
+      "notes": "static 메소드로도 사용 가능: Malgn.time()",
+      "related": ["Malgn.time(format)", "Malgn.time(format, dateStr)"]
+    },
+    {
+      "name": "time",
+      "signature": "String time(String format)",
+      "description": "현재 시간을 지정 포맷으로 반환",
+      "returnType": "String",
+      "parameters": [{"name": "format", "type": "String", "description": "날짜 포맷 (예: yyyyMMdd)"}],
+      "usage": "String today = Malgn.time(\"yyyyMMdd\");",
+      "notes": "SimpleDateFormat 패턴 사용.",
+      "related": []
+    },
+    {
+      "name": "time",
+      "signature": "String time(String format, String dateStr)",
+      "description": "주어진 날짜를 다른 포맷으로 변환",
+      "returnType": "String",
+      "parameters": [
+        {"name": "format", "type": "String", "description": "출력 포맷"},
+        {"name": "dateStr", "type": "String", "description": "입력 날짜 문자열"}
+      ],
+      "usage": "String formatted = Malgn.time(\"yyyy년 MM월 dd일\", \"2024-01-15\");",
+      "notes": "입력 날짜는 자동으로 포맷 감지.",
+      "related": []
+    },
+    {
+      "name": "sha256",
+      "signature": "static String sha256(String str)",
+      "description": "SHA-256 해시 생성",
+      "returnType": "String",
+      "parameters": [{"name": "str", "type": "String", "description": "해시할 문자열"}],
+      "usage": "String hash = Malgn.sha256(password);",
+      "notes": "비밀번호 저장 시 사용. static 메소드.",
+      "related": []
+    },
+    {
+      "name": "p",
+      "signature": "void p(Object obj)",
+      "description": "디버그 출력 (화면에 출력)",
+      "returnType": "void",
+      "parameters": [{"name": "obj", "type": "Object", "description": "출력할 객체"}],
+      "usage": "m.p(info);",
+      "notes": "개발 중 디버깅용. DataSet도 출력 가능.",
+      "related": []
+    },
+    {
+      "name": "getCookie",
+      "signature": "String getCookie(String name)",
+      "description": "쿠키 값 조회",
+      "returnType": "String",
+      "parameters": [{"name": "name", "type": "String", "description": "쿠키명"}],
+      "usage": "String value = m.getCookie(\"remember\");",
+      "notes": "",
+      "related": ["m.setCookie()", "m.delCookie()"]
+    },
+    {
+      "name": "setCookie",
+      "signature": "void setCookie(String name, String value)",
+      "description": "쿠키 설정",
+      "returnType": "void",
+      "parameters": [
+        {"name": "name", "type": "String", "description": "쿠키명"},
+        {"name": "value", "type": "String", "description": "쿠키값"}
+      ],
+      "usage": "m.setCookie(\"remember\", \"Y\");",
+      "notes": "",
+      "related": ["m.getCookie()", "m.delCookie()"]
+    },
+    {
+      "name": "delCookie",
+      "signature": "void delCookie(String name)",
+      "description": "쿠키 삭제",
+      "returnType": "void",
+      "parameters": [{"name": "name", "type": "String", "description": "쿠키명"}],
+      "usage": "m.delCookie(\"remember\");",
+      "notes": "",
+      "related": ["m.getCookie()", "m.setCookie()"]
+    },
+    {
+      "name": "getSession",
+      "signature": "String getSession(String name)",
+      "description": "세션 값 조회",
+      "returnType": "String",
+      "parameters": [{"name": "name", "type": "String", "description": "세션키"}],
+      "usage": "String userId = m.getSession(\"user_id\");",
+      "notes": "",
+      "related": ["m.setSession()"]
+    },
+    {
+      "name": "setSession",
+      "signature": "void setSession(String name, String value)",
+      "description": "세션 값 설정",
+      "returnType": "void",
+      "parameters": [
+        {"name": "name", "type": "String", "description": "세션키"},
+        {"name": "value", "type": "String", "description": "세션값"}
+      ],
+      "usage": "m.setSession(\"user_id\", \"123\");",
+      "notes": "",
+      "related": ["m.getSession()"]
+    },
+    {
+      "name": "split",
+      "signature": "static String[] split(String str, String delimiter)",
+      "description": "문자열 분리",
+      "returnType": "String[]",
+      "parameters": [
+        {"name": "str", "type": "String", "description": "원본 문자열"},
+        {"name": "delimiter", "type": "String", "description": "구분자"}
+      ],
+      "usage": "String[] arr = Malgn.split(\"a,b,c\", \",\");",
+      "notes": "static 메소드.",
+      "related": ["Malgn.join()"]
+    },
+    {
+      "name": "join",
+      "signature": "static String join(String[] arr, String delimiter)",
+      "description": "배열을 문자열로 합침",
+      "returnType": "String",
+      "parameters": [
+        {"name": "arr", "type": "String[]", "description": "문자열 배열"},
+        {"name": "delimiter", "type": "String", "description": "구분자"}
+      ],
+      "usage": "String str = Malgn.join(arr, \",\");",
+      "notes": "static 메소드.",
+      "related": ["Malgn.split()"]
+    },
+    {
+      "name": "replace",
+      "signature": "static String replace(String str, String oldStr, String newStr)",
+      "description": "문자열 치환",
+      "returnType": "String",
+      "parameters": [
+        {"name": "str", "type": "String", "description": "원본 문자열"},
+        {"name": "oldStr", "type": "String", "description": "찾을 문자열"},
+        {"name": "newStr", "type": "String", "description": "바꿀 문자열"}
+      ],
+      "usage": "String result = Malgn.replace(str, \"\\n\", \"<br>\");",
+      "notes": "static 메소드.",
+      "related": ["Malgn.nl2br()"]
+    },
+    {
+      "name": "inArray",
+      "signature": "static boolean inArray(String value, String[] arr)",
+      "description": "배열에 값 포함 여부 확인",
+      "returnType": "boolean",
+      "parameters": [
+        {"name": "value", "type": "String", "description": "찾을 값"},
+        {"name": "arr", "type": "String[]", "description": "검색 대상 배열"}
+      ],
+      "usage": "if(Malgn.inArray(\"admin\", roles)) { ... }",
+      "notes": "static 메소드.",
+      "related": []
+    },
+    {
+      "name": "cutString",
+      "signature": "static String cutString(String str, int length)",
+      "description": "문자열을 지정 길이로 자름 (말줄임표 추가)",
+      "returnType": "String",
+      "parameters": [
+        {"name": "str", "type": "String", "description": "원본 문자열"},
+        {"name": "length", "type": "int", "description": "최대 길이"}
+      ],
+      "usage": "String title = Malgn.cutString(info.s(\"title\"), 30);",
+      "notes": "static 메소드. 한글 바이트 계산.",
+      "related": []
+    },
+    {
+      "name": "nf",
+      "signature": "static String nf(int num)",
+      "description": "숫자 천단위 콤마 포맷",
+      "returnType": "String",
+      "parameters": [{"name": "num", "type": "int", "description": "포맷할 숫자"}],
+      "usage": "String price = Malgn.nf(15000);  // \"15,000\"",
+      "notes": "static 메소드. numberFormat()의 약칭.",
+      "related": []
+    },
+    {
+      "name": "nl2br",
+      "signature": "static String nl2br(String str)",
+      "description": "줄바꿈을 <br> 태그로 변환",
+      "returnType": "String",
+      "parameters": [{"name": "str", "type": "String", "description": "변환할 문자열"}],
+      "usage": "String html = Malgn.nl2br(info.s(\"content\"));",
+      "notes": "static 메소드.",
+      "related": []
+    },
+    {
+      "name": "htt",
+      "signature": "static String htt(String str)",
+      "description": "HTML 엔티티 변환 (XSS 방지)",
+      "returnType": "String",
+      "parameters": [{"name": "str", "type": "String", "description": "변환할 문자열"}],
+      "usage": "String safe = Malgn.htt(input);",
+      "notes": "static 메소드. htmlentities()의 약칭.",
+      "related": []
+    },
+    {
+      "name": "uuid",
+      "signature": "static String uuid()",
+      "description": "UUID 생성",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "String id = Malgn.uuid();",
+      "notes": "static 메소드.",
+      "related": ["Malgn.getUniqId()"]
+    },
+    {
+      "name": "getUniqId",
+      "signature": "static String getUniqId()",
+      "description": "타임스탬프 기반 고유 ID 생성",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "String uid = Malgn.getUniqId();",
+      "notes": "static 메소드.",
+      "related": ["Malgn.uuid()"]
+    },
+    {
+      "name": "urlencode",
+      "signature": "static String urlencode(String str)",
+      "description": "URL 인코딩",
+      "returnType": "String",
+      "parameters": [{"name": "str", "type": "String", "description": "인코딩할 문자열"}],
+      "usage": "String encoded = Malgn.urlencode(keyword);",
+      "notes": "static 메소드.",
+      "related": ["Malgn.urldecode()"]
+    },
+    {
+      "name": "urldecode",
+      "signature": "static String urldecode(String str)",
+      "description": "URL 디코딩",
+      "returnType": "String",
+      "parameters": [{"name": "str", "type": "String", "description": "디코딩할 문자열"}],
+      "usage": "String decoded = Malgn.urldecode(encoded);",
+      "notes": "static 메소드.",
+      "related": ["Malgn.urlencode()"]
+    },
+    {
+      "name": "readFile",
+      "signature": "static String readFile(String path)",
+      "description": "파일 내용 읽기",
+      "returnType": "String",
+      "parameters": [{"name": "path", "type": "String", "description": "파일 경로"}],
+      "usage": "String content = Malgn.readFile(\"/data/config.txt\");",
+      "notes": "static 메소드.",
+      "related": ["Malgn.writeFile()"]
+    },
+    {
+      "name": "writeFile",
+      "signature": "static void writeFile(String path, String content)",
+      "description": "파일 내용 쓰기",
+      "returnType": "void",
+      "parameters": [
+        {"name": "path", "type": "String", "description": "파일 경로"},
+        {"name": "content", "type": "String", "description": "파일 내용"}
+      ],
+      "usage": "Malgn.writeFile(\"/data/log.txt\", logStr);",
+      "notes": "static 메소드.",
+      "related": ["Malgn.readFile()"]
+    }
+  ],
+  "method_count": 31,
+  "important_rules": [
+    "init.jsp에서 자동 초기화됨 (개별 import 불필요)",
+    "GET: m.rs(), m.ri() / POST: f.get(), f.getInt()",
+    "m.rs()는 null 대신 빈 문자열 반환 (null 체크 불필요)",
+    "m.getInt(), m.getString() 등은 존재하지 않는 메소드",
+    "static 메소드는 Malgn.time(), Malgn.sha256() 등으로 직접 호출"
+  ]
+}

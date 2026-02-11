@@ -1,0 +1,181 @@
+{
+  "name": "Config",
+  "fullClassName": "malgnsoft.util.Config",
+  "category": "core",
+  "description": "전역 설정 관리자. /WEB-INF/config.xml에서 설정을 로드하여 경로, URL, JNDI, 인코딩 등 제공.",
+  "variable_name": "Config (static)",
+  "initialization": "Config.load(request); // init.jsp에서 자동 로드",
+  "initialized_in": "서블릿 초기화 또는 init.jsp에서 자동 로드",
+  "methods": [
+    {
+      "name": "getDocRoot",
+      "signature": "static String getDocRoot()",
+      "description": "웹 문서 루트 경로 반환",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "String root = Config.getDocRoot();",
+      "notes": "",
+      "related": ["getWebUrl()", "getTplRoot()"]
+    },
+    {
+      "name": "getWebUrl",
+      "signature": "static String getWebUrl()",
+      "description": "웹 애플리케이션 URL 반환",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "String url = Config.getWebUrl();",
+      "notes": "",
+      "related": ["getDocRoot()"]
+    },
+    {
+      "name": "getTplRoot",
+      "signature": "static String getTplRoot()",
+      "description": "템플릿 디렉토리 루트 경로 반환",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "String tpl = Config.getTplRoot();",
+      "notes": "",
+      "related": ["getDocRoot()"]
+    },
+    {
+      "name": "getDataDir",
+      "signature": "static String getDataDir()",
+      "description": "데이터 디렉토리 경로 반환",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "String dir = Config.getDataDir();",
+      "notes": "",
+      "related": ["getDataUrl()"]
+    },
+    {
+      "name": "getDataUrl",
+      "signature": "static String getDataUrl()",
+      "description": "데이터 URL 경로 반환",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "String url = Config.getDataUrl();",
+      "notes": "",
+      "related": ["getDataDir()"]
+    },
+    {
+      "name": "getLogDir",
+      "signature": "static String getLogDir()",
+      "description": "로그 디렉토리 경로 반환",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "String logDir = Config.getLogDir();",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "getJndi",
+      "signature": "static String getJndi()",
+      "description": "기본 데이터베이스 JNDI 이름 반환",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "String jndi = Config.getJndi();",
+      "notes": "기본값: jdbc/malgn",
+      "related": ["getRoJndi()"]
+    },
+    {
+      "name": "getRoJndi",
+      "signature": "static String getRoJndi()",
+      "description": "읽기 전용 데이터베이스 JNDI 이름 반환",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "String roJndi = Config.getRoJndi();",
+      "notes": "",
+      "related": ["getJndi()"]
+    },
+    {
+      "name": "getSecretId",
+      "signature": "static String getSecretId()",
+      "description": "암호화/보안용 시크릿 ID 반환",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "String secret = Config.getSecretId();",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "getEncoding",
+      "signature": "static String getEncoding()",
+      "description": "문자 인코딩 반환 (기본 UTF-8)",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "String enc = Config.getEncoding();",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "getDatabase",
+      "signature": "static DataSet getDatabase()",
+      "description": "데이터베이스 설정을 DataSet으로 반환",
+      "returnType": "DataSet",
+      "parameters": [],
+      "usage": "DataSet dbConf = Config.getDatabase();",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "getDataSet",
+      "signature": "static DataSet getDataSet(String xpath)",
+      "description": "XPath로 설정 값을 DataSet으로 반환",
+      "returnType": "DataSet",
+      "parameters": [{"name": "xpath", "type": "String", "description": "XPath 표현식"}],
+      "usage": "DataSet oauth = Config.getDataSet(\"//config/oauth\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "get",
+      "signature": "static String get(String key)",
+      "description": "설정 값 조회",
+      "returnType": "String",
+      "parameters": [{"name": "key", "type": "String", "description": "설정 키"}],
+      "usage": "String val = Config.get(\"customKey\");",
+      "notes": "",
+      "related": ["getInt()", "set()"]
+    },
+    {
+      "name": "getInt",
+      "signature": "static int getInt(String key)",
+      "description": "설정 값을 정수로 조회",
+      "returnType": "int",
+      "parameters": [{"name": "key", "type": "String", "description": "설정 키"}],
+      "usage": "int port = Config.getInt(\"port\");",
+      "notes": "",
+      "related": ["get()"]
+    },
+    {
+      "name": "set",
+      "signature": "static void set(String key, String value)",
+      "description": "설정 값 동적 설정",
+      "returnType": "void",
+      "parameters": [
+        {"name": "key", "type": "String", "description": "설정 키"},
+        {"name": "value", "type": "String", "description": "설정 값"}
+      ],
+      "usage": "Config.set(\"customKey\", \"value\");",
+      "notes": "",
+      "related": ["get()"]
+    },
+    {
+      "name": "reload",
+      "signature": "static void reload()",
+      "description": "설정 파일 다시 로드",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "Config.reload();",
+      "notes": "",
+      "related": []
+    }
+  ],
+  "method_count": 16,
+  "important_rules": [
+    "모든 메소드가 static - 인스턴스 생성 불필요",
+    "config.xml 위치: /WEB-INF/config.xml",
+    "기본 JNDI: jdbc/malgn, 기본 인코딩: UTF-8",
+    "init.jsp에서 자동 로드됨"
+  ]
+}

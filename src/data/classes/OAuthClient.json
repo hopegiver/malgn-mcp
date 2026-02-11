@@ -1,0 +1,95 @@
+{
+  "name": "OAuthClient",
+  "fullClassName": "malgnsoft.util.OAuthClient",
+  "category": "security",
+  "description": "OAuth 2.0 클라이언트. Google, Facebook, Naver 등 소셜 로그인 인증 플로우 처리.",
+  "variable_name": "oauth",
+  "initialization": "OAuthClient oauth = new OAuthClient(request, session);",
+  "initialized_in": "필요 시 직접 생성",
+  "methods": [
+    {
+      "name": "constructor",
+      "signature": "OAuthClient(HttpServletRequest request, HttpSession session)",
+      "description": "요청과 세션으로 생성",
+      "returnType": "OAuthClient",
+      "parameters": [
+        {"name": "request", "type": "HttpServletRequest", "description": "HTTP 요청"},
+        {"name": "session", "type": "HttpSession", "description": "HTTP 세션"}
+      ],
+      "usage": "OAuthClient oauth = new OAuthClient(request, request.getSession());",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "setClient",
+      "signature": "void setClient(String vendor, String id, String secret)",
+      "description": "OAuth 벤더 인증 정보 설정",
+      "returnType": "void",
+      "parameters": [
+        {"name": "vendor", "type": "String", "description": "벤더명 (google, facebook, naver 등)"},
+        {"name": "id", "type": "String", "description": "Client ID"},
+        {"name": "secret", "type": "String", "description": "Client Secret"}
+      ],
+      "usage": "oauth.setClient(\"google\", clientId, clientSecret);",
+      "notes": "config.xml에 설정되어 있으면 자동 로드. 콜백 URL 포함 오버로드도 있음.",
+      "related": []
+    },
+    {
+      "name": "setScope",
+      "signature": "void setScope(String scope)",
+      "description": "OAuth 스코프 설정",
+      "returnType": "void",
+      "parameters": [{"name": "scope", "type": "String", "description": "스코프 문자열"}],
+      "usage": "oauth.setScope(\"email profile\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "getAuthUrl",
+      "signature": "String getAuthUrl(String vendor)",
+      "description": "인증 URL 생성 (사용자를 이 URL로 리다이렉트)",
+      "returnType": "String",
+      "parameters": [{"name": "vendor", "type": "String", "description": "벤더명"}],
+      "usage": "String url = oauth.getAuthUrl(\"google\");\nresponse.sendRedirect(url);",
+      "notes": "CSRF 보호를 위한 state 파라미터 자동 포함.",
+      "related": ["getAccessToken()", "getProfile()"]
+    },
+    {
+      "name": "getAccessToken",
+      "signature": "String getAccessToken(String code)",
+      "description": "인증 코드를 액세스 토큰으로 교환",
+      "returnType": "String",
+      "parameters": [{"name": "code", "type": "String", "description": "인증 코드 (콜백에서 수신)"}],
+      "usage": "String token = oauth.getAccessToken(code);",
+      "notes": "",
+      "related": ["getProfile()"]
+    },
+    {
+      "name": "getProfile",
+      "signature": "HashMap<String, Object> getProfile(String code)",
+      "description": "인증 코드로 사용자 프로필 조회 (토큰 교환 + 프로필 요청 통합)",
+      "returnType": "HashMap<String, Object>",
+      "parameters": [{"name": "code", "type": "String", "description": "인증 코드"}],
+      "usage": "HashMap<String, Object> profile = oauth.getProfile(code);\nString email = (String)profile.get(\"email\");",
+      "notes": "Naver는 response 객체에서 추출, Facebook은 email,name,gender 필드 요청.",
+      "related": ["getAuthUrl()"]
+    },
+    {
+      "name": "isValidState",
+      "signature": "boolean isValidState(String s)",
+      "description": "CSRF 방지 state 파라미터 검증",
+      "returnType": "boolean",
+      "parameters": [{"name": "s", "type": "String", "description": "콜백에서 수신한 state 값"}],
+      "usage": "if(!oauth.isValidState(m.rs(\"state\"))) { m.jsError(\"인증 오류\"); }",
+      "notes": "",
+      "related": []
+    }
+  ],
+  "method_count": 7,
+  "important_rules": [
+    "OAuth 2.0 Authorization Code 플로우",
+    "config.xml의 //config/oauth/vendor 에서 벤더 설정 자동 로드",
+    "state 파라미터로 CSRF 보호 (세션 저장)",
+    "지원 벤더: Google, Facebook, Naver 등"
+  ]
+}

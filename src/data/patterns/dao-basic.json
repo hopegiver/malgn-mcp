@@ -1,0 +1,14 @@
+{
+  "type": "dao-basic",
+  "title": "기본 DAO 클래스",
+  "variables": {
+    "TABLE_NAME": { "description": "테이블명", "example": "tb_board" },
+    "DAO_CLASS": { "description": "DAO 클래스명", "example": "BoardDao" }
+  },
+  "java_template": "package dao;\n\nimport malgnsoft.db.DataObject;\n\npublic class {DAO_CLASS} extends DataObject {\n  public {DAO_CLASS}() {\n    this.table = \"{TABLE_NAME}\";\n  }\n}",
+  "notes": [
+    "DataObject를 상속하고 생성자에서 table 설정",
+    "find(), get(), insert(), update(), delete() 자동 제공",
+    "DAO 변수명은 테이블명에서 tb_ 제거: BoardDao board"
+  ]
+}

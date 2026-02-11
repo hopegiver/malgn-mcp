@@ -1,0 +1,24 @@
+{
+  "category": "postback",
+  "total": 2,
+  "rules": [
+    {
+      "id": "postback-pattern",
+      "category": "postback",
+      "severity": "error",
+      "title": "Postback 패턴",
+      "rule": "등록/수정은 같은 JSP에서 POST 처리 후 return으로 종료. else 사용하지 않음.",
+      "correct": "if(m.isPost() && f.validate()) {\n  // 처리\n  m.jsAlert(\"저장되었습니다.\");\n  m.jsReplace(\"/list.jsp\");\n  return;\n}\n// 폼 표시 (else 없이 자연스럽게 진행)",
+      "incorrect": "// else 사용\nif(m.isPost()) { /* 처리 */ } else { /* 폼 표시 */ }\n// 별도 파일 사용\ninsert_ok.jsp"
+    },
+    {
+      "id": "postback-redirect",
+      "category": "postback",
+      "severity": "warning",
+      "title": "POST 처리 후 리다이렉트",
+      "rule": "POST 처리 성공 후 메시지 표시가 필요하면 m.jsAlert() + m.jsReplace() 쌍으로 사용. 메시지가 불필요하면 m.redirect()가 더 간편함.",
+      "correct": "// 메시지 필요 시\nm.jsAlert(\"저장되었습니다.\");\nm.jsReplace(\"/list.jsp\");\n// 메시지 불필요 시\nm.redirect(\"/list.jsp\");",
+      "incorrect": "// 메시지 없이 jsReplace만 단독 사용\nm.jsReplace(\"/list.jsp\");"
+    }
+  ]
+}

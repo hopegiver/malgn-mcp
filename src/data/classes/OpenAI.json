@@ -1,0 +1,135 @@
+{
+  "name": "OpenAI",
+  "fullClassName": "malgnsoft.util.OpenAI",
+  "category": "web",
+  "description": "OpenAI API 클라이언트. Chat Completions API 호출, 스트리밍 응답, 대화 히스토리 관리.",
+  "variable_name": "ai",
+  "initialization": "OpenAI ai = new OpenAI();",
+  "initialized_in": "필요 시 직접 생성",
+  "methods": [
+    {
+      "name": "apiKey",
+      "signature": "void apiKey(String key)",
+      "description": "OpenAI API 키 설정",
+      "returnType": "void",
+      "parameters": [{"name": "key", "type": "String", "description": "API 키"}],
+      "usage": "ai.apiKey(\"sk-...\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "modelName",
+      "signature": "void modelName(String name)",
+      "description": "모델 이름 설정 (기본: gpt-4o-mini)",
+      "returnType": "void",
+      "parameters": [{"name": "name", "type": "String", "description": "모델명"}],
+      "usage": "ai.modelName(\"gpt-4o\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "temperature",
+      "signature": "void temperature(double t)",
+      "description": "응답 temperature 설정 (기본: 0.7)",
+      "returnType": "void",
+      "parameters": [{"name": "t", "type": "double", "description": "0.0~2.0"}],
+      "usage": "ai.temperature(0.3);",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "maxToken",
+      "signature": "void maxToken(int size)",
+      "description": "최대 토큰 수 설정 (기본: 1000)",
+      "returnType": "void",
+      "parameters": [{"name": "size", "type": "int", "description": "최대 토큰 수"}],
+      "usage": "ai.maxToken(2000);",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "system",
+      "signature": "void system(String systemMessage)",
+      "description": "시스템 메시지 설정 (대화 히스토리 첫 번째에 추가/교체)",
+      "returnType": "void",
+      "parameters": [{"name": "systemMessage", "type": "String", "description": "시스템 프롬프트"}],
+      "usage": "ai.system(\"당신은 친절한 도우미입니다.\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "chat",
+      "signature": "String chat(String messagesJson)",
+      "description": "메시지 JSON 배열로 채팅 요청 (권장 메소드)",
+      "returnType": "String",
+      "parameters": [{"name": "messagesJson", "type": "String", "description": "JSON 메시지 배열"}],
+      "usage": "String reply = ai.chat(\"[{\\\"role\\\":\\\"user\\\",\\\"content\\\":\\\"안녕\\\"}]\");",
+      "notes": "role과 content 필드 필수.",
+      "related": ["streamChat()"]
+    },
+    {
+      "name": "chatMemory",
+      "signature": "String chatMemory(String message)",
+      "description": "대화 히스토리 자동 관리 단일 턴 채팅",
+      "returnType": "String",
+      "parameters": [{"name": "message", "type": "String", "description": "사용자 메시지"}],
+      "usage": "String reply = ai.chatMemory(\"오늘 날씨 어때?\");",
+      "notes": "내부적으로 히스토리를 유지하며 맥락 있는 대화 가능.",
+      "related": ["streamMemory()", "getHistory()", "setHistory()"]
+    },
+    {
+      "name": "streamMemory",
+      "signature": "String streamMemory(String message, Writer writer)",
+      "description": "스트리밍 응답 + 대화 히스토리 자동 관리",
+      "returnType": "String",
+      "parameters": [
+        {"name": "message", "type": "String", "description": "사용자 메시지"},
+        {"name": "writer", "type": "Writer", "description": "실시간 출력 대상"}
+      ],
+      "usage": "ai.streamMemory(\"설명해줘\", out);",
+      "notes": "SSE(Server-Sent Events) 방식 스트리밍.",
+      "related": ["chatMemory()"]
+    },
+    {
+      "name": "streamChat",
+      "signature": "String streamChat(String messagesJson, Writer writer)",
+      "description": "메시지 JSON 배열로 스트리밍 채팅",
+      "returnType": "String",
+      "parameters": [
+        {"name": "messagesJson", "type": "String", "description": "JSON 메시지 배열"},
+        {"name": "writer", "type": "Writer", "description": "실시간 출력 대상"}
+      ],
+      "usage": "ai.streamChat(messages, out);",
+      "notes": "",
+      "related": ["chat()"]
+    },
+    {
+      "name": "getHistory",
+      "signature": "String getHistory()",
+      "description": "대화 히스토리를 JSON 문자열로 반환",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "String history = ai.getHistory();\nsession.setAttribute(\"history\", history);",
+      "notes": "",
+      "related": ["setHistory()"]
+    },
+    {
+      "name": "setHistory",
+      "signature": "void setHistory(String historyJson)",
+      "description": "JSON 문자열에서 대화 히스토리 복원",
+      "returnType": "void",
+      "parameters": [{"name": "historyJson", "type": "String", "description": "JSON 히스토리"}],
+      "usage": "ai.setHistory((String)session.getAttribute(\"history\"));",
+      "notes": "",
+      "related": ["getHistory()"]
+    }
+  ],
+  "method_count": 11,
+  "important_rules": [
+    "API 엔드포인트: https://api.openai.com/v1/chat/completions",
+    "기본 모델: gpt-4o-mini",
+    "chat(): 메시지 JSON 배열 직접 전달 (권장)",
+    "chatMemory(): 히스토리 자동 관리 (간편)",
+    "errMsg 필드로 오류 확인"
+  ]
+}

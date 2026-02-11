@@ -1,0 +1,11 @@
+{
+  "type": "html-layout",
+  "title": "레이아웃 HTML 템플릿",
+  "html_template": "<!DOCTYPE html>\n<html lang=\"ko\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>{{pageTitle}}</title>\n  <link rel=\"stylesheet\" href=\"/css/style.css\">\n</head>\n<body>\n  <header>\n    <nav>\n      <a href=\"/\">홈</a>\n      <!--@if(isLogin)-->\n      <span>{{userName}}님</span>\n      <a href=\"/member/logout.jsp\">로그아웃</a>\n      <!--/if(isLogin)-->\n      <!--@nif(isLogin)-->\n      <a href=\"/member/login.jsp\">로그인</a>\n      <!--/nif(isLogin)-->\n    </nav>\n  </header>\n\n  <main>\n    <!--@include(BODY)-->\n  </main>\n\n  <footer>\n    <p>&copy; 2024 My Site</p>\n  </footer>\n\n  <script src=\"/js/common.js\"></script>\n</body>\n</html>",
+  "notes": [
+    "파일 위치: /html/layout/layout_default.html",
+    "<!--@include(BODY)-->에 p.setBody()로 지정한 HTML이 삽입됨",
+    "p.setLayout(\"default\") → layout_default.html 로드",
+    "@if(isLogin)/@nif(isLogin)로 로그인 상태 분기"
+  ]
+}

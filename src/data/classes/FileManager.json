@@ -1,0 +1,91 @@
+{
+  "name": "FileManager",
+  "fullClassName": "malgnsoft.util.SimpleFTP",
+  "category": "util",
+  "description": "FTP 파일 전송 클라이언트. 바이너리/ASCII 모드 지원.",
+  "variable_name": "ftp",
+  "initialization": "SimpleFTP ftp = new SimpleFTP();",
+  "initialized_in": "필요 시 직접 생성",
+  "methods": [
+    {
+      "name": "connect",
+      "signature": "void connect(String host, int port, String user, String pass)",
+      "description": "FTP 서버 접속",
+      "returnType": "void",
+      "parameters": [
+        {"name": "host", "type": "String", "description": "FTP 호스트"},
+        {"name": "port", "type": "int", "description": "포트"},
+        {"name": "user", "type": "String", "description": "사용자"},
+        {"name": "pass", "type": "String", "description": "비밀번호"}
+      ],
+      "usage": "ftp.connect(\"ftp.example.com\", 21, \"user\", \"pass\");",
+      "notes": "",
+      "related": ["disconnect()"]
+    },
+    {
+      "name": "disconnect",
+      "signature": "void disconnect()",
+      "description": "FTP 접속 해제",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "ftp.disconnect();",
+      "notes": "사용 후 반드시 호출.",
+      "related": ["connect()"]
+    },
+    {
+      "name": "cwd",
+      "signature": "boolean cwd(String dir)",
+      "description": "디렉토리 이동",
+      "returnType": "boolean",
+      "parameters": [{"name": "dir", "type": "String", "description": "디렉토리 경로"}],
+      "usage": "ftp.cwd(\"/upload\");",
+      "notes": "",
+      "related": ["pwd()"]
+    },
+    {
+      "name": "pwd",
+      "signature": "String pwd()",
+      "description": "현재 디렉토리 조회",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "String dir = ftp.pwd();",
+      "notes": "",
+      "related": ["cwd()"]
+    },
+    {
+      "name": "stor",
+      "signature": "boolean stor(File file)",
+      "description": "파일 업로드",
+      "returnType": "boolean",
+      "parameters": [{"name": "file", "type": "File", "description": "업로드할 파일"}],
+      "usage": "ftp.stor(new File(\"/data/file.txt\"));",
+      "notes": "패시브 모드 사용.",
+      "related": ["bin()", "ascii()"]
+    },
+    {
+      "name": "bin",
+      "signature": "boolean bin()",
+      "description": "바이너리 전송 모드 설정",
+      "returnType": "boolean",
+      "parameters": [],
+      "usage": "ftp.bin();",
+      "notes": "이미지, 바이너리 파일 전송 시 사용.",
+      "related": ["ascii()"]
+    },
+    {
+      "name": "ascii",
+      "signature": "boolean ascii()",
+      "description": "ASCII 전송 모드 설정",
+      "returnType": "boolean",
+      "parameters": [],
+      "usage": "ftp.ascii();",
+      "notes": "텍스트 파일 전송 시 사용.",
+      "related": ["bin()"]
+    }
+  ],
+  "method_count": 7,
+  "important_rules": [
+    "사용 후 반드시 disconnect() 호출",
+    "바이너리 파일은 bin() 모드 설정 후 전송"
+  ]
+}

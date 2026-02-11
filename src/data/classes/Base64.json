@@ -1,0 +1,69 @@
+{
+  "name": "Base64",
+  "fullClassName": "malgnsoft.util.Base64",
+  "category": "security",
+  "description": "Base64 인코딩/디코딩 유틸리티. 모든 메소드가 static.",
+  "variable_name": "Base64 (static)",
+  "initialization": "// static 메소드 직접 호출",
+  "initialized_in": "인스턴스 생성 불필요",
+  "methods": [
+    {
+      "name": "encode",
+      "signature": "static String encode(String s)",
+      "description": "문자열을 Base64로 인코딩 (Config 인코딩 사용)",
+      "returnType": "String",
+      "parameters": [{"name": "s", "type": "String", "description": "원본 문자열"}],
+      "usage": "String encoded = Base64.encode(\"hello\");",
+      "notes": "",
+      "related": ["decode()"]
+    },
+    {
+      "name": "encode (charset)",
+      "signature": "static String encode(String s, String charset)",
+      "description": "지정된 문자셋으로 Base64 인코딩",
+      "returnType": "String",
+      "parameters": [
+        {"name": "s", "type": "String", "description": "원본 문자열"},
+        {"name": "charset", "type": "String", "description": "문자셋"}
+      ],
+      "usage": "String encoded = Base64.encode(\"hello\", \"UTF-8\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "decode",
+      "signature": "static String decode(String s)",
+      "description": "Base64 문자열을 디코딩",
+      "returnType": "String",
+      "parameters": [{"name": "s", "type": "String", "description": "Base64 문자열"}],
+      "usage": "String decoded = Base64.decode(encoded);",
+      "notes": "",
+      "related": ["encode()"]
+    },
+    {
+      "name": "enc",
+      "signature": "static char[] enc(byte[] in)",
+      "description": "바이트 배열을 Base64 char 배열로 변환",
+      "returnType": "char[]",
+      "parameters": [{"name": "in", "type": "byte[]", "description": "바이트 배열"}],
+      "usage": "char[] encoded = Base64.enc(bytes);",
+      "notes": "",
+      "related": ["dec()"]
+    },
+    {
+      "name": "dec",
+      "signature": "static byte[] dec(String s)",
+      "description": "Base64 문자열을 바이트 배열로 디코딩",
+      "returnType": "byte[]",
+      "parameters": [{"name": "s", "type": "String", "description": "Base64 문자열"}],
+      "usage": "byte[] bytes = Base64.dec(encoded);",
+      "notes": "",
+      "related": ["enc()"]
+    }
+  ],
+  "method_count": 5,
+  "important_rules": [
+    "모든 메소드가 static",
+    "줄바꿈 없는 표준 Base64"
+  ]
+}

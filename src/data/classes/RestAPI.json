@@ -1,0 +1,196 @@
+{
+  "name": "RestAPI",
+  "fullClassName": "malgnsoft.util.RestAPI",
+  "category": "web",
+  "description": "REST API 라우팅, JWT 인증, CORS 처리. RESTful 엔드포인트 구현.",
+  "variable_name": "api",
+  "initialization": "RestAPI api = new RestAPI(request, response);",
+  "initialized_in": "REST API JSP에서 직접 생성",
+  "methods": [
+    {
+      "name": "get",
+      "signature": "void get(String path, ApiAction action)",
+      "description": "GET 라우트 등록",
+      "returnType": "void",
+      "parameters": [
+        {"name": "path", "type": "String", "description": "경로 패턴 (예: /users, /users/:id)"},
+        {"name": "action", "type": "ApiAction", "description": "핸들러 람다"}
+      ],
+      "usage": "api.get(\"/users\", () -> { j.success(list); });",
+      "notes": "path에 :param으로 경로 파라미터 지정.",
+      "related": ["post()", "put()", "delete()"]
+    },
+    {
+      "name": "post",
+      "signature": "void post(String path, ApiAction action)",
+      "description": "POST 라우트 등록",
+      "returnType": "void",
+      "parameters": [
+        {"name": "path", "type": "String", "description": "경로 패턴"},
+        {"name": "action", "type": "ApiAction", "description": "핸들러 람다"}
+      ],
+      "usage": "api.post(\"/users\", () -> { user.insert(); j.success(); });",
+      "notes": "",
+      "related": ["get()"]
+    },
+    {
+      "name": "put",
+      "signature": "void put(String path, ApiAction action)",
+      "description": "PUT 라우트 등록",
+      "returnType": "void",
+      "parameters": [
+        {"name": "path", "type": "String", "description": "경로 패턴"},
+        {"name": "action", "type": "ApiAction", "description": "핸들러 람다"}
+      ],
+      "usage": "api.put(\"/users/:id\", () -> { user.update(...); j.success(); });",
+      "notes": "",
+      "related": ["get()"]
+    },
+    {
+      "name": "delete",
+      "signature": "void delete(String path, ApiAction action)",
+      "description": "DELETE 라우트 등록",
+      "returnType": "void",
+      "parameters": [
+        {"name": "path", "type": "String", "description": "경로 패턴"},
+        {"name": "action", "type": "ApiAction", "description": "핸들러 람다"}
+      ],
+      "usage": "api.delete(\"/users/:id\", () -> { user.delete(...); j.success(); });",
+      "notes": "",
+      "related": ["get()"]
+    },
+    {
+      "name": "param",
+      "signature": "String param(String name)",
+      "description": "파라미터 조회 (경로 > 쿼리스트링 > JSON body 우선순위)",
+      "returnType": "String",
+      "parameters": [{"name": "name", "type": "String", "description": "파라미터명"}],
+      "usage": "String name = api.param(\"name\");",
+      "notes": "경로 파라미터가 최우선.",
+      "related": ["paramInt()"]
+    },
+    {
+      "name": "paramInt",
+      "signature": "int paramInt(String name)",
+      "description": "파라미터를 정수로 조회",
+      "returnType": "int",
+      "parameters": [{"name": "name", "type": "String", "description": "파라미터명"}],
+      "usage": "int id = api.paramInt(\"id\");",
+      "notes": "",
+      "related": ["param()"]
+    },
+    {
+      "name": "cors",
+      "signature": "void cors()",
+      "description": "CORS 전체 허용",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "api.cors();",
+      "notes": "모든 오리진 허용.",
+      "related": ["handlePreflight()"]
+    },
+    {
+      "name": "cors",
+      "signature": "void cors(String origin)",
+      "description": "특정 오리진 CORS 허용",
+      "returnType": "void",
+      "parameters": [{"name": "origin", "type": "String", "description": "허용할 오리진"}],
+      "usage": "api.cors(\"https://example.com\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "handlePreflight",
+      "signature": "boolean handlePreflight()",
+      "description": "OPTIONS 프리플라이트 요청 처리",
+      "returnType": "boolean",
+      "parameters": [],
+      "usage": "if(api.handlePreflight()) return;",
+      "notes": "OPTIONS 요청이면 true 반환 후 종료.",
+      "related": ["cors()"]
+    },
+    {
+      "name": "auth",
+      "signature": "boolean auth()",
+      "description": "JWT 토큰 인증 확인",
+      "returnType": "boolean",
+      "parameters": [],
+      "usage": "if(!api.auth()) return;",
+      "notes": "publicRoute()에 등록된 경로는 자동 패스.",
+      "related": ["publicRoute()", "generateToken()"]
+    },
+    {
+      "name": "publicRoute",
+      "signature": "void publicRoute(String... paths)",
+      "description": "인증 불필요한 공개 경로 등록",
+      "returnType": "void",
+      "parameters": [{"name": "paths", "type": "String...", "description": "공개 경로 목록"}],
+      "usage": "api.publicRoute(\"/login\", \"/register\");",
+      "notes": "auth() 호출 시 자동으로 스킵.",
+      "related": ["auth()"]
+    },
+    {
+      "name": "generateToken",
+      "signature": "String generateToken(long expireMinutes)",
+      "description": "JWT 토큰 생성",
+      "returnType": "String",
+      "parameters": [{"name": "expireMinutes", "type": "long", "description": "만료 시간 (분)"}],
+      "usage": "String token = api.generateToken(60 * 24);",
+      "notes": "setData()로 토큰에 데이터 포함 가능.",
+      "related": ["setData()", "isValidToken()"]
+    },
+    {
+      "name": "setData",
+      "signature": "void setData(String key, String value)",
+      "description": "JWT 토큰에 데이터 저장",
+      "returnType": "void",
+      "parameters": [
+        {"name": "key", "type": "String", "description": "키"},
+        {"name": "value", "type": "String", "description": "값"}
+      ],
+      "usage": "api.setData(\"user_id\", String.valueOf(userId));",
+      "notes": "generateToken() 전에 호출.",
+      "related": ["getData()", "generateToken()"]
+    },
+    {
+      "name": "getData",
+      "signature": "String getData(String key)",
+      "description": "JWT 토큰에서 데이터 조회",
+      "returnType": "String",
+      "parameters": [{"name": "key", "type": "String", "description": "키"}],
+      "usage": "String userId = api.getData(\"user_id\");",
+      "notes": "auth() 성공 후 사용 가능.",
+      "related": ["setData()"]
+    },
+    {
+      "name": "error",
+      "signature": "void error(int errorCode, String msg)",
+      "description": "에러 JSON 응답",
+      "returnType": "void",
+      "parameters": [
+        {"name": "errorCode", "type": "int", "description": "HTTP 상태 코드"},
+        {"name": "msg", "type": "String", "description": "에러 메시지"}
+      ],
+      "usage": "api.error(404, \"사용자를 찾을 수 없습니다.\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "forward",
+      "signature": "void forward()",
+      "description": "등록된 라우트로 요청 포워딩",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "api.forward();",
+      "notes": "use()로 등록한 라우트 패턴에 매칭.",
+      "related": ["use()"]
+    }
+  ],
+  "method_count": 16,
+  "important_rules": [
+    "cors() 설정 후 handlePreflight() 체크 필수",
+    "publicRoute()로 공개 경로 등록 후 auth()로 인증 체크",
+    "param()은 경로 > 쿼리스트링 > JSON body 순서로 탐색",
+    "JWT 토큰에 setData()로 사용자 정보 저장, getData()로 조회"
+  ]
+}

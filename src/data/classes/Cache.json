@@ -1,0 +1,97 @@
+{
+  "name": "Cache",
+  "fullClassName": "malgnsoft.util.Cache",
+  "category": "util",
+  "description": "파일 시스템 기반 객체 캐시. MD5 해시 키로 직렬화된 객체 저장/조회, 타임아웃 지원.",
+  "variable_name": "cache",
+  "initialization": "Cache cache = new Cache();",
+  "initialized_in": "필요 시 직접 생성",
+  "methods": [
+    {
+      "name": "setTimeOut",
+      "signature": "void setTimeOut(int t)",
+      "description": "캐시 타임아웃 설정 (초 단위, 기본 300초)",
+      "returnType": "void",
+      "parameters": [{"name": "t", "type": "int", "description": "타임아웃 (초)"}],
+      "usage": "cache.setTimeOut(600);",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "get",
+      "signature": "Object get(String key)",
+      "description": "캐시된 객체 조회. 만료/미존재 시 null 반환.",
+      "returnType": "Object",
+      "parameters": [{"name": "key", "type": "String", "description": "캐시 키"}],
+      "usage": "Object data = cache.get(\"myKey\");",
+      "notes": "",
+      "related": ["save()"]
+    },
+    {
+      "name": "getString",
+      "signature": "String getString(String key)",
+      "description": "캐시된 문자열 조회",
+      "returnType": "String",
+      "parameters": [{"name": "key", "type": "String", "description": "캐시 키"}],
+      "usage": "String html = cache.getString(\"page_cache\");",
+      "notes": "",
+      "related": ["getDataSet()", "getMap()"]
+    },
+    {
+      "name": "getDataSet",
+      "signature": "DataSet getDataSet(String key)",
+      "description": "캐시된 DataSet 조회",
+      "returnType": "DataSet",
+      "parameters": [{"name": "key", "type": "String", "description": "캐시 키"}],
+      "usage": "DataSet list = cache.getDataSet(\"menu_list\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "save",
+      "signature": "void save(String key, Object data)",
+      "description": "객체를 캐시에 저장",
+      "returnType": "void",
+      "parameters": [
+        {"name": "key", "type": "String", "description": "캐시 키"},
+        {"name": "data", "type": "Object", "description": "저장할 객체"}
+      ],
+      "usage": "cache.save(\"menu_list\", menuList);",
+      "notes": "MD5로 해시된 파일명으로 저장.",
+      "related": ["get()"]
+    },
+    {
+      "name": "print",
+      "signature": "boolean print(Writer out, String key)",
+      "description": "캐시된 문자열을 Writer로 출력. 캐시 존재 시 true 반환.",
+      "returnType": "boolean",
+      "parameters": [
+        {"name": "out", "type": "Writer", "description": "출력 대상"},
+        {"name": "key", "type": "String", "description": "캐시 키"}
+      ],
+      "usage": "if(!cache.print(out, \"page\")) {\n  // 캐시 없으면 새로 생성\n}",
+      "notes": "캐시 존재 여부 확인 + 출력을 한번에.",
+      "related": ["savePrint()"]
+    },
+    {
+      "name": "savePrint",
+      "signature": "void savePrint(String key, Object data, Writer out)",
+      "description": "캐시 저장 + Writer 출력 동시 수행",
+      "returnType": "void",
+      "parameters": [
+        {"name": "key", "type": "String", "description": "캐시 키"},
+        {"name": "data", "type": "Object", "description": "저장할 데이터"},
+        {"name": "out", "type": "Writer", "description": "출력 대상"}
+      ],
+      "usage": "cache.savePrint(\"page\", html, out);",
+      "notes": "",
+      "related": ["print()"]
+    }
+  ],
+  "method_count": 7,
+  "important_rules": [
+    "파일 시스템 기반 캐시 (직렬화)",
+    "기본 타임아웃: 300초 (5분)",
+    "MD5 해시 키로 파일명 생성"
+  ]
+}

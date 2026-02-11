@@ -1,0 +1,258 @@
+{
+  "name": "DataObject",
+  "fullClassName": "malgnsoft.db.DataObject",
+  "category": "data",
+  "description": "DAO 기반 데이터베이스 CRUD 추상 클래스. 모든 DAO는 이 클래스를 상속받음.",
+  "variable_name": "테이블명에서 tb_ 제거 후 소문자 (예: UserDao → user)",
+  "initialization": "UserDao user = new UserDao();",
+  "initialized_in": "각 JSP에서 직접 생성",
+  "methods": [
+    {
+      "name": "item",
+      "signature": "void item(String key, String value)",
+      "description": "INSERT/UPDATE할 필드와 값을 설정",
+      "returnType": "void",
+      "parameters": [
+        {"name": "key", "type": "String", "description": "컬럼명"},
+        {"name": "value", "type": "String", "description": "값"}
+      ],
+      "usage": "user.item(\"name\", f.get(\"name\"));\nuser.item(\"email\", f.get(\"email\"));",
+      "notes": "insert()/update() 전에 호출. 여러 번 호출하여 복수 필드 설정.",
+      "related": ["insert()", "update()"]
+    },
+    {
+      "name": "insert",
+      "signature": "boolean insert()",
+      "description": "데이터 등록 (INSERT)",
+      "returnType": "boolean",
+      "parameters": [],
+      "usage": "if(user.insert()) {\n  m.jsReplace(\"/list.jsp\");\n} else {\n  m.jsError(user.getErrMsg());\n}",
+      "notes": "item()으로 설정한 필드들이 INSERT됨. 실패 시 false 반환.",
+      "related": ["item()", "getInsertId()"]
+    },
+    {
+      "name": "update",
+      "signature": "boolean update(String where)",
+      "description": "데이터 수정 (UPDATE)",
+      "returnType": "boolean",
+      "parameters": [{"name": "where", "type": "String", "description": "WHERE 조건"}],
+      "usage": "if(user.update(\"WHERE id = \" + id)) { ... }",
+      "notes": "item()으로 설정한 필드들이 UPDATE됨.",
+      "related": ["item()"]
+    },
+    {
+      "name": "update",
+      "signature": "boolean update(String where, Object[] args)",
+      "description": "바인딩 파라미터를 사용한 안전한 UPDATE",
+      "returnType": "boolean",
+      "parameters": [
+        {"name": "where", "type": "String", "description": "WHERE 조건 (? 플레이스홀더)"},
+        {"name": "args", "type": "Object[]", "description": "바인딩 파라미터"}
+      ],
+      "usage": "user.update(\"WHERE id = ?\", new Object[]{id});",
+      "notes": "SQL Injection 방지를 위해 이 형태 권장.",
+      "related": ["item()"]
+    },
+    {
+      "name": "delete",
+      "signature": "boolean delete(String where)",
+      "description": "데이터 삭제 (DELETE)",
+      "returnType": "boolean",
+      "parameters": [{"name": "where", "type": "String", "description": "WHERE 조건"}],
+      "usage": "if(user.delete(\"WHERE id = \" + id)) { ... }",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "delete",
+      "signature": "boolean delete(String where, Object[] args)",
+      "description": "바인딩 파라미터를 사용한 안전한 DELETE",
+      "returnType": "boolean",
+      "parameters": [
+        {"name": "where", "type": "String", "description": "WHERE 조건"},
+        {"name": "args", "type": "Object[]", "description": "바인딩 파라미터"}
+      ],
+      "usage": "user.delete(\"WHERE id = ?\", new Object[]{id});",
+      "notes": "SQL Injection 방지를 위해 이 형태 권장.",
+      "related": []
+    },
+    {
+      "name": "find",
+      "signature": "DataSet find()",
+      "description": "전체 데이터 조회",
+      "returnType": "DataSet",
+      "parameters": [],
+      "usage": "DataSet list = user.find();",
+      "notes": "결과 DataSet은 next()를 호출해야 데이터 접근 가능.",
+      "related": ["find(where)", "get(id)"]
+    },
+    {
+      "name": "find",
+      "signature": "DataSet find(String where)",
+      "description": "조건부 데이터 조회",
+      "returnType": "DataSet",
+      "parameters": [{"name": "where", "type": "String", "description": "WHERE 조건"}],
+      "usage": "DataSet list = user.find(\"WHERE status = 'active'\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "find",
+      "signature": "DataSet find(String where, Object[] args)",
+      "description": "바인딩 파라미터를 사용한 안전한 조회",
+      "returnType": "DataSet",
+      "parameters": [
+        {"name": "where", "type": "String", "description": "WHERE 조건"},
+        {"name": "args", "type": "Object[]", "description": "바인딩 파라미터"}
+      ],
+      "usage": "DataSet info = user.find(\"WHERE email = ?\", new Object[]{email});",
+      "notes": "SQL Injection 방지를 위해 이 형태 권장.",
+      "related": []
+    },
+    {
+      "name": "get",
+      "signature": "DataSet get(int id)",
+      "description": "PK로 단일 행 조회",
+      "returnType": "DataSet",
+      "parameters": [{"name": "id", "type": "int", "description": "Primary Key 값"}],
+      "usage": "DataSet info = user.get(id);\nif(info.next()) {\n  String name = info.s(\"name\");\n}",
+      "notes": "결과는 반드시 if(info.next()) 체크 후 사용.",
+      "related": ["find()"]
+    },
+    {
+      "name": "query",
+      "signature": "DataSet query(String sql)",
+      "description": "직접 SQL 실행 (SELECT)",
+      "returnType": "DataSet",
+      "parameters": [{"name": "sql", "type": "String", "description": "SQL 쿼리"}],
+      "usage": "DataSet list = user.query(\"SELECT * FROM tb_user WHERE age > 20\");",
+      "notes": "복잡한 JOIN 등에서 사용.",
+      "related": ["query(sql, args)"]
+    },
+    {
+      "name": "query",
+      "signature": "DataSet query(String sql, Object[] args)",
+      "description": "바인딩 파라미터를 사용한 직접 SQL 실행",
+      "returnType": "DataSet",
+      "parameters": [
+        {"name": "sql", "type": "String", "description": "SQL 쿼리 (? 플레이스홀더)"},
+        {"name": "args", "type": "Object[]", "description": "바인딩 파라미터"}
+      ],
+      "usage": "DataSet list = user.query(\"SELECT * FROM tb_user WHERE age > ?\", new Object[]{20});",
+      "notes": "SQL Injection 방지를 위해 이 형태 권장.",
+      "related": []
+    },
+    {
+      "name": "execute",
+      "signature": "int execute(String sql)",
+      "description": "직접 SQL 실행 (INSERT/UPDATE/DELETE)",
+      "returnType": "int",
+      "parameters": [{"name": "sql", "type": "String", "description": "SQL 쿼리"}],
+      "usage": "int affected = user.execute(\"UPDATE tb_user SET status = 'inactive' WHERE ...\");",
+      "notes": "영향받은 행 수 반환.",
+      "related": []
+    },
+    {
+      "name": "getInsertId",
+      "signature": "int getInsertId()",
+      "description": "마지막 INSERT의 자동생성 ID 반환",
+      "returnType": "int",
+      "parameters": [],
+      "usage": "user.insert();\nint newId = user.getInsertId();",
+      "notes": "insert() 직후 호출.",
+      "related": ["insert()"]
+    },
+    {
+      "name": "getErrMsg",
+      "signature": "String getErrMsg()",
+      "description": "마지막 에러 메시지 반환",
+      "returnType": "String",
+      "parameters": [],
+      "usage": "m.jsError(user.getErrMsg());",
+      "notes": "insert()/update()/delete() 실패 시 호출.",
+      "related": []
+    },
+    {
+      "name": "addWhere",
+      "signature": "void addWhere(String where)",
+      "description": "find()에 WHERE 조건 추가",
+      "returnType": "void",
+      "parameters": [{"name": "where", "type": "String", "description": "조건절"}],
+      "usage": "user.addWhere(\"AND status = 'active'\");",
+      "notes": "find() 호출 전에 설정.",
+      "related": ["addSearch()"]
+    },
+    {
+      "name": "addSearch",
+      "signature": "void addSearch(String field, String keyword, String oper)",
+      "description": "검색 조건 추가 (빈 값 자동 무시)",
+      "returnType": "void",
+      "parameters": [
+        {"name": "field", "type": "String", "description": "검색 필드"},
+        {"name": "keyword", "type": "String", "description": "검색어"},
+        {"name": "oper", "type": "String", "description": "연산자 (like, =, >, < 등)"}
+      ],
+      "usage": "user.addSearch(\"name\", keyword, \"like\");",
+      "notes": "keyword가 빈 문자열이면 자동으로 무시됨.",
+      "related": ["addWhere()"]
+    },
+    {
+      "name": "setOrderBy",
+      "signature": "void setOrderBy(String sort)",
+      "description": "정렬 조건 설정",
+      "returnType": "void",
+      "parameters": [{"name": "sort", "type": "String", "description": "정렬 조건"}],
+      "usage": "user.setOrderBy(\"id DESC\");",
+      "notes": "find() 호출 전에 설정.",
+      "related": []
+    },
+    {
+      "name": "findCount",
+      "signature": "int findCount(String where)",
+      "description": "조건에 맞는 행 수 조회",
+      "returnType": "int",
+      "parameters": [{"name": "where", "type": "String", "description": "WHERE 조건"}],
+      "usage": "int count = user.findCount(\"WHERE status = 'active'\");",
+      "notes": "",
+      "related": []
+    },
+    {
+      "name": "startTrans",
+      "signature": "void startTrans()",
+      "description": "트랜잭션 시작",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "user.startTrans();\n// ... 여러 작업\nuser.endTrans();",
+      "notes": "endTrans()로 커밋, 에러 시 자동 롤백.",
+      "related": ["endTrans()"]
+    },
+    {
+      "name": "endTrans",
+      "signature": "void endTrans()",
+      "description": "트랜잭션 종료 (커밋)",
+      "returnType": "void",
+      "parameters": [],
+      "usage": "user.endTrans();",
+      "notes": "",
+      "related": ["startTrans()"]
+    },
+    {
+      "name": "d",
+      "signature": "void d(Writer out)",
+      "description": "디버그 모드 활성화",
+      "returnType": "void",
+      "parameters": [{"name": "out", "type": "Writer", "description": "출력 Writer (보통 out)"}],
+      "usage": "user.d(out);",
+      "notes": "실행되는 SQL 쿼리를 화면에 출력.",
+      "related": []
+    }
+  ],
+  "method_count": 22,
+  "important_rules": [
+    "DAO 클래스 작성 시 반드시 DataObject 상속: public class UserDao extends DataObject { this.table = \"tb_user\"; }",
+    "DAO 변수명은 테이블명에서 tb_ 제거 후 소문자: UserDao user (userDao X)",
+    "insert()/update()/delete()는 boolean 반환 - try-catch 대신 if 체크",
+    "SQL 파라미터는 ? 바인딩 사용 (SQL Injection 방지)",
+    "find()/get()/query() 결과는 반드시 next() 호출 후 데이터 접근"
+  ]
+}

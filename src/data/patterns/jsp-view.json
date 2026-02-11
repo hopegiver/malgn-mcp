@@ -1,0 +1,16 @@
+{
+  "type": "jsp-view",
+  "title": "상세 조회 (JSP)",
+  "variables": {
+    "TABLE_NAME": { "description": "테이블명", "example": "tb_board" },
+    "DAO_CLASS": { "description": "DAO 클래스명", "example": "BoardDao" },
+    "DAO_VAR": { "description": "DAO 변수명", "example": "board" }
+  },
+  "jsp_template": "<%@ page contentType=\"text/html; charset=utf-8\" %><%@ include file=\"/init.jsp\" %><%\n\nint id = m.ri(\"id\");\nif(id == 0) { m.jsError(\"잘못된 접근입니다.\"); return; }\n\n{DAO_CLASS} {DAO_VAR} = new {DAO_CLASS}();\nDataSet info = {DAO_VAR}.get(id);\nif(!info.next()) { m.jsError(\"데이터를 찾을 수 없습니다.\"); return; }\n\np.setLayout(\"default\");\np.setBody(\"board.view\");\np.setVar(\"info\", info);\np.display();\n\n%>",
+  "html_template": "<table>\n  <tr>\n    <th>제목</th>\n    <td>{{info.title}}</td>\n  </tr>\n  <tr>\n    <th>내용</th>\n    <td>{{info.content}}</td>\n  </tr>\n  <tr>\n    <th>작성일</th>\n    <td>{{info.created}}</td>\n  </tr>\n</table>\n\n<div class=\"btn-area\">\n  <a href=\"modify.jsp?id={{info.id}}\">수정</a>\n  <form name=\"deleteForm\" method=\"post\" action=\"delete.jsp\">\n    <input type=\"hidden\" name=\"id\" value=\"{{info.id}}\">\n    <button type=\"submit\" onclick=\"return confirm('삭제하시겠습니까?')\">삭제</button>\n  </form>\n  <a href=\"list.jsp\">목록</a>\n</div>",
+  "notes": [
+    "get(id)로 PK 조회",
+    "info.next() 체크 필수",
+    "삭제는 POST 폼으로 처리"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "type": "jsp-delete",
+  "title": "삭제 처리 (JSP)",
+  "variables": {
+    "TABLE_NAME": { "description": "테이블명", "example": "tb_board" },
+    "DAO_CLASS": { "description": "DAO 클래스명", "example": "BoardDao" },
+    "DAO_VAR": { "description": "DAO 변수명", "example": "board" }
+  },
+  "jsp_template": "<%@ page contentType=\"text/html; charset=utf-8\" %><%@ include file=\"/init.jsp\" %><%\n\nif(!m.isPost()) { m.jsError(\"잘못된 접근입니다.\"); return; }\n\nint id = m.ri(\"id\");\nif(id == 0) { m.jsError(\"잘못된 접근입니다.\"); return; }\n\n{DAO_CLASS} {DAO_VAR} = new {DAO_CLASS}();\n\nif({DAO_VAR}.delete(\"WHERE id = ?\", new Object[]{id})) {\n  m.jsReplace(\"list.jsp\");\n} else {\n  m.jsError({DAO_VAR}.getErrMsg());\n}\n\n%>",
+  "notes": [
+    "반드시 POST 요청만 허용",
+    "delete()에 바인딩 파라미터 사용",
+    "성공 시 목록으로 이동"
+  ]
+}
