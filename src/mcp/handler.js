@@ -1,7 +1,7 @@
 import { TOOL_DEFINITIONS, executeTool } from './tools.js';
 import { formatToolResult } from './formatter.js';
 
-const PROTOCOL_VERSION = '2024-11-05';
+const PROTOCOL_VERSION = '2025-03-26';
 const SERVER_INFO = { name: 'malgn-mcp', version: '1.0.0' };
 
 // 스키마에 정의되지 않은 파라미터 검출
@@ -19,10 +19,15 @@ function jsonrpcError(id, code, message) {
   return { jsonrpc: '2.0', id, error: { code, message } };
 }
 
+// 메시지가 JSON-RPC request인지 판별 (method + id 존재)
+function isRequest(msg) {
+  return msg && typeof msg.method === 'string' && msg.id !== undefined && msg.id !== null;
+}
+
 // MCP 메시지 처리
 function handleMessage(msg) {
-  // notification (id 없음) → 응답 불필요
-  if (msg.id === undefined || msg.id === null) {
+  // notification/response (id 없음) → 응답 불필요
+  if (!isRequest(msg)) {
     return null;
   }
 
@@ -75,17 +80,9 @@ function handleMessage(msg) {
   }
 }
 
-// Hono 라우트 핸들러
-export async function handleMcpRequest(c) {
+// POST /mcp - MCP Streamable HTTP 핸들러
+export async function handleMcpPost(c) {
   const contentType = c.req.header('content-type') || '';
-
-  // POST만 처리
-  if (c.req.method !== 'POST') {
-    return c.json(
-      { jsonrpc: '2.0', error: { code: -32600, message: 'POST required' } },
-      405
-    );
-  }
 
   if (!contentType.includes('application/json')) {
     return c.json(
@@ -104,14 +101,14 @@ export async function handleMcpRequest(c) {
     );
   }
 
-  // 배치 요청 처리
+  // 배치 요청
   if (Array.isArray(body)) {
     const responses = body.map(handleMessage).filter(r => r !== null);
     if (responses.length === 0) return c.body(null, 202);
     return c.json(responses);
   }
 
-  // 단일 요청 처리
+  // 단일 메시지
   const response = handleMessage(body);
   if (response === null) return c.body(null, 202);
   return c.json(response);

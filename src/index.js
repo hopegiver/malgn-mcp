@@ -1,14 +1,16 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import { handleMcpRequest } from './mcp/handler.js';
+import { handleMcpPost } from './mcp/handler.js';
 
 const app = new Hono();
 
 // Middleware
 app.use('*', cors());
 
-// MCP 엔드포인트 (Streamable HTTP)
-app.post('/mcp', handleMcpRequest);
+// MCP 엔드포인트 (Streamable HTTP - spec 2025-03-26)
+app.post('/mcp', handleMcpPost);
+app.get('/mcp', (c) => c.body(null, 405));
+app.delete('/mcp', (c) => c.body(null, 405));
 
 // Root
 app.get('/', (c) => {
