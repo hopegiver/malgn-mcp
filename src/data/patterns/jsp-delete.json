@@ -6,10 +6,12 @@
     "DAO_CLASS": { "description": "DAO 클래스명", "example": "BoardDao" },
     "DAO_VAR": { "description": "DAO 변수명", "example": "board" }
   },
-  "jsp_template": "<%@ page contentType=\"text/html; charset=utf-8\" %><%@ include file=\"/init.jsp\" %><%\n\nif(!m.isPost()) { m.jsError(\"잘못된 접근입니다.\"); return; }\n\nint id = m.ri(\"id\");\nif(id == 0) { m.jsError(\"잘못된 접근입니다.\"); return; }\n\n{DAO_CLASS} {DAO_VAR} = new {DAO_CLASS}();\n\nif({DAO_VAR}.delete(\"WHERE id = ?\", new Object[]{id})) {\n  m.jsReplace(\"list.jsp\");\n} else {\n  m.jsError({DAO_VAR}.getErrMsg());\n}\n\n%>",
+  "jsp_template": "<%@ page contentType=\"text/html; charset=utf-8\" %><%@ include file=\"/init.jsp\" %><%\n\n// 로그인 체크\nif(!isLogin) {\n    m.redirect(\"/member/login.jsp\");\n    return;\n}\n\nif(m.isPost()) {\n    int id = m.ri(\"id\");\n\n    {DAO_CLASS} {DAO_VAR} = new {DAO_CLASS}();\n    DataSet info = {DAO_VAR}.find(\"id = ?\", new Object[]{id});\n\n    if(!info.next()) {\n        m.jsError(\"데이터를 찾을 수 없습니다.\");\n        return;\n    }\n\n    // 작성자 본인 확인\n    if(info.i(\"user_id\") != userId) {\n        m.jsError(\"삭제 권한이 없습니다.\");\n        return;\n    }\n\n    if({DAO_VAR}.delete(\"id = ?\", new Object[]{id})) {\n        m.jsAlert(\"삭제되었습니다.\");\n        m.jsReplace(\"list.jsp\");\n    } else {\n        m.jsError(\"삭제 실패: \" + {DAO_VAR}.getErrMsg());\n    }\n    return;\n}\n\nm.jsError(\"잘못된 접근입니다.\");\n\n%>",
   "notes": [
     "반드시 POST 요청만 허용",
-    "delete()에 바인딩 파라미터 사용",
-    "성공 시 목록으로 이동"
+    "delete()에 바인딩 파라미터 사용 (WHERE 접두사 없음)",
+    "삭제 전 데이터 존재 여부 + 작성자 본인 확인 필수",
+    "성공 시 m.jsAlert() + m.jsReplace()로 목록 이동",
+    "삭제는 상세 페이지의 POST 폼에서 호출됨"
   ]
 }

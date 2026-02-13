@@ -6,11 +6,13 @@
     "DAO_CLASS": { "description": "DAO 클래스명", "example": "BoardDao" },
     "DAO_VAR": { "description": "DAO 변수명", "example": "board" }
   },
-  "jsp_template": "<%@ page contentType=\"text/html; charset=utf-8\" %><%@ include file=\"/init.jsp\" %><%\n\nif(!m.isPost()) { j.error(\"잘못된 접근입니다.\"); return; }\n\nf.addElement(\"title\", \"\", \"required,maxbyte:200\");\nf.addElement(\"content\", \"\", \"required\");\n\nif(!f.validate()) {\n  j.error(f.getErrMsg());\n  return;\n}\n\n{DAO_CLASS} {DAO_VAR} = new {DAO_CLASS}();\n{DAO_VAR}.item(\"title\", f.get(\"title\"));\n{DAO_VAR}.item(\"content\", f.get(\"content\"));\n{DAO_VAR}.item(\"created\", m.time());\n\nif({DAO_VAR}.insert()) {\n  j.put(\"id\", {DAO_VAR}.getInsertId());\n  j.success(\"저장되었습니다.\");\n} else {\n  j.error({DAO_VAR}.getErrMsg());\n}\n\n%>",
-  "html_template": "<form name=\"form1\" method=\"post\" data-ajax=\"true\">\n  <table>\n    <tr>\n      <th>제목</th>\n      <td><input type=\"text\" name=\"title\"></td>\n    </tr>\n    <tr>\n      <th>내용</th>\n      <td><textarea name=\"content\"></textarea></td>\n    </tr>\n  </table>\n  <button type=\"submit\">저장</button>\n</form>",
+  "jsp_template": "<%@ page contentType=\"text/html; charset=utf-8\" %><%@ include file=\"/init.jsp\" %><%\n\nif(!m.isPost()) { j.error(\"잘못된 접근입니다.\"); return; }\n\n// 로그인 체크\nif(!isLogin) { j.error(\"로그인이 필요합니다.\"); return; }\n\nf.addElement(\"title\", null, \"required:'Y', minlength:2\");\nf.addElement(\"content\", null, \"required:'Y', minlength:10\");\n\nif(!f.validate()) {\n    j.error(f.getErrMsg());\n    return;\n}\n\n{DAO_CLASS} {DAO_VAR} = new {DAO_CLASS}();\n{DAO_VAR}.item(\"user_id\", userId);\n{DAO_VAR}.item(\"title\", f.get(\"title\"));\n{DAO_VAR}.item(\"content\", f.get(\"content\"));\n{DAO_VAR}.item(\"reg_date\", m.time());\n{DAO_VAR}.item(\"status\", 1);\n\nif({DAO_VAR}.insert()) {\n    j.put(\"id\", {DAO_VAR}.getInsertId());\n    j.success(\"저장되었습니다.\");\n} else {\n    j.error({DAO_VAR}.getErrMsg());\n}\n\n%>",
+  "html_template": "<form name=\"form1\" method=\"post\" data-ajax=\"true\">\n    <div class=\"mb-3\">\n        <label class=\"form-label\">제목 <span class=\"text-danger\">*</span></label>\n        <input type=\"text\" class=\"form-control\" name=\"title\">\n    </div>\n    <div class=\"mb-3\">\n        <label class=\"form-label\">내용 <span class=\"text-danger\">*</span></label>\n        <textarea class=\"form-control\" name=\"content\" rows=\"10\"></textarea>\n    </div>\n    <button type=\"submit\" class=\"btn btn-primary\">저장</button>\n</form>\n{{form_script}}",
   "notes": [
     "data-ajax=\"true\" 폼의 응답은 반드시 j.success()/j.error()",
-    "m.jsReplace()는 AJAX에서 작동하지 않음",
-    "j.put()으로 추가 데이터 전달 가능"
+    "AJAX에서는 m.jsReplace(), m.jsAlert() 사용 불가",
+    "j.put()으로 추가 데이터 전달 가능",
+    "data-success=\"함수명\"으로 성공 시 콜백 지정 가능",
+    "data-redirect=\"URL\"로 성공 시 리다이렉트 가능"
   ]
 }

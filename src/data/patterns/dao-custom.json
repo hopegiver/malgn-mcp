@@ -5,10 +5,13 @@
     "TABLE_NAME": { "description": "테이블명", "example": "tb_board" },
     "DAO_CLASS": { "description": "DAO 클래스명", "example": "BoardDao" }
   },
-  "java_template": "package dao;\n\nimport malgnsoft.db.DataObject;\nimport malgnsoft.db.DataSet;\n\npublic class {DAO_CLASS} extends DataObject {\n  public {DAO_CLASS}() {\n    this.table = \"{TABLE_NAME}\";\n  }\n\n  // 커스텀 조회 메소드\n  public DataSet findByStatus(String status) {\n    return this.find(\"WHERE status = ?\", new Object[]{status});\n  }\n\n  // 커스텀 카운트 메소드\n  public int countByStatus(String status) {\n    return this.findCount(\"WHERE status = '\" + status + \"'\");\n  }\n\n  // 복잡한 JOIN 조회\n  public DataSet findWithUser() {\n    return this.query(\n      \"SELECT a.*, b.name as user_name \" +\n      \"FROM {TABLE_NAME} a \" +\n      \"LEFT JOIN tb_user b ON a.user_id = b.id \" +\n      \"ORDER BY a.id DESC\"\n    );\n  }\n}",
+  "java_template": "package dao;\n\nimport malgnsoft.db.*;\n\npublic class {DAO_CLASS} extends DataObject {\n    public {DAO_CLASS}() {\n        this.table = \"{TABLE_NAME}\";\n        this.PK = \"id\";\n    }\n\n    // 조회수 증가\n    public boolean increaseHit(int id) {\n        this.item(\"hit\", \"\", \"hit + 1\");\n        return this.update(\"id = ?\", new Object[]{id});\n    }\n\n    // 특정 사용자의 글 조회\n    public DataSet findByUserId(int userId) {\n        return this.find(\"user_id = ?\", new Object[]{userId});\n    }\n\n    // 작성자 정보를 포함한 조회 (JOIN)\n    public DataSet getWithUser(int id) {\n        return this.query(\n            \"SELECT b.*, u.name as user_name \" +\n            \"FROM {TABLE_NAME} b \" +\n            \"LEFT JOIN tb_user u ON b.user_id = u.id \" +\n            \"WHERE b.id = ?\",\n            new Object[]{id}\n        );\n    }\n}",
   "notes": [
     "기본 CRUD 외에 자주 사용하는 쿼리를 메소드로 정의",
-    "find(), query() 등 부모 메소드 활용",
-    "바인딩 파라미터 사용 권장"
+    "this.PK = \"id\"로 기본키 설정 필수",
+    "find() 조건에 WHERE 접두사 없이 작성: \"user_id = ?\" (O), \"WHERE user_id = ?\" (X)",
+    "반드시 바인딩 파라미터(new Object[]{}) 사용 - 문자열 연결 금지 (SQL injection 방지)",
+    "item(필드, \"\", \"SQL표현식\")으로 SQL 표현식 직접 사용 가능 (예: hit + 1)",
+    "query()에서는 WHERE 포함한 전체 SQL 작성"
   ]
 }

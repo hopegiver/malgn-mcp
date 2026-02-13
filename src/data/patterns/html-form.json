@@ -1,11 +1,14 @@
 {
   "type": "html-form",
   "title": "폼 HTML 템플릿 (등록/수정 공용)",
-  "html_template": "<form name=\"form1\" method=\"post\" enctype=\"multipart/form-data\">\n  <table class=\"table-form\">\n    <tr>\n      <th>제목 <span class=\"required\">*</span></th>\n      <td><input type=\"text\" name=\"title\" value=\"{{info.title}}\" class=\"input-full\"></td>\n    </tr>\n    <tr>\n      <th>카테고리</th>\n      <td>\n        <select name=\"category\">\n          <option value=\"\">선택</option>\n          <!--@loop(categories)-->\n          <option value=\"{{categories.code}}\" <!--@if(categories.selected)-->selected<!--/if(categories.selected)-->>{{categories.name}}</option>\n          <!--/loop(categories)-->\n        </select>\n      </td>\n    </tr>\n    <tr>\n      <th>내용 <span class=\"required\">*</span></th>\n      <td><textarea name=\"content\" class=\"input-full\" rows=\"10\">{{info.content}}</textarea></td>\n    </tr>\n    <tr>\n      <th>첨부파일</th>\n      <td>\n        <input type=\"file\" name=\"attach\">\n        <!--@if(hasFile)-->\n        <p>현재 파일: {{info.file_name}}</p>\n        <!--/if(hasFile)-->\n      </td>\n    </tr>\n  </table>\n  <div class=\"btn-area\">\n    <button type=\"submit\" class=\"btn-primary\">{{submitText}}</button>\n    <a href=\"list.jsp\" class=\"btn-cancel\">취소</a>\n  </div>\n</form>\n<script>{{formScript}}</script>",
+  "html_template": "<div class=\"row justify-content-center\">\n    <div class=\"col-md-10\">\n        <div class=\"card shadow\">\n            <div class=\"card-body p-4\">\n                <h2 class=\"mb-4\">{{page_title}}</h2>\n\n                <form name=\"form1\" method=\"post\" data-ajax=\"true\">\n                    <div class=\"mb-3\">\n                        <label for=\"title\" class=\"form-label\">제목 <span class=\"text-danger\">*</span></label>\n                        <input type=\"text\" class=\"form-control form-control-lg\" id=\"title\" name=\"title\" placeholder=\"제목을 입력하세요\">\n                    </div>\n\n                    <div class=\"mb-4\">\n                        <label for=\"content\" class=\"form-label\">내용 <span class=\"text-danger\">*</span></label>\n                        <textarea class=\"form-control\" id=\"content\" name=\"content\" rows=\"15\" placeholder=\"내용을 입력하세요\"></textarea>\n                    </div>\n\n                    <div class=\"d-flex gap-2\">\n                        <button type=\"submit\" class=\"btn btn-primary btn-lg\">{{submit_text}}</button>\n                        <a href=\"list.jsp\" class=\"btn btn-outline-secondary btn-lg\">취소</a>\n                    </div>\n                </form>\n            </div>\n        </div>\n    </div>\n</div>\n\n{{form_script}}",
   "notes": [
-    "등록/수정 폼 공용 (info 변수 여부로 구분)",
-    "enctype=\"multipart/form-data\"는 파일 업로드 시 필수",
-    "{{formScript}}는 f.getScript()가 생성한 클라이언트 검증 JS",
-    "select 옵션에서 selected 처리는 JSP에서 boolean 변수로 미리 설정"
+    "Bootstrap 5 카드 레이아웃 사용",
+    "data-ajax=\"true\"로 AJAX 폼 전송 (j.success()/j.error() 응답 필요)",
+    "등록 폼: data-success=\"콜백함수\"로 성공 시 콜백 지정",
+    "수정 폼: data-redirect=\"view.jsp?id={{id}}\"로 성공 시 리다이렉트",
+    "{{form_script}}: f.getScript()가 생성한 클라이언트 검증 JS",
+    "수정 폼에서는 JSP의 f.addElement(name, info.s(name), ...)로 기본값 프리필됨",
+    "파일 업로드 시 enctype=\"multipart/form-data\" 추가 필요"
   ]
 }

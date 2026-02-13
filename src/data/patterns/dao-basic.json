@@ -5,10 +5,13 @@
     "TABLE_NAME": { "description": "테이블명", "example": "tb_board" },
     "DAO_CLASS": { "description": "DAO 클래스명", "example": "BoardDao" }
   },
-  "java_template": "package dao;\n\nimport malgnsoft.db.DataObject;\n\npublic class {DAO_CLASS} extends DataObject {\n  public {DAO_CLASS}() {\n    this.table = \"{TABLE_NAME}\";\n  }\n}",
+  "java_template": "package dao;\n\nimport malgnsoft.db.*;\n\npublic class {DAO_CLASS} extends DataObject {\n    public {DAO_CLASS}() {\n        this.table = \"{TABLE_NAME}\";\n        this.PK = \"id\";\n    }\n}",
   "notes": [
-    "DataObject를 상속하고 생성자에서 table 설정",
+    "DataObject를 상속하고 생성자에서 table, PK 설정",
+    "import malgnsoft.db.* 사용 (DataObject, DataSet 등 포함)",
+    "this.PK = \"id\"로 기본키 설정 필수",
     "find(), get(), insert(), update(), delete() 자동 제공",
-    "DAO 변수명은 테이블명에서 tb_ 제거: BoardDao board"
+    "DAO 변수명은 테이블명에서 tb_ 제거: BoardDao board",
+    "들여쓰기: 4칸 스페이스"
   ]
 }
