@@ -77,6 +77,9 @@ function formatContext(result) {
       if (pat.html_template) {
         lines.push('', '**HTML:**', '```html', pat.html_template, '```');
       }
+      if (pat.java_template) {
+        lines.push('', '**Java:**', '```java', pat.java_template, '```');
+      }
       if (pat.code) {
         lines.push('', '**코드:**', '```java', pat.code, '```');
       }
@@ -313,6 +316,10 @@ function formatPatternDetail(pat) {
 
   if (pat.html_template) {
     lines.push('', '## HTML 템플릿', '```html', pat.html_template, '```');
+  }
+
+  if (pat.java_template) {
+    lines.push('', '## Java 템플릿', '```java', pat.java_template, '```');
   }
 
   if (pat.code) {
